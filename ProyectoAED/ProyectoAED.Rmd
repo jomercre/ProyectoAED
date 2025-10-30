@@ -37,3 +37,23 @@ output:
 # Importación de los datos
 
 En este apartado vamos a proceder a importar el archivo de datos con el que vamos a trabajar, el cual pertenece al INE (Insituto Nacional de Estadística) y trata sobre la inserción laboral de las personas con estudios universitarios o superiores.
+
+
+Importamos los datos:
+```{r}
+library(readr)
+df_raw <- read_delim("./data/EILU_GRAD_2019.csv", 
+    delim = "\t", escape_double = FALSE, 
+    trim_ws = TRUE)
+```
+
+Seleccionamos las variables de interés:
+```{r}
+var <- c('IDENT','SEXO','EDAD','TITU','AMBITO','T_UNIV','EST_B12','EST_B16',
+         'EST_B13_AMB1','EST_B13_AMB2','EST_B13_AMB3','EST_B17_M1','EST_B17_M2',
+         'EST_B17_M3','EST_B21','EST2_SA','EST2_NC','IDIOMAS','SIT_PRO','TR_SUELDO',
+         'HATR_E11')
+
+df <- df_raw[var]
+```
+
