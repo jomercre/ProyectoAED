@@ -55,7 +55,7 @@ df_raw <- read_delim("./data/EILU_GRAD_2019.csv",
 
 Seleccionamos las variables de interés:
 ```{r}
-var <- c('IDENT','SEXO','EDAD','TITU','AMBITO','T_UNIV','EST_B12','EST_B16',
+var <- c('IDENT','SEXO','EDAD','TITU','RAMA','AMBITO','T_UNIV','EST_B12','EST_B16',
          'EST_B13_AMB1','EST_B13_AMB2','EST_B13_AMB3','EST_B17_M1','EST_B17_M2',
          'EST_B17_M3','EST_B21','EST2_SA','EST2_NC','IDIOMAS','TRBPRN1','TR_SUELDO',
          'HATR_E11')
@@ -78,6 +78,8 @@ codi_amb <- c("0112", "0113", "011", "0211", "021", "022", "023", "0311", "0313"
 desc_amb <- c("Formación de docentes de enseñanza infantil", "Formación de docentes de enseñanza primaria", "Educación (Otros estudios)", "Técnicas audiovisuales y medios de comunicación", "Artes (Otros estudios)", "Humanidades", "Lenguas", "Economía", "Psicología", "Ciencias sociales y del comportamiento (Otros estudios)", "Periodismo y documentación", "Dirección y administración", "Negocios y administración (Otros estudios)", "Derecho", "Ciencias de la vida", "Medio ambiente", "Ciencias químicas, físicas y geológicas", "Matemáticas y estadística", "Informática", "Ingeniería y profesiones afines", "Industria manufacturera y producción", "Arquitectura y construcción", "Agricultura y ganadería", "Silvicultura", "Veterinaria", "Medicina", "Enfermería", "Salud (Otros estudios)", "Servicios sociales", "Actividades físicas y deportivas", "Viajes, turismo y ocio", "Servicios (Otros estudios)", "NS/NC")
 
 df$AMBITO <- factor(df$AMBITO, levels=codi_amb, labels=desc_amb) # NA's = 9999
+
+# Añadir la columna Rama !!!!!!
 
 codi_tipu <- c("1", "2", "3", "4")
 desc_tipu <- c("Universidad Pública presencial", "Universidad Pública a distancia", "Universidad Privada presencial", "Universidad Privada a distancia")
