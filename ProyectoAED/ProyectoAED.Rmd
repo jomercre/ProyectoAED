@@ -39,9 +39,15 @@ output:
 En este apartado vamos a proceder a importar el archivo de datos con el que vamos a trabajar, el cual pertenece al INE (Insituto Nacional de Estadística) y trata sobre la inserción laboral de las personas con estudios universitarios o superiores.
 
 
-Importamos los datos:
+Importamos las librerías que vamos a utilizar:
 ```{r}
 library(readr)
+library(dplyr)
+```
+
+
+Importamos los datos:
+```{r}
 df_raw <- read_delim("./data/EILU_GRAD_2019.csv", 
     delim = "\t", escape_double = FALSE, 
     trim_ws = TRUE)
@@ -64,7 +70,7 @@ df$EDAD <- as.numeric(df$EDAD)
 
 codi <- c("011101", "011201", "011301", "011401", "011901", "021101", "021201", "021301", "021302", "021401", "021502", "022201", "022202", "022301", "022901", "023101", "023102", "023103", "023104", "023201", "023202", "023901", "031101", "031201", "031202", "031301", "031401", "031402", "031404", "031406", "032101", "032102", "032201", "041201", "041202", "041301", "041302", "041303", "041401", "041402", "041403", "041601", "042101", "051101", "051201", "051202", "051901", "052101", "053101", "053201", "053202", "053203", "053301", "054101", "054201", "061301", "061901", "071101", "071301", "071302", "071401", "071402", "071403", "071404", "071405", "071501", "071502", "071503", "071601", "071603", "071901", "072101", "072102", "072201", "072401", "073101", "073102", "073201", "073202", "081102", "081103", "081201", "082101", "084101", "091101", "091201", "091301", "091401", "091402", "091501", "091502", "091503", "091504", "091505", "091601", "092301", "101401", "101501", "104101", "104103", "109999")
 
-  descrip <- c("Pedagogía", "Educación infantil", "Educación primaria", "Otros maestros", "Educación social", "Audiovisual, imagen y multimedia", "Diseño", "Bellas artes", "Historia del arte", "Conservación y restauración", "Música y Artes escénicas", "Arqueología", "Historia", "Filosofía", "Humanidades", "Lengua inglesa", "Lenguas clásicas", "Otras lenguas extranjeras", "Traducción e interpretación", "Lenguas y dialectos españoles", "Literatura", "Lenguas modernas y aplicadas", "Economía", "Política y gestión pública", "Relaciones internacionales", "Psicología", "Antropología social y cultural y Estudios y gestión de la cultura", "Criminología", "Geografía", "Sociología e Igualdad de género", "Comunicación", "Periodismo", "Información y documentación", "Financiera y actuarial", "Finanzas y contabilidad", "Administración y empresa", "Ciencias del trabajo", "Gestión y administración pública", "Marketing", "Protocolo y eventos", "Publicidad y relaciones públicas", "Comercio", "Derecho", "Biología", "Bioquímica", "Biotecnología", "Biomedicina", "Ciencias ambientales", "Química", "Ciencias del mar", "Geografía y ordenación del territorio", "Geología", "Física", "Matemáticas", "Estadística", "Desarrollo de software y de aplicaciones e Ingeniería multimedia", "Informática", "Ingeniería química industrial e Ingeniería medioambiental", "Ingeniería de la energía", "Ingeniería eléctrica", "Ingeniería de computadores", "Ingeniería de sonido e imagen", "Ingeniería de telecomunicación", "Ingeniería electrónica industrial y automática", "Ingeniería en electrónica", "Ingeniería en diseño industrial y desarrollo del producto", "Ingeniería en tecnologías industriales", "Ingeniería mecánica", "Ingeniería aeronáutica", "Ingeniería naval y oceánica", "Ingeniería de organización industrial y Nanotecnología", "Ciencia y tecnología de los alimentos e Ingeniería alimentaria", "Enología", "Ingeniería de materiales e Ingeniería textil", "Ingeniería de minas y energía", "Arquitectura y Urbanismo y paisajismo", "Ingeniería geomática, topografía y cartografía", "Arquitectura técnica", "Ingeniería civil", "Ingeniería agraria y agroalimentaria", "Ingeniería agrícola, agropecuaria y medio rural", "Ingeniería horticultura y jardinería", "Ingeniería forestal y montes", "Veterinaria", "Odontología", "Medicina", "Enfermería", "Ingeniería biomédica y de la salud", "Óptica y optometría", "Fisioterapia", "Logopedia", "Nutrición humana y dietética", "Podología", "Terapia ocupacional", "Farmacia", "Trabajo social", "Actividad física y del deporte", "Turismo", "Náutica y transporte marítimo", "Servicio de transporte terrestre y Servicio de transporte aéreo", "Servicios (otros estudios)")
+descrip <- c("Pedagogía", "Educación infantil", "Educación primaria", "Otros maestros", "Educación social", "Audiovisual, imagen y multimedia", "Diseño", "Bellas artes", "Historia del arte", "Conservación y restauración", "Música y Artes escénicas", "Arqueología", "Historia", "Filosofía", "Humanidades", "Lengua inglesa", "Lenguas clásicas", "Otras lenguas extranjeras", "Traducción e interpretación", "Lenguas y dialectos españoles", "Literatura", "Lenguas modernas y aplicadas", "Economía", "Política y gestión pública", "Relaciones internacionales", "Psicología", "Antropología social y cultural y Estudios y gestión de la cultura", "Criminología", "Geografía", "Sociología e Igualdad de género", "Comunicación", "Periodismo", "Información y documentación", "Financiera y actuarial", "Finanzas y contabilidad", "Administración y empresa", "Ciencias del trabajo", "Gestión y administración pública", "Marketing", "Protocolo y eventos", "Publicidad y relaciones públicas", "Comercio", "Derecho", "Biología", "Bioquímica", "Biotecnología", "Biomedicina", "Ciencias ambientales", "Química", "Ciencias del mar", "Geografía y ordenación del territorio", "Geología", "Física", "Matemáticas", "Estadística", "Desarrollo de software y de aplicaciones e Ingeniería multimedia", "Informática", "Ingeniería química industrial e Ingeniería medioambiental", "Ingeniería de la energía", "Ingeniería eléctrica", "Ingeniería de computadores", "Ingeniería de sonido e imagen", "Ingeniería de telecomunicación", "Ingeniería electrónica industrial y automática", "Ingeniería en electrónica", "Ingeniería en diseño industrial y desarrollo del producto", "Ingeniería en tecnologías industriales", "Ingeniería mecánica", "Ingeniería aeronáutica", "Ingeniería naval y oceánica", "Ingeniería de organización industrial y Nanotecnología", "Ciencia y tecnología de los alimentos e Ingeniería alimentaria", "Enología", "Ingeniería de materiales e Ingeniería textil", "Ingeniería de minas y energía", "Arquitectura y Urbanismo y paisajismo", "Ingeniería geomática, topografía y cartografía", "Arquitectura técnica", "Ingeniería civil", "Ingeniería agraria y agroalimentaria", "Ingeniería agrícola, agropecuaria y medio rural", "Ingeniería horticultura y jardinería", "Ingeniería forestal y montes", "Veterinaria", "Odontología", "Medicina", "Enfermería", "Ingeniería biomédica y de la salud", "Óptica y optometría", "Fisioterapia", "Logopedia", "Nutrición humana y dietética", "Podología", "Terapia ocupacional", "Farmacia", "Trabajo social", "Actividad física y del deporte", "Turismo", "Náutica y transporte marítimo", "Servicio de transporte terrestre y Servicio de transporte aéreo", "Servicios (otros estudios)")
 
 df$TITU <- factor(df$TITU, levels=codi, labels=descrip) # NA's = 109999
 
@@ -73,8 +79,13 @@ desc_amb <- c("Formación de docentes de enseñanza infantil", "Formación de do
 
 df$AMBITO <- factor(df$AMBITO, levels=codi_amb, labels=desc_amb) # NA's = 9999
 
+codi_tipu <- c("1", "2", "3", "4")
+desc_tipu <- c("Universidad Pública presencial", "Universidad Pública a distancia", "Universidad Privada presencial", "Universidad Privada a distancia")
+
+df$T_UNIV <- factor(df$T_UNIV, levels=codi_tipu, labels=desc_tipu) # NA's = 9
+
 codi_idi <- c("0", "1", "2", "3", "4", "5", "9")
-desc_idi <- c("Ninguno", "1", "2", "3", "4", "5 o más", "NS/NC")
+desc_idi <- c("0", "1", "2", "3", "4", "5 o más", "NS/NC")
 
 df$IDIOMAS <- factor(df$IDIOMAS, levels=codi_idi, labels=desc_idi) # NA's = 9
 
@@ -94,7 +105,30 @@ desc_tiempo1 <- c("Continuó al menos 6 meses más en el trabajo que tenía", "M
 df$HATR_E11<- factor(df$HATR_E11, levels=codi_tiempo1, labels=desc_tiempo1)
 ```
 
-Seguidamente, nos disponemos a analizar las variables que comienzan por EST, estas poseen información del tipo de estudios que ha realizado y del tipo de cada estudio. Nuestra intención es utilizar dicha información para obtener la cantidad de grados, másteres y carreras que tiene cada entrevistado y además obtener una columna en la que se observe el ámbito del estudio de más nivel que tenga. Para ello vamos a utilizar la librería __dplyr__ en conjunto con las funciones 'mutate' y 'pipe'.
+Antes de crear la columna con la rama del último estudio necesitamos adaptar las columnas EST2_SA para que se encuentren en el mismo formato que las de tipo rama. Para ello debemos asociar manualmente los diferentes ámbitos a una rama dada, en nuestro caso hemos realizado la siguiente asociación:
+
+
+Seguidamente, nos disponemos a analizar las variables que comienzan por EST, estas poseen información del tipo de estudios que ha realizado y del tipo de cada estudio. Nuestra intención es utilizar dicha información para obtener la cantidad de grados, másteres y carreras que tiene cada entrevistado y además obtener una columna en la que se observe el ámbito del estudio de más nivel que tenga. Para ello vamos a utilizar la librería __dplyr__ en conjunto con las funciones 'mutate' y 'pipe'. Asumimos que los NA significa que no poseen ese estudio. Podríamos ignorar muchas de las columnas porqué hay muy poca gente con 3 grados o 3 máster, peró aún así intentamos mantener los máximos datos posibles
+```{r}
+COL_MIR <- 3
+
+df <- df %>% 
+  mutate(EST_UAMB = ifelse(!is.na(EST_B21), EST_B21, 
+    ifelse(!is.na(EST2_SA), COL_MIR, 
+      ifelse(!is.na(EST_B17_M3), EST_B17_M3,
+        ifelse(!is.na(EST_B17_M2), EST_B17_M2,
+          ifelse(!is.na(EST_B17_M1), EST_B17_M1,
+            ifelse(!is.na(EST_B13_AMB3), EST_B13_AMB3, 
+              ifelse(!is.na(EST_B13_AMB2), EST_B13_AMB2, 
+                EST_B13_AMB1))))))))
+```
+
+Comparamos la ganacia de datos al realizar el anterior proceso en comparación de si solo utilizaramos el ámbito del grado realizado.
+```{r}
+cat('La columna EST_B13_AMB1 contiene', sum(is.na(df$EST_B13_AMB1)), 'datos no válidos')
+cat('La columna EST_UAMB contiene', sum(is.na(df$EST_UAMB)), 'datos no válidos')
+```
+Hemos obtenido una ganancia de unos 14 datos útiles, lo cual puede ser clave para realizar estadística con los datos.
 
 
 
