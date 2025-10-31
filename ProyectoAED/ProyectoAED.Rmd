@@ -51,9 +51,50 @@ Seleccionamos las variables de interés:
 ```{r}
 var <- c('IDENT','SEXO','EDAD','TITU','AMBITO','T_UNIV','EST_B12','EST_B16',
          'EST_B13_AMB1','EST_B13_AMB2','EST_B13_AMB3','EST_B17_M1','EST_B17_M2',
-         'EST_B17_M3','EST_B21','EST2_SA','EST2_NC','IDIOMAS','SIT_PRO','TR_SUELDO',
+         'EST_B17_M3','EST_B21','EST2_SA','EST2_NC','IDIOMAS','TRBPRN1','TR_SUELDO',
          'HATR_E11')
 
 df <- df_raw[var]
 ```
+
+Asignamos a cada variable su tipo, exceptuando a las variables EST_B..., ya qu estas las fusionaremos más adelante como una matriz de tipo factor.
+```{r}
+df$SEXO <- factor(df$SEXO, levels = c(1,2), labels = c('Hombre', 'Mujer'))
+df$EDAD <- as.numeric(df$EDAD)
+
+codi <- c("011101", "011201", "011301", "011401", "011901", "021101", "021201", "021301", "021302", "021401", "021502", "022201", "022202", "022301", "022901", "023101", "023102", "023103", "023104", "023201", "023202", "023901", "031101", "031201", "031202", "031301", "031401", "031402", "031404", "031406", "032101", "032102", "032201", "041201", "041202", "041301", "041302", "041303", "041401", "041402", "041403", "041601", "042101", "051101", "051201", "051202", "051901", "052101", "053101", "053201", "053202", "053203", "053301", "054101", "054201", "061301", "061901", "071101", "071301", "071302", "071401", "071402", "071403", "071404", "071405", "071501", "071502", "071503", "071601", "071603", "071901", "072101", "072102", "072201", "072401", "073101", "073102", "073201", "073202", "081102", "081103", "081201", "082101", "084101", "091101", "091201", "091301", "091401", "091402", "091501", "091502", "091503", "091504", "091505", "091601", "092301", "101401", "101501", "104101", "104103", "109999")
+
+  descrip <- c("Pedagogía", "Educación infantil", "Educación primaria", "Otros maestros", "Educación social", "Audiovisual, imagen y multimedia", "Diseño", "Bellas artes", "Historia del arte", "Conservación y restauración", "Música y Artes escénicas", "Arqueología", "Historia", "Filosofía", "Humanidades", "Lengua inglesa", "Lenguas clásicas", "Otras lenguas extranjeras", "Traducción e interpretación", "Lenguas y dialectos españoles", "Literatura", "Lenguas modernas y aplicadas", "Economía", "Política y gestión pública", "Relaciones internacionales", "Psicología", "Antropología social y cultural y Estudios y gestión de la cultura", "Criminología", "Geografía", "Sociología e Igualdad de género", "Comunicación", "Periodismo", "Información y documentación", "Financiera y actuarial", "Finanzas y contabilidad", "Administración y empresa", "Ciencias del trabajo", "Gestión y administración pública", "Marketing", "Protocolo y eventos", "Publicidad y relaciones públicas", "Comercio", "Derecho", "Biología", "Bioquímica", "Biotecnología", "Biomedicina", "Ciencias ambientales", "Química", "Ciencias del mar", "Geografía y ordenación del territorio", "Geología", "Física", "Matemáticas", "Estadística", "Desarrollo de software y de aplicaciones e Ingeniería multimedia", "Informática", "Ingeniería química industrial e Ingeniería medioambiental", "Ingeniería de la energía", "Ingeniería eléctrica", "Ingeniería de computadores", "Ingeniería de sonido e imagen", "Ingeniería de telecomunicación", "Ingeniería electrónica industrial y automática", "Ingeniería en electrónica", "Ingeniería en diseño industrial y desarrollo del producto", "Ingeniería en tecnologías industriales", "Ingeniería mecánica", "Ingeniería aeronáutica", "Ingeniería naval y oceánica", "Ingeniería de organización industrial y Nanotecnología", "Ciencia y tecnología de los alimentos e Ingeniería alimentaria", "Enología", "Ingeniería de materiales e Ingeniería textil", "Ingeniería de minas y energía", "Arquitectura y Urbanismo y paisajismo", "Ingeniería geomática, topografía y cartografía", "Arquitectura técnica", "Ingeniería civil", "Ingeniería agraria y agroalimentaria", "Ingeniería agrícola, agropecuaria y medio rural", "Ingeniería horticultura y jardinería", "Ingeniería forestal y montes", "Veterinaria", "Odontología", "Medicina", "Enfermería", "Ingeniería biomédica y de la salud", "Óptica y optometría", "Fisioterapia", "Logopedia", "Nutrición humana y dietética", "Podología", "Terapia ocupacional", "Farmacia", "Trabajo social", "Actividad física y del deporte", "Turismo", "Náutica y transporte marítimo", "Servicio de transporte terrestre y Servicio de transporte aéreo", "Servicios (otros estudios)")
+
+df$TITU <- factor(df$TITU, levels=codi, labels=descrip) # NA's = 109999
+
+codi_amb <- c("0112", "0113", "011", "0211", "021", "022", "023", "0311", "0313", "031", "032", "0413", "041", "042", "051", "052", "053", "054", "061", "071", "072", "073", "081", "082", "084", "0912", "0913", "091", "092", "1014", "1015", "109", "9999")
+desc_amb <- c("Formación de docentes de enseñanza infantil", "Formación de docentes de enseñanza primaria", "Educación (Otros estudios)", "Técnicas audiovisuales y medios de comunicación", "Artes (Otros estudios)", "Humanidades", "Lenguas", "Economía", "Psicología", "Ciencias sociales y del comportamiento (Otros estudios)", "Periodismo y documentación", "Dirección y administración", "Negocios y administración (Otros estudios)", "Derecho", "Ciencias de la vida", "Medio ambiente", "Ciencias químicas, físicas y geológicas", "Matemáticas y estadística", "Informática", "Ingeniería y profesiones afines", "Industria manufacturera y producción", "Arquitectura y construcción", "Agricultura y ganadería", "Silvicultura", "Veterinaria", "Medicina", "Enfermería", "Salud (Otros estudios)", "Servicios sociales", "Actividades físicas y deportivas", "Viajes, turismo y ocio", "Servicios (Otros estudios)", "NS/NC")
+
+df$AMBITO <- factor(df$AMBITO, levels=codi_amb, labels=desc_amb) # NA's = 9999
+
+codi_idi <- c("0", "1", "2", "3", "4", "5", "9")
+desc_idi <- c("Ninguno", "1", "2", "3", "4", "5 o más", "NS/NC")
+
+df$IDIOMAS <- factor(df$IDIOMAS, levels=codi_idi, labels=desc_idi) # NA's = 9
+
+codi_empl <- c("1", "2", "3")
+desc_empl <- c("Trabajando", "En desempleo", "Inactivo")
+
+df$TRBPRN1 <- factor(df$TRBPRN1, levels=codi_empl, labels=desc_empl)
+
+codi_sueldo <- c("1", "2", "3", "4", "5", "6", "7", "9")
+desc_sueldo <- c("Menos de 700 euros", "De 700 a 999 euros", "De 1.000 a 1.499 euros", "De 1.500 a 1.999 euros", "De 2.000 a 2.499 euros", "De 2.500 a 2.999 euros", "De 3.000 euros en adelante", "NS/NC")
+
+df$TR_SUELDO <- factor(df$TR_SUELDO, levels=codi_sueldo, labels=desc_sueldo)
+
+codi_tiempo1 <- c("0", "1", "2", "3", "4", "5", "6", "9")
+desc_tiempo1 <- c("Continuó al menos 6 meses más en el trabajo que tenía", "Menos de tres meses", "De 3 a 6 meses", "De 6 meses a 1 año", "De 1 año a año y medio", "De 1 año y medio a 2 años", "2 ó más años", "NS/NC")
+
+df$HATR_E11<- factor(df$HATR_E11, levels=codi_tiempo1, labels=desc_tiempo1)
+```
+
+Seguidamente, nos disponemos a analizar las variables que comienzan por EST, estas poseen información del tipo de estudios que ha realizado y del tipo de cada estudio. Nuestra intención es utilizar dicha información para obtener la cantidad de grados, másteres y carreras que tiene cada entrevistado y además obtener una columna en la que se observe el ámbito del estudio de más nivel que tenga. Para ello vamos a utilizar la librería __dplyr__ en conjunto con las funciones 'mutate' y 'pipe'.
+
+
 
