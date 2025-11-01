@@ -34,6 +34,10 @@ output:
     extra_dependencies: longtable
 ---
 
+# Aclaración de los datos
+
+En la carpeta de datos original se pueden observar dos archivos completamente diferentes, el archivo que se va a proceder a analizar es el de la gente que se graduó en una universidad española durante el curso 2013-2014 (EILU_GRAD_2019.csv). El otro archivo corresponde a la gente que obtuvo un máster en el curso 2013-2014, por lo que no será objeto de nuestro estudio. Habiendo aclarado ya el conjunto de datos a utilizar podemos proceder a analizarlo, limpiarlo y estudiarlo.
+
 # Importación de los datos
 
 En este apartado vamos a proceder a importar el archivo de datos con el que vamos a trabajar, el cual pertenece al INE (Insituto Nacional de Estadística) y trata sobre la inserción laboral de las personas con estudios universitarios o superiores.
@@ -53,8 +57,9 @@ df_raw <- read_delim("./data/EILU_GRAD_2019.csv",
     delim = "\t", escape_double = FALSE, 
     trim_ws = TRUE)
 ```
+# Preparación de los datos
 
-Seleccionamos las variables de interés:
+En primer lugar, seleccionaremos las variables de interés:
 ```{r}
 var <- c('IDENT','SEXO','EDAD','TITU','RAMA','AMBITO','T_UNIV','EST_B12','EST_B16',
          'EST_B13_AMB1','EST_B13_AMB2','EST_B13_AMB3','EST_B17_M1','EST_B17_M2',
