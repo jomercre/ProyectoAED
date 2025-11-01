@@ -172,6 +172,17 @@ df_tra <- df %>% filter(TRBPRN1=='Trabajando')
 
 # Gráficas
 
-Variación del tiempo transcurrido hasta que empezo a trabajar según su universidad.
+Estadísticas del tipo de universidad.
+```{r}
+ggplot(data=df, aes(x = T_UNIV)) + geom_bar() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10))
+```
+Como podemos observar la gran mayoría de la gente ha estudiado de forma presencial en una universidad pública por lo que utilizar el factor de tipo de universidad para estudios siguientes puede no ser estadísticamente correcto, ya que hay oversampling.
 
+Variación del tiempo transcurrido hasta que empezo a trabajar según su universidad.
+```{r}
+ggplot(data=df, aes(x = HATR_E11)) + geom_bar() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10)) +
+  facet_wrap(~ T_UNIV)
+```
 
