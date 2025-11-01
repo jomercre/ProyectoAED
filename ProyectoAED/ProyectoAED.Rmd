@@ -63,7 +63,7 @@ En primer lugar, seleccionaremos las variables de interés:
 ```{r}
 var <- c('IDENT','SEXO','EDAD','TITU','RAMA','AMBITO','T_UNIV','EST_B12','EST_B16',
          'EST_B13_AMB1','EST_B13_AMB2','EST_B13_AMB3','EST_B17_M1','EST_B17_M2',
-         'EST_B17_M3','EST_B21','EST2_SA','EST2_NC','IDIOMAS','TRBPRN1','TR_SUELDO',
+         'EST_B17_M3','EST_B21','EST2_SA','IDIOMAS','TRBPRN1','TR_SUELDO',
          'HATR_E11')
 
 df <- df_raw[var]
@@ -100,7 +100,7 @@ desc_idi <- c("0", "1", "2", "3", "4", "5 o más", "NS/NC")
 
 df$IDIOMAS <- factor(df$IDIOMAS, levels=codi_idi, labels=desc_idi) # NA's = 9
 
-codi_empl <- c("1", "2", "3")
+codi_empl <- c(1, 2, 3)
 desc_empl <- c("Trabajando", "En desempleo", "Inactivo")
 
 df$TRBPRN1 <- factor(df$TRBPRN1, levels=codi_empl, labels=desc_empl)
@@ -144,6 +144,13 @@ Podemos comprobar ahora cuantas personas se han cambiado de rama en comparación
 ```{r}
 sum(sum(df$URAMA != df$RAMA))
 ```
+Una vez se ha obtenido la columna URAMA podemos eliminar del dataframe todas aquellas columnas que no nos son relevantes para graficar.
+```{r}
+df <- df %>% select(-c('EST_B13_AMB1','EST_B13_AMB2','EST_B13_AMB3','EST_B17_M1',
+                       'EST_B17_M2','EST_B17_M3','EST_B21','EST2_SA'))
+```
+
+
 Graficamos ahora dos gráficos de barras comparando la columna con la rama de la primera titulación con la rama del último estudio realizado.
 ```{r}
 ggplot(data=df, aes(x = RAMA)) + geom_bar() +
@@ -153,7 +160,18 @@ ggplot(data=df, aes(x = URAMA)) + geom_bar() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10)) +
   scale_y_continuous(limits = c(0, 16000))
 ```
+Graficamos en un gráfico de barras los estados laborales de las personas analizadas.
+```{r}
+ggplot(data=df, aes(x = TRBPRN1)) + geom_bar() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10))
+```
+De forma auxiliar generamos un dataframe en el que solo se encuentre la población de la encuesta que se encuentra trabajando.
+```{r}
+df_tra <- df %>% filter(TRBPRN1=='Trabajando')
+```
 
+# Gráficas
 
+Variación del tiempo transcurrido hasta que empezo a trabajar según su universidad.
 
 
