@@ -48,6 +48,7 @@ Importamos las librerías que vamos a utilizar:
 library(readr)
 library(dplyr)
 library(ggplot2)
+library(ggmosaic)
 ```
 
 
@@ -111,7 +112,7 @@ desc_sueldo <- c("Menos de 700 euros", "De 700 a 999 euros", "De 1.000 a 1.499 e
 df$TR_SUELDO <- factor(df$TR_SUELDO, levels=codi_sueldo, labels=desc_sueldo)
 
 codi_tiempo1 <- c("0", "1", "2", "3", "4", "5", "6", "9")
-desc_tiempo1 <- c("Continuó al menos 6 meses más en el trabajo que tenía", "Menos de tres meses", "De 3 a 6 meses", "De 6 meses a 1 año", "De 1 año a año y medio", "De 1 año y medio a 2 años", "2 ó más años", "NS/NC")
+desc_tiempo1 <- c("Continuó al menos 6 meses más en el trabajo que tenía", "Menos de tres meses", "De 3 a 6 meses", "De 6 meses a 1 año", "De 1 año a año y medio", "De 1 año y medio a 2 años", "2 o más años", "NS/NC")
 
 df$HATR_E11<- factor(df$HATR_E11, levels=codi_tiempo1, labels=desc_tiempo1)
 ```
@@ -181,8 +182,45 @@ Como podemos observar la gran mayoría de la gente ha estudiado de forma presenc
 
 Variación del tiempo transcurrido hasta que empezo a trabajar según su universidad.
 ```{r}
-ggplot(data=df, aes(x = HATR_E11)) + geom_bar() +
+df_plot <- df %>% filter(!is.na(HATR_E11)) %>% filter(HATR_E11!='NS/NC')
+
+ggplot(data=df_plot, aes(x = HATR_E11)) + geom_bar() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10)) +
   facet_wrap(~ T_UNIV)
 ```
+Variación del tiempo transcurrido hasta que empezo a trabajar según su rama.
+```{r}
+# Quitamos los registros NA y graficamos
+
+df_plot <- df %>% filter(!is.na(HATR_E11)) %>% filter(HATR_E11!='NS/NC')
+
+ggplot(data=df_plot, aes(x = HATR_E11)) + geom_bar() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 5)) +
+  facet_wrap(~ URAMA)
+```
+Situación laboral separando por el tipo de rama del estudio más elevado.
+
+```{r}
+# Quitamos los registros NA y graficamos
+
+df_plot <- df %>% filter(!is.na(TRBPRN1))
+
+ggplot(df_plot, aes(x= TRBPRN1)) + geom_bar() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 5)) +
+  facet_wrap(~URAMA)
+```
+
+Número de idiomas frente a situación laboral.
+```{r}
+# Quitamos los registros NA y graficamos
+
+df_plot <- df %>% filter(!is.na(TRBPRN1))
+
+ggplot(df_plot) + geom_mosaic(aes(x= product(TRBPRN1,IDIOMAS), fill = IDIOMAS))
+```
+
+
+
+
+
 
