@@ -43,6 +43,7 @@ Importamos las librerías que vamos a utilizar:
 ```{r}
 library(readr)
 library(dplyr)
+library(ggplot2)
 ```
 
 
@@ -79,9 +80,12 @@ desc_amb <- c("Formación de docentes de enseñanza infantil", "Formación de do
 
 df$AMBITO <- factor(df$AMBITO, levels=codi_amb, labels=desc_amb) # NA's = 9999
 
-# Añadir la columna Rama !!!!!!
+codi_rama <- c(1, 2, 3, 4, 5)
+desc_rama <- c("Artes y humanidades", "Ciencias", "Ciencias sociales y jurídicas", "Ingeniería y arquitectura", "Ciencias de la salud")
 
-codi_tipu <- c("1", "2", "3", "4")
+df$RAMA <- factor(df$RAMA, levels=codi_rama, labels=desc_rama) # NA's = 9999
+
+codi_tipu <- c(1, 2, 3, 4)
 desc_tipu <- c("Universidad Pública presencial", "Universidad Pública a distancia", "Universidad Privada presencial", "Universidad Privada a distancia")
 
 df$T_UNIV <- factor(df$T_UNIV, levels=codi_tipu, labels=desc_tipu) # NA's = 9
@@ -107,30 +111,44 @@ desc_tiempo1 <- c("Continuó al menos 6 meses más en el trabajo que tenía", "M
 df$HATR_E11<- factor(df$HATR_E11, levels=codi_tiempo1, labels=desc_tiempo1)
 ```
 
-Antes de crear la columna con la rama del último estudio necesitamos adaptar las columnas EST2_SA para que se encuentren en el mismo formato que las de tipo rama. Para ello debemos asociar manualmente los diferentes ámbitos a una rama dada, en nuestro caso hemos realizado la siguiente asociación:
+Observamos la cantidad de respuestas vacías en las columnas sobre el MIR, el ámbito de estudio de la primera carrera y la rama de la carrera.
+```{r}
+sum(is.na(df$EST_B13_AMB1))
 
+sum(is.na(df$EST2_SA))
+
+sum(is.na(df$RAMA))
+```
+Descartamos la columna del MIR, ya que todo aquel que se encuentre realizándolo o ya lo haya realizado necesariamente debe haver realizado una carrera o máster de la rama de ciencias de la salut. Por tanto, no es redundante conocer esa información para crear la columna con la rama del último estudio realizado.
 
 Seguidamente, nos disponemos a analizar las variables que comienzan por EST, estas poseen información del tipo de estudios que ha realizado y del tipo de cada estudio. Nuestra intención es utilizar dicha información para obtener la cantidad de grados, másteres y carreras que tiene cada entrevistado y además obtener una columna en la que se observe el ámbito del estudio de más nivel que tenga. Para ello vamos a utilizar la librería __dplyr__ en conjunto con las funciones 'mutate' y 'pipe'. Asumimos que los NA significa que no poseen ese estudio. Podríamos ignorar muchas de las columnas porqué hay muy poca gente con 3 grados o 3 máster, peró aún así intentamos mantener los máximos datos posibles
 ```{r}
-COL_MIR <- 3
-
 df <- df %>% 
-  mutate(EST_UAMB = ifelse(!is.na(EST_B21), EST_B21, 
-    ifelse(!is.na(EST2_SA), COL_MIR, 
-      ifelse(!is.na(EST_B17_M3), EST_B17_M3,
+  mutate(URAMA = ifelse(!is.na(EST_B21), EST_B21, 
+    ifelse(!is.na(EST_B17_M3), EST_B17_M3,
         ifelse(!is.na(EST_B17_M2), EST_B17_M2,
           ifelse(!is.na(EST_B17_M1), EST_B17_M1,
-            ifelse(!is.na(EST_B13_AMB3), EST_B13_AMB3, 
-              ifelse(!is.na(EST_B13_AMB2), EST_B13_AMB2, 
-                EST_B13_AMB1))))))))
+                 RAMA)))))
+
+codi_urama <- c(1, 2, 3, 4, 5)
+desc_urama <- c("Artes y humanidades", "Ciencias", "Ciencias sociales y jurídicas", "Ingeniería y arquitectura", "Ciencias de la salud")
+
+df$URAMA <- factor(df$URAMA, levels=codi_urama, labels=desc_urama)
+```
+Podemos comprobar ahora cuantas personas se han cambiado de rama en comparación con la carrera realizada.
+```{r}
+sum(sum(df$URAMA != df$RAMA))
+```
+Graficamos ahora dos gráficos de barras comparando la columna con la rama de la primera titulación con la rama del último estudio realizado.
+```{r}
+ggplot(data=df, aes(x = RAMA)) + geom_bar() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10)) + 
+  scale_y_continuous(limits = c(0, 16000))
+ggplot(data=df, aes(x = URAMA)) + geom_bar() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10)) +
+  scale_y_continuous(limits = c(0, 16000))
 ```
 
-Comparamos la ganacia de datos al realizar el anterior proceso en comparación de si solo utilizaramos el ámbito del grado realizado.
-```{r}
-cat('La columna EST_B13_AMB1 contiene', sum(is.na(df$EST_B13_AMB1)), 'datos no válidos')
-cat('La columna EST_UAMB contiene', sum(is.na(df$EST_UAMB)), 'datos no válidos')
-```
-Hemos obtenido una ganancia de unos 14 datos útiles, lo cual puede ser clave para realizar estadística con los datos.
 
 
 
