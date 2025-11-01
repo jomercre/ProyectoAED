@@ -48,7 +48,7 @@ Importamos las librerías que vamos a utilizar:
 library(readr)
 library(dplyr)
 library(ggplot2)
-library(ggmosaic)
+library(vcd)
 ```
 
 
@@ -214,11 +214,19 @@ Número de idiomas frente a situación laboral.
 ```{r}
 # Quitamos los registros NA y graficamos
 
-df_plot <- df %>% filter(!is.na(TRBPRN1))
+df_plot <- df %>% filter(!is.na(TRBPRN1)) %>% filter(IDIOMAS != 'NS/NC')
 
-ggplot(df_plot) + geom_mosaic(aes(x= product(TRBPRN1,IDIOMAS), fill = IDIOMAS))
+ggplot(df_plot, aes(x=IDIOMAS)) + geom_bar() + facet_wrap(~TRBPRN1) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10))
 ```
 
+Rama del estudio más elevado en función de la situación laboral.
+```{r}
+df_plot <- df %>% filter(!is.na(TRBPRN1))
+
+ggplot(df_plot, aes(x=URAMA)) + geom_bar() + facet_wrap(~TRBPRN1) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10))
+```
 
 
 
