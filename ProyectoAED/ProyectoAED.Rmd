@@ -175,6 +175,12 @@ ggplot(data=df, aes(x = URAMA)) + geom_bar(aes(fill=SEXO)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10)) +
   scale_y_continuous(limits = c(0, 16000))
 ```
+Ahora lo hacemos con un diagrama de mosaico.
+```{r}
+tc <- table(df$RAMA,df$SEXO)
+mosaicplot(tc,color=c("#F8766D", "#00BFC4"))
+```
+
 Graficamos en un gráfico de barras los estados laborales de las personas analizadas.
 ```{r}
 ggplot(data=df, aes(x = TRBPRN1)) + geom_bar(aes(fill=T_UNIV)) +
