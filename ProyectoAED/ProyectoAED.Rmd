@@ -231,7 +231,7 @@ Número de idiomas frente a situación laboral.
 ```{r}
 # Quitamos los registros NA y graficamos
 
-df_plot <- df %>% filter(!is.na(TRBPRN1))
+df_plot <- df %>% filter(!is.na(TRBPRN1),!is.na(IDIOMAS))
 
 ggplot(df_plot, aes(x=IDIOMAS)) + geom_bar(aes(fill=SEXO)) + facet_wrap(~TRBPRN1) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10))
