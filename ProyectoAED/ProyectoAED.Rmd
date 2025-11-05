@@ -191,6 +191,153 @@ De forma auxiliar generamos un dataframe en el que solo se encuentre la poblaci�
 df_tra <- df %>% filter(TRBPRN1=='Trabajando')
 ```
 
+Preparación de la variable TR_SUELDO, dado que esta variable presenta una cantidad elevada de datos faltantes además de una codificación que complica trabajar con los datos. 
+
+Antes de imputar es necesario verificar si podemos realizar imputación condicional obervando si hay relación entre las variables TR_SUELDO y RAMA. Para ello realizamos el test Chi-Cuadrado
+
+
+```{r}
+tabla <- table(df$RAMA, df$TR_SUELDO)
+print(tabla)
+
+chi_test <- chisq.test(tabla)
+print("RESULTADO TEST CHI-CUADRADO") 
+print(chi_test)
+```
+
+El resultado del test chi-cuadrado confirma que las variables están estadísticamente relacionadas y por ende pueden usarse para imputación condicional.
+
+El proceso que se seguirá es una imputación de los datos presentes en la variable:
+
+En primer lugar, se verifica que la variable RAMA se encuentre definida como un factor nominal y que T_SUELDO se establezca como un factor ordinal. A continuación, se realiza una exploración inicial para cuantificar el número total de valores faltantes (NA) y determinar su distribución por grupo de rama.
+
+Posteriormente, se procede con la imputación condicional, sustituyendo los valores faltantes de T_SUELDO por la mediana ordinal correspondiente al grupo definido por la variable RAMA, excluyendo los valores ausentes. Una vez completada esta etapa, la variable imputada se reconvierte en un factor con las etiquetas originales.
+
+Finalmente, se genera un gráfico de barras apiladas que representa las proporciones de los distintos rangos salariales por rama de estudio, utilizando los datos tras la imputación.
+
+
+```{r}
+
+# IMPUTACIÓN DE T_SUELDO SEGÚN RAMA DE ESTUDIO
+
+library(dplyr)
+library(ggplot2)
+
+
+# convertimos las variables a factores (TR_SUELDO y RAMA)
+
+df$RAMA <- factor(df$RAMA,
+                  levels = c("Artes y humanidades",
+                             "Ciencias",
+                             "Ciencias sociales y jurídicas",
+                             "Ingeniería y arquitectura",
+                             "Ciencias de la salud"))
+
+df$TR_SUELDO <- factor(df$TR_SUELDO,
+                      levels = c("Menos de 700 euros",
+                                 "De 700 a 999 euros",
+                                 "De 1.000 a 1.499 euros",
+                                 "De 1.500 a 1.999 euros",
+                                 "De 2.000 a 2.499 euros",
+                                 "De 2.500 a 2.999 euros",
+                                 "De 3.000 euros en adelante",
+                                 "NS/NC"),
+                      ordered = TRUE)
+
+
+#VERIFICAR DATOS FALTANTES
+
+cat("Número de valores faltantes en T_SUELDO:\n")
+sum(is.na(df$TR_SUELDO))
+
+cat("\nDistribución de NAs por rama:\n")
+table(df$RAMA, is.na(df$TR_SUELDO))
+
+
+# Imputacion por rama.
+# Convertimos TR_SUELDO a índice numérico ordenado para calcular la mediana de cada grupo
+df <- df %>%
+  group_by(RAMA) %>%
+  mutate(
+    TR_SUELDO = ifelse(
+      is.na(TR_SUELDO),
+      as.numeric(stats::median(as.numeric(TR_SUELDO), na.rm = TRUE)),
+      as.numeric(TR_SUELDO)
+    )
+  ) %>%
+  ungroup()
+
+# reconstruimos factor del suelkdo ordenado con etiquetas originales.
+df$TR_SUELDO <- factor(round(df$TR_SUELDO),
+                      levels = 1:8,
+                      labels = c("Menos de 700 euros",
+                                 "De 700 a 999 euros",
+                                 "De 1.000 a 1.499 euros",
+                                 "De 1.500 a 1.999 euros",
+                                 "De 2.000 a 2.499 euros",
+                                 "De 2.500 a 2.999 euros",
+                                 "De 3.000 euros en adelante",
+                                 "NS/NC"),
+                      ordered = TRUE)
+
+
+#VERIFICACION
+
+cat("\nValores faltantes después de la imputación:\n")
+sum(is.na(df$TR_SUELDO))
+
+cat("\nFrecuencia de niveles T_SUELDO:\n")
+print(summary(df$TR_SUELDO))
+
+
+# visualizamos las distribucione despues de la imputación.
+
+ggplot(df, aes(x = RAMA, fill = TR_SUELDO)) +
+  geom_bar(position = "fill") +
+  labs(
+    title = "Distribución de niveles salariales imputados por rama de estudio",
+    x = "Rama de estudio",
+    y = "Proporción dentro de cada rama",
+    fill = "Nivel salarial"
+  ) +
+  scale_fill_brewer(palette = "Blues") +
+  theme_minimal(base_size = 12) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+```
+La imputación condinional aplicada ha funcionado correctamente al imputar un total de 4527 datos faltantes usando la mediana.
+La categoría “1.000–1.499 euros” sigue siendo la más frecuente esto suele ser realista y consistente con distribuciones salariales típicas.
+El número de casos imputados (4 527) se ha redistribuido de forma coherente con la estructura de los datos.
+No hay picos o saltos anómalos en ninguna categoría, lo cual indica que la imputación no sesgó visiblemente la distribución.
+
+Obtenemos información sobre la mediana imputada por cada rama de estudio, lo cual corresponde con el nivel salarial típico que ha usado el algoritmo para imputar los datos faltantes.
+
+```{r}
+
+#MEDIANA IMPUTADA POR RAMA
+
+library(dplyr)
+
+medianas_por_rama <- df %>%
+  group_by(RAMA) %>%
+  summarise(
+    Mediana_Sueldo = levels(TR_SUELDO)[median(as.numeric(TR_SUELDO))],
+    n = n()
+  )
+
+print(medianas_por_rama)
+
+```
+
+
+La siguiente tabla muestra todas las ramas con valores salariales distribuidos tras la imputación.
+
+```{r}
+table(df$RAMA, df$TR_SUELDO, useNA = "ifany")
+
+```
+
+
 # Gráficas
 
 Estadísticas del tipo de universidad.
