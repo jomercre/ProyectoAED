@@ -392,6 +392,58 @@ ggplot(df_plot, aes(x=URAMA)) + geom_bar(aes(fill=SEXO)) + facet_wrap(~TRBPRN1) 
   theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10))
 ```
 
+Gráfica de la variación del sueldo según la rama de de estudio
+
+```{r}
+ggplot(df, aes(x = RAMA, fill = TR_SUELDO)) +
+  geom_bar(position = "fill") +
+  labs(
+    title = "Variación del sueldo según la rama de estudio",
+    x = "Rama de estudio",
+    y = "Proporción de cada nivel salarial",
+    fill = "Nivel salarial"
+  ) +
+  scale_fill_brewer(palette = "Blues") +
+  theme_minimal(base_size = 12) +
+  theme(axis.text.x = element_text(angle = 20, hjust = 1))
+
+```
+
+Gráfica de distribución de hombres y mujeres en cada rama de estudio
+
+```{r}
+ggplot(df, aes(x = RAMA, fill = SEXO)) +
+  geom_bar(position = "fill") +
+  labs(
+    title = "Distribución de mujeres y hombres por rama de estudio",
+    x = "Rama de estudio",
+    y = "Proporción",
+    fill = "Sexo"
+  ) +
+  scale_fill_manual(values = c("#F28E2B", "#4E79A7")) +
+  theme_minimal(base_size = 12) +
+  theme(axis.text.x = element_text(angle = 20, hjust = 1))
+
+```
+Gráfica de comparación salarial según sexo
+
+```{r}
+ggplot(df, aes(x = SEXO, fill = TR_SUELDO)) +
+  geom_bar(position = "fill") +
+  labs(
+    title = "Diferencia salarial según el sexo",
+    x = "Sexo",
+    y = "Proporción de niveles salariales",
+    fill = "Nivel salarial"
+  ) +
+  scale_fill_brewer(palette = "Purples") +
+  theme_minimal()
+
+```
+
+
+
+
 
 
 
