@@ -154,16 +154,16 @@ df <- df %>% select(-c('EST_B13_AMB1','EST_B13_AMB2','EST_B13_AMB3','EST_B17_M1'
 
 Graficamos ahora dos gráficos de barras comparando la columna con la rama de la primera titulación con la rama del último estudio realizado.
 ```{r}
-ggplot(data=df, aes(x = RAMA)) + geom_bar() +
+ggplot(data=df, aes(x = RAMA)) + geom_bar(aes(fill=SEXO)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10)) + 
   scale_y_continuous(limits = c(0, 16000))
-ggplot(data=df, aes(x = URAMA)) + geom_bar() +
+ggplot(data=df, aes(x = URAMA)) + geom_bar(aes(fill=SEXO)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10)) +
   scale_y_continuous(limits = c(0, 16000))
 ```
 Graficamos en un gráfico de barras los estados laborales de las personas analizadas.
 ```{r}
-ggplot(data=df, aes(x = TRBPRN1)) + geom_bar() +
+ggplot(data=df, aes(x = TRBPRN1)) + geom_bar(aes(fill=T_UNIV)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10))
 ```
 De forma auxiliar generamos un dataframe en el que solo se encuentre la población de la encuesta que se encuentra trabajando.
@@ -175,7 +175,7 @@ df_tra <- df %>% filter(TRBPRN1=='Trabajando')
 
 Estadísticas del tipo de universidad.
 ```{r}
-ggplot(data=df, aes(x = T_UNIV)) + geom_bar() +
+ggplot(data=df, aes(x = T_UNIV)) + geom_bar(aes(fill=SEXO)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10))
 ```
 Como podemos observar la gran mayoría de la gente ha estudiado de forma presencial en una universidad pública por lo que utilizar el factor de tipo de universidad para estudios siguientes puede no ser estadísticamente correcto, ya que hay oversampling.
@@ -184,9 +184,8 @@ Variación del tiempo transcurrido hasta que empezo a trabajar según su univers
 ```{r}
 df_plot <- df %>% filter(!is.na(HATR_E11)) %>% filter(HATR_E11!='NS/NC')
 
-ggplot(data=df_plot, aes(x = HATR_E11)) + geom_bar() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10)) +
-  facet_wrap(~ T_UNIV)
+ggplot(data=df_plot, aes(x = HATR_E11)) + geom_bar(aes(fill=T_UNIV)) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10))
 ```
 Variación del tiempo transcurrido hasta que empezo a trabajar según su rama.
 ```{r}
@@ -194,9 +193,8 @@ Variación del tiempo transcurrido hasta que empezo a trabajar según su rama.
 
 df_plot <- df %>% filter(!is.na(HATR_E11)) %>% filter(HATR_E11!='NS/NC')
 
-ggplot(data=df_plot, aes(x = HATR_E11)) + geom_bar() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 5)) +
-  facet_wrap(~ URAMA)
+ggplot(data=df_plot, aes(x = HATR_E11)) + geom_bar(aes(fill=URAMA)) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 5))
 ```
 Situación laboral separando por el tipo de rama del estudio más elevado.
 
@@ -205,9 +203,8 @@ Situación laboral separando por el tipo de rama del estudio más elevado.
 
 df_plot <- df %>% filter(!is.na(TRBPRN1))
 
-ggplot(df_plot, aes(x= TRBPRN1)) + geom_bar() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 5)) +
-  facet_wrap(~URAMA)
+ggplot(df_plot, aes(x= TRBPRN1)) + geom_bar(aes(fill=URAMA)) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 5))
 ```
 
 Número de idiomas frente a situación laboral.
@@ -216,7 +213,7 @@ Número de idiomas frente a situación laboral.
 
 df_plot <- df %>% filter(!is.na(TRBPRN1)) %>% filter(IDIOMAS != 'NS/NC')
 
-ggplot(df_plot, aes(x=IDIOMAS)) + geom_bar() + facet_wrap(~TRBPRN1) +
+ggplot(df_plot, aes(x=IDIOMAS)) + geom_bar(aes(fill=SEXO)) + facet_wrap(~TRBPRN1) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10))
 ```
 
@@ -224,7 +221,7 @@ Rama del estudio más elevado en función de la situación laboral.
 ```{r}
 df_plot <- df %>% filter(!is.na(TRBPRN1))
 
-ggplot(df_plot, aes(x=URAMA)) + geom_bar() + facet_wrap(~TRBPRN1) +
+ggplot(df_plot, aes(x=URAMA)) + geom_bar(aes(fill=SEXO)) + facet_wrap(~TRBPRN1) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10))
 ```
 
