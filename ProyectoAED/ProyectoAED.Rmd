@@ -62,7 +62,7 @@ df_raw <- read_delim("./data/EILU_GRAD_2019.csv",
 
 En primer lugar, seleccionaremos las variables de interés:
 ```{r}
-var <- c('IDENT','SEXO','EDAD','AMBITO','T_UNIV','EST_B12','EST_B16',
+var <- c('IDENT','SEXO','EDAD','RAMA','T_UNIV','EST_B12','EST_B16',
          'EST_B13_AMB1','EST_B13_AMB2','EST_B13_AMB3','EST_B17_M1','EST_B17_M2',
          'EST_B17_M3','EST_B21','EST2_SA','IDIOMAS','TRBPRN1','TR_SUELDO',
          'HATR_E11')
@@ -152,10 +152,23 @@ Graficamos ahora dos gráficos de barras comparando la columna con la rama de la
 ggplot(data=df, aes(x = RAMA)) + geom_bar(aes(fill=SEXO)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10)) + 
   scale_y_continuous(limits = c(0, 16000))
-ggplot(data=df, aes(x = URAMA)) + geom_bar(aes(fill=SEXO)) +
+p2 <- ggplot(data=df, aes(x = URAMA)) + geom_bar(aes(fill=SEXO)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10)) +
   scale_y_continuous(limits = c(0, 16000))
 ```
+
+Gráfica con caption y numerada.
+```{r mi-grafico-ggplot, 
+  fig.cap="Este es el caption de mi gráfico ggplot.", 
+  echo=FALSE, 
+  fig.align="center",
+  fig.width=6, 
+  fig.height=4.5}
+p2
+```
+  
+
+
 Ahora lo hacemos con un diagrama de mosaico.
 ```{r}
 tc <- table(df$RAMA,df$SEXO)
