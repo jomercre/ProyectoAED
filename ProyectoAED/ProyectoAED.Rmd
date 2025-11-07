@@ -253,6 +253,7 @@ sum(is.na(df$TR_SUELDO))
 cat("\nDistribución de NAs por rama:\n")
 table(df$RAMA, is.na(df$TR_SUELDO))
 
+moda <- names(which.max(table(df$TR_SUELDO[!is.na(df$TR_SUELDO)])))
 
 # Imputacion por rama.
 # Convertimos TR_SUELDO a índice numérico ordenado para calcular la mediana de cada grupo
@@ -261,8 +262,8 @@ df <- df %>%
   mutate(
     TR_SUELDO = ifelse(
       is.na(TR_SUELDO),
-      as.numeric(stats::median(as.numeric(TR_SUELDO), na.rm = TRUE)),
-      as.numeric(TR_SUELDO)
+      moda,
+      TR_SUELDO
     )
   ) %>%
   ungroup()
@@ -293,7 +294,7 @@ print(summary(df$TR_SUELDO))
 # visualizamos las distribucione despues de la imputación.
 
 ggplot(df, aes(x = RAMA, fill = TR_SUELDO)) +
-  geom_bar(position = "fill") +
+  geom_bar() +
   labs(
     title = "Distribución de niveles salariales imputados por rama de estudio",
     x = "Rama de estudio",
