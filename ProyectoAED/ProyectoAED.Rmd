@@ -217,7 +217,6 @@ Finalmente, se genera un gráfico de barras apiladas que representa las proporci
 
 
 ```{r}
-
 # IMPUTACIÓN DE T_SUELDO SEGÚN RAMA DE ESTUDIO
 
 library(dplyr)
@@ -254,6 +253,9 @@ cat("\nDistribución de NAs por rama:\n")
 table(df$RAMA, is.na(df$TR_SUELDO))
 
 moda <- names(which.max(table(df$TR_SUELDO[!is.na(df$TR_SUELDO)])))
+```
+
+```{r}
 
 # Imputacion por rama.
 # Convertimos TR_SUELDO a índice numérico ordenado para calcular la mediana de cada grupo
@@ -269,9 +271,8 @@ df <- df %>%
   ungroup()
 
 # reconstruimos factor del suelkdo ordenado con etiquetas originales.
-df$TR_SUELDO <- factor(round(df$TR_SUELDO),
-                      levels = 1:8,
-                      labels = c("Menos de 700 euros",
+df$TR_SUELDO <- factor(df$TR_SUELDO,
+                      levels = c("Menos de 700 euros",
                                  "De 700 a 999 euros",
                                  "De 1.000 a 1.499 euros",
                                  "De 1.500 a 1.999 euros",
@@ -279,7 +280,7 @@ df$TR_SUELDO <- factor(round(df$TR_SUELDO),
                                  "De 2.500 a 2.999 euros",
                                  "De 3.000 euros en adelante",
                                  "NS/NC"),
-                      ordered = TRUE)
+                      )
 
 
 #VERIFICACION
