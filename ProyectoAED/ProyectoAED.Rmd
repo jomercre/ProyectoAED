@@ -49,6 +49,7 @@ library(readr)
 library(dplyr)
 library(ggplot2)
 library(vcd)
+library(patchwork)
 ```
 
 
@@ -148,21 +149,17 @@ df <- df %>% select(-c('EST_B13_AMB1','EST_B13_AMB2','EST_B13_AMB3','EST_B17_M1'
 
 
 Graficamos ahora dos gráficos de barras comparando la columna con la rama de la primera titulación con la rama del último estudio realizado.
-```{r}
-ggplot(data=df, aes(x = RAMA)) + geom_bar(aes(fill=SEXO)) +
+```{r figT1, fig.cap="Gráfico de barras de RAMA coloreado con SEXO", out.width = "\\linewidth"}
+p1 <- ggplot(data=df, aes(x = RAMA)) + geom_bar(aes(fill=SEXO)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10)) + 
   scale_y_continuous(limits = c(0, 16000))
+
 p2 <- ggplot(data=df, aes(x = URAMA)) + geom_bar(aes(fill=SEXO)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10)) +
   scale_y_continuous(limits = c(0, 16000))
-```
 
-Gráfica con caption y numerada.
-```{r fig1, fig.cap="Gráfico de barras de URAMA coloreado con SEXO", out.width = "\\linewidth"}
-p2
+p1+p2
 ```
-  
-
 
 Ahora lo hacemos con un diagrama de mosaico.
 ```{r}
