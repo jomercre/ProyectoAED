@@ -101,7 +101,7 @@ desc_empl <- c("Trabajando", "En desempleo", "Inactivo")
 df$TRBPRN1 <- factor(df$TRBPRN1, levels=codi_empl, labels=desc_empl)
 
 codi_sueldo <- c("1", "2", "3", "4", "5", "6", "7")
-desc_sueldo <- c("Menos de 700 euros", "De 700 a 999 euros", "De 1.000 a 1.499 euros", "De 1.500 a 1.999 euros", "De 2.000 a 2.499 euros", "De 2.500 a 2.999 euros", "De 3.000 euros en adelante")
+desc_sueldo <- c("< 700 €", "700-999 €", "1.000-1.499 €", "1.500-1.999 €", "2.000-2.499 €", "2.500-2.999 €", "> 3.000 €")
 
 df <- df %>% mutate(TR_SUELDO = ifelse(TRBPRN1 == "9",NA, TR_SUELDO))
 
@@ -110,7 +110,7 @@ df$TR_SUELDO <- factor(df$TR_SUELDO, levels=codi_sueldo, labels=desc_sueldo)
 # 9 = NA
 
 codi_tiempo1 <- c("0", "1", "2", "3", "4", "5", "6")
-desc_tiempo1 <- c("Continuó al menos 6 meses más en el trabajo que tenía", "Menos de tres meses", "De 3 a 6 meses", "De 6 meses a 1 año", "De 1 año a año y medio", "De 1 año y medio a 2 años", "2 o más años")
+desc_tiempo1 <- c("Continuó (+ 6 meses)", "< 3 meses", "3-6 meses", "6 meses-1 año", "1-1.5 años", "1.5-2 años", ">= 2 años")
 
 df <- df %>% mutate(HATR_E11 = ifelse(TRBPRN1 == "9",NA, HATR_E11))
 
@@ -149,7 +149,7 @@ df <- df %>% select(-c('EST_B13_AMB1','EST_B13_AMB2','EST_B13_AMB3','EST_B17_M1'
 
 
 Graficamos ahora dos gráficos de barras comparando la columna con la rama de la primera titulación con la rama del último estudio realizado.
-```{r figT1, fig.cap="Gráfico de barras de RAMA coloreado con SEXO", out.width = "\\linewidth"}
+```{r figT1, fig.cap="Gráfico de barras de RAMA/URAMA coloreado con SEXO",fig.align = 'center', out.width = "0.8\\linewidth"}
 p1 <- ggplot(data=df, aes(x = RAMA)) + geom_bar(aes(fill=SEXO)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10)) + 
   scale_y_continuous(limits = c(0, 16000))
@@ -161,16 +161,11 @@ p2 <- ggplot(data=df, aes(x = URAMA)) + geom_bar(aes(fill=SEXO)) +
 p1+p2
 ```
 
-Ahora lo hacemos con un diagrama de mosaico.
-```{r}
-tc <- table(df$RAMA,df$SEXO)
-mosaicplot(tc,color=c("#F8766D", "#00BFC4"))
-```
-
 Graficamos en un gráfico de barras los estados laborales de las personas analizadas.
-```{r}
+```{r figT2, fig.cap="Gráfico de barras de TRBPRN1 coloreado con SEXO",fig.align = 'center', out.width = "0.8\\linewidth"}
 ggplot(data=df, aes(x = TRBPRN1)) + geom_bar(aes(fill=T_UNIV)) +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10))
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10)) +
+  scale_fill_brewer(palette = "YlOrRd")
 ```
 De forma auxiliar generamos un dataframe en el que solo se encuentre la población de la encuesta que se encuentra trabajando.
 ```{r}
@@ -180,55 +175,49 @@ df_tra <- df %>% filter(TRBPRN1=='Trabajando')
 # Gráficas
 
 Estadísticas del tipo de universidad.
-```{r}
+
+```{r figT3, fig.cap="Gráfico de barras de TRBPRN1 coloreado con SEXO",fig.align = 'center', out.width = "0.8\\linewidth"}
 ggplot(data=df, aes(x = T_UNIV)) + geom_bar(aes(fill=SEXO)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10))
 ```
 Como podemos observar la gran mayoría de la gente ha estudiado de forma presencial en una universidad pública por lo que utilizar el factor de tipo de universidad para estudios siguientes puede no ser estadísticamente correcto, ya que hay oversampling.
 
 Variación del tiempo transcurrido hasta que empezo a trabajar según su universidad.
-```{r}
-df_plot <- df %>% filter(!is.na(HATR_E11))
-
-ggplot(data=df_plot, aes(x = HATR_E11)) + geom_bar(aes(fill=T_UNIV)) +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10))
+```{r figT4, fig.cap="Gráfico de barras de TRBPRN1 coloreado con SEXO",fig.align = 'center', out.width = "0.8\\linewidth"}
+ggplot(data=df, aes(x = HATR_E11)) + geom_bar(aes(fill=T_UNIV)) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10)) +
+  scale_fill_brewer(palette = "YlOrRd")
 ```
+
 Variación del tiempo transcurrido hasta que empezo a trabajar según su rama.
-```{r}
-# Quitamos los registros NA y graficamos
 
-df_plot <- df %>% filter(!is.na(HATR_E11))
-
-ggplot(data=df_plot, aes(x = HATR_E11)) + geom_bar(aes(fill=URAMA)) +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 5))
+```{r figT5, fig.cap="Gráfico de barras de TRBPRN1 coloreado con SEXO",fig.align = 'center', out.width = "0.8\\linewidth"}
+ggplot(data=df, aes(x = HATR_E11)) + geom_bar(aes(fill=T_UNIV)) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10)) +
+  scale_fill_brewer(palette = "YlOrRd")
+```
+```{r figT6, fig.cap="Gráfico de barras de TRBPRN1 coloreado con SEXO",fig.align = 'center', out.width = "0.8\\linewidth"}
+ggplot(data=df, aes(x = HATR_E11)) + geom_bar(aes(fill=URAMA)) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 8)) +
+  scale_fill_brewer(palette = "Purples")
 ```
 Situación laboral separando por el tipo de rama del estudio más elevado.
-
-```{r}
-# Quitamos los registros NA y graficamos
-
-df_plot <- df %>% filter(!is.na(TRBPRN1))
-
-ggplot(df_plot, aes(x= TRBPRN1)) + geom_bar(aes(fill=URAMA)) +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10))
+```{r figT7, fig.cap="Gráfico de barras de TRBPRN1 coloreado con SEXO",fig.align = 'center', out.width = "0.8\\linewidth"}
+ggplot(df, aes(x= TRBPRN1)) + geom_bar(aes(fill=URAMA)) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10)) +
+  scale_fill_brewer(palette = "Purples")
 ```
 
 Número de idiomas frente a situación laboral.
-```{r}
-# Quitamos los registros NA y graficamos
-
-df_plot <- df %>% filter(!is.na(TRBPRN1),!is.na(IDIOMAS))
-
-ggplot(df_plot, aes(x=IDIOMAS)) + geom_bar(aes(fill=SEXO)) + facet_wrap(~TRBPRN1) +
+```{r figT8, fig.cap="Gráfico de barras de TRBPRN1 coloreado con SEXO",fig.align = 'center', out.width = "0.8\\linewidth"}
+ggplot(df, aes(x=IDIOMAS)) + geom_bar(aes(fill=SEXO)) + facet_wrap(~TRBPRN1) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10))
 ```
 
 Rama del estudio más elevado en función de la situación laboral.
-```{r}
-df_plot <- df %>% filter(!is.na(TRBPRN1))
-
-ggplot(df_plot, aes(x=URAMA)) + geom_bar(aes(fill=SEXO)) + facet_wrap(~TRBPRN1) +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10))
+```{r figT9, fig.cap="Gráfico de barras de TRBPRN1 coloreado con SEXO",fig.align = 'center', out.width = "0.8\\linewidth"}
+ggplot(df, aes(x=URAMA)) + geom_bar(aes(fill=SEXO)) + facet_wrap(~TRBPRN1) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 8))
 ```
 
 
