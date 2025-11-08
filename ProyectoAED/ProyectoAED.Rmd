@@ -207,23 +207,32 @@ print(chi_test)
 
 El resultado del test chi-cuadrado confirma que las variables están estadísticamente relacionadas y por ende pueden usarse para imputación condicional.
 
-El proceso que se seguirá es una imputación de los datos presentes en la variable:
+A continuación se realiza la imputación condicional de la variable *TR_SUELDO* empleando la moda, el objetivo es completar los valores faltantes en la variable, la cual corresponde con el rango salarial de las personas encuestadas. Para garantizar la coherencia estadística se realiza imputación solamente en individuos que constan como "Trabajando", además se emplea la variable *RAMA* de manera condicional, usando como criterio de sustitución la moda salarial de cada rama. 
 
-En primer lugar, se verifica que la variable RAMA se encuentre definida como un factor nominal y que T_SUELDO se establezca como un factor ordinal. A continuación, se realiza una exploración inicial para cuantificar el número total de valores faltantes (NA) y determinar su distribución por grupo de rama.
+El proceso se estructura en fases: preparación de las variables, detección de los valores faltantes (NA), cálculo de la moda, imputación y verificación.
 
-Posteriormente, se procede con la imputación condicional, sustituyendo los valores faltantes de T_SUELDO por la mediana ordinal correspondiente al grupo definido por la variable RAMA, excluyendo los valores ausentes. Una vez completada esta etapa, la variable imputada se reconvierte en un factor con las etiquetas originales.
+En primer lugar convertimos las variables *RAMA* y *TR_SUELDO* en factores ordenados. Esto es obligatorio ya que ambas variables son categóricas y presentan un número finito de niveles. Además, destacar la conversión de *TR_SUELDO* a factor ordinal ya que los rangos salariales deben tener un orden lógico, en este caso de menor a mayor. Esto permitirá ordenar correcatmente las categorías y realizar comparaciones válidas entre niveles.
 
-Finalmente, se genera un gráfico de barras apiladas que representa las proporciones de los distintos rangos salariales por rama de estudio, utilizando los datos tras la imputación.
+En segundo lugar, antes de hacer la imputación, se lleva a cabo un cuantificación del número de observaciones faltantes en *TR_SUELDO* y como estan distribuidas en cada rama. El resultado obtenido fue de 5266 NAs en total, habiendo una mayor proporción de NA en la rama "Ciencias sociales y jurídicas". 
 
+A continuación, se calcula la moda salarial, la cual corresponde con el nivel de sueldo más frecuente dentro de cada rama de estudio. Para calcularla se han considerado únicamente las siguiente obervaciones:
++ La persona se encuentra trabajando actualmente.
++ El valor de *TR_SUELDO* no es NA.
++ El valor de *TR_SUELDO* no corresponde a la categoría "NS/NC", la cual no es imputable.
+
+El cálculo de la moda se lleva a cabo usando funciones de la librería *dplyr*: group_by(RAMA) agrupa los registros por rama, count() contabiliza la frecuencia de cada nivel salarial dentro del grupo, y slice_max() selecciona el valor más frecuente (la moda) en cada rama. El resultado es una tabla auxiliar que asocia a cada rama su correspondiente “moda salarial”.
+
+Cuando la moda salarial de cada rama está calculada, se puede comenzar la imputación. Empleando la función *left_join()*, se une la tabla de modas al conjunto de datos original a través de la variable *RAMA*. Luego, usando *mutate()* se reemplazan los valores NA con las condiciones *ifelse(TRBPRN1 == "Trabajando" & is.na(TR_SUELDO)*, es decir, que esté trabajando y que el valor sea NA, que es lo que se debe imputar. Tras la imputación, *TR_SUELDO* se reconvierte nuevamente en factor ordenado, asegurando que la variable conserva la estructura ordinal orginial y también las etiquetas.
+
+Por útlimo, es posible verificar los resultados y la efectividad del proceso de imputación. Se oberva una imputación satisfactoria con reducción de 5266 casos de NA en trabajador a 0 NA presentes. No obstante, es necesario destacar todavía la presencia de 4527 valores faltantes, los cuales corresponden con NA de personas que no trabajan. Además, de acuerdo con el resumen de frecuencias, se muestra un distribución coherente con la esperada para variables salariales: rangos más comunes entre 1000 y 1999 euros y no se registran casos en la categoría "NS/NC" confirmando que se excluyó correctamente del proceso.
 
 ```{r}
-# IMPUTACIÓN DE T_SUELDO SEGÚN RAMA DE ESTUDIO
+#imputación de tr_sueldo usando la moda y dplyr y count().
 
 library(dplyr)
 library(ggplot2)
 
-
-# convertimos las variables a factores (TR_SUELDO y RAMA)
+#convertimos variabls a factores para trabajar bien con ello
 
 df$RAMA <- factor(df$RAMA,
                   levels = c("Artes y humanidades",
@@ -233,71 +242,76 @@ df$RAMA <- factor(df$RAMA,
                              "Ciencias de la salud"))
 
 df$TR_SUELDO <- factor(df$TR_SUELDO,
-                      levels = c("Menos de 700 euros",
-                                 "De 700 a 999 euros",
-                                 "De 1.000 a 1.499 euros",
-                                 "De 1.500 a 1.999 euros",
-                                 "De 2.000 a 2.499 euros",
-                                 "De 2.500 a 2.999 euros",
-                                 "De 3.000 euros en adelante",
-                                 "NS/NC"),
-                      ordered = TRUE)
+                       levels = c("Menos de 700 euros",
+                                  "De 700 a 999 euros",
+                                  "De 1.000 a 1.499 euros",
+                                  "De 1.500 a 1.999 euros",
+                                  "De 2.000 a 2.499 euros",
+                                  "De 2.500 a 2.999 euros",
+                                  "De 3.000 euros en adelante",
+                                  "NS/NC"),
+                       ordered = TRUE)
 
+#chequear valores na en el dataset
 
-#VERIFICAR DATOS FALTANTES
-
-cat("Número de valores faltantes en T_SUELDO:\n")
+print("Número de valores faltantes en TR_SUELDO")
 sum(is.na(df$TR_SUELDO))
 
-cat("\nDistribución de NAs por rama:\n")
-table(df$RAMA, is.na(df$TR_SUELDO))
+print("Distribución de NAs por rama")
+print(table(df$RAMA, is.na(df$TR_SUELDO)))
 
-moda <- names(which.max(table(df$TR_SUELDO[!is.na(df$TR_SUELDO)])))
-```
+#calculamos la moda sin tener en cuenta na y ns/nc
 
-```{r}
+moda_por_rama <- df %>%
+  filter(TRBPRN1 == "Trabajando",
+         !is.na(TR_SUELDO),
+         TR_SUELDO != "NS/NC") %>%
+  group_by(RAMA) %>% 
+  count(RAMA, TR_SUELDO, sort = TRUE) %>%
+  slice_max(n, n = 1, with_ties = FALSE) %>%
+  transmute(RAMA,
+            moda_sueldo = as.character(TR_SUELDO))  # nos quedamos con el texto
 
-# Imputacion por rama.
-# Convertimos TR_SUELDO a índice numérico ordenado para calcular la mediana de cada grupo
+#imputación en este caso con la moda 
+
 df <- df %>%
-  group_by(RAMA) %>%
+  left_join(moda_por_rama, by = "RAMA") %>%
   mutate(
     TR_SUELDO = ifelse(
-      is.na(TR_SUELDO),
-      moda,
-      TR_SUELDO
+      TRBPRN1 == "Trabajando" & is.na(TR_SUELDO),
+      moda_sueldo,                      # usamos la moda de su rama
+      as.character(TR_SUELDO)           # dejamos el valor actual (o NA si no aplica)
     )
   ) %>%
-  ungroup()
+  select(-moda_sueldo)
 
-# reconstruimos factor del suelkdo ordenado con etiquetas originales.
+#convertimos tr_sueldo a factor ordenado otra vez
 df$TR_SUELDO <- factor(df$TR_SUELDO,
-                      levels = c("Menos de 700 euros",
-                                 "De 700 a 999 euros",
-                                 "De 1.000 a 1.499 euros",
-                                 "De 1.500 a 1.999 euros",
-                                 "De 2.000 a 2.499 euros",
-                                 "De 2.500 a 2.999 euros",
-                                 "De 3.000 euros en adelante",
-                                 "NS/NC"),
-                      )
+                       levels = c("Menos de 700 euros",
+                                  "De 700 a 999 euros",
+                                  "De 1.000 a 1.499 euros",
+                                  "De 1.500 a 1.999 euros",
+                                  "De 2.000 a 2.499 euros",
+                                  "De 2.500 a 2.999 euros",
+                                  "De 3.000 euros en adelante",
+                                  "NS/NC"),
+                       ordered = TRUE)
 
+#verificamos results
 
-#VERIFICACION
+print("Valores faltantes en TR_SUELDO después de la imputación (solo trabajando)")
+sum(is.na(df$TR_SUELDO[df$TRBPRN1 == "Trabajando"]))
 
-cat("\nValores faltantes después de la imputación:\n")
-sum(is.na(df$TR_SUELDO))
-
-cat("\nFrecuencia de niveles T_SUELDO:\n")
+print("Frecuencia de niveles TR_SUELDO (en todo el dataset)")
 print(summary(df$TR_SUELDO))
 
+# visualizar los resultados pero !solo los trbajando 
 
-# visualizamos las distribucione despues de la imputación.
-
-ggplot(df, aes(x = RAMA, fill = TR_SUELDO)) +
-  geom_bar() +
+ggplot(df %>% filter(TRBPRN1 == "Trabajando"),
+       aes(x = RAMA, fill = TR_SUELDO)) +
+  geom_bar(position = "fill") +
   labs(
-    title = "Distribución de niveles salariales imputados por rama de estudio",
+    title = "Distribución de niveles salariales imputados por rama (solo personas que trabajan)",
     x = "Rama de estudio",
     y = "Proporción dentro de cada rama",
     fill = "Nivel salarial"
@@ -306,33 +320,26 @@ ggplot(df, aes(x = RAMA, fill = TR_SUELDO)) +
   theme_minimal(base_size = 12) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
-```
-La imputación condinional aplicada ha funcionado correctamente al imputar un total de 4527 datos faltantes usando la mediana.
-La categoría “1.000–1.499 euros” sigue siendo la más frecuente esto suele ser realista y consistente con distribuciones salariales típicas.
-El número de casos imputados (4 527) se ha redistribuido de forma coherente con la estructura de los datos.
-No hay picos o saltos anómalos en ninguna categoría, lo cual indica que la imputación no sesgó visiblemente la distribución.
-
-Obtenemos información sobre la mediana imputada por cada rama de estudio, lo cual corresponde con el nivel salarial típico que ha usado el algoritmo para imputar los datos faltantes.
-
-```{r}
-
-#MEDIANA IMPUTADA POR RAMA
-
-library(dplyr)
-
-medianas_por_rama <- df %>%
+#calcular cuántos valores se imputaron los na
+imputaciones_por_rama <- df %>%
+  filter(TRBPRN1 == "Trabajando") %>%
   group_by(RAMA) %>%
   summarise(
-    Mediana_Sueldo = levels(TR_SUELDO)[median(as.numeric(TR_SUELDO))],
-    n = n()
+    Total_Registros = n(),
+    Faltantes = sum(is.na(TR_SUELDO)),
+    Completos = Total_Registros - Faltantes
+  ) %>%
+  mutate(
+    Porcentaje_Completos = round((Completos / Total_Registros) * 100, 2)
   )
 
-print(medianas_por_rama)
+# unir tablas
+resumen_imputacion <- left_join(moda_por_rama, imputaciones_por_rama, by = "RAMA")
+resumen_imputacion
 
 ```
 
-
-La siguiente tabla muestra todas las ramas con valores salariales distribuidos tras la imputación.
+Con el propósito de examinar la distribución de las variables *RAMA* y *TR_SUELDO* tras la imputación, se genera una tabla de contingencia. El resultado respalda la correcta aplicación del método de imputación por moda y evidencia que la variable *TR_SUELDO* quedó adecuadamente estructurada.
 
 ```{r}
 table(df$RAMA, df$TR_SUELDO, useNA = "ifany")
@@ -431,7 +438,7 @@ Gráfica de comparación salarial según sexo
 
 ```{r}
 ggplot(df, aes(x = SEXO, fill = TR_SUELDO)) +
-  geom_bar(position = "fill") 
+  geom_bar(position = "fill") +
   labs(
     title = "Diferencia salarial según el sexo",
     x = "Sexo",
