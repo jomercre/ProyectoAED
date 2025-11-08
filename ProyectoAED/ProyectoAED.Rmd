@@ -34,48 +34,47 @@ output:
     extra_dependencies: longtable
 ---
 
-# Importación de los datos
+# Introducción
 
-En la carpeta de datos original, (que se puede obtener en el siguiente enlace  se pueden observar dos archivos completamente diferentes, el archivo que se va a proceder a analizar es el de la gente que se graduó en una universidad española durante el curso 2013-2014 (EILU_GRAD_2019.csv). El otro archivo corresponde a la gente que obtuvo un máster en el curso 2013-2014, por lo que no será objeto de nuestro estudio. Habiendo aclarado ya el conjunto de datos a utilizar podemos proceder a analizarlo, limpiarlo y estudiarlo.
+En la carpeta de datos original, se pueden observar dos archivos de datos CSV diferentes. El archivo que se va a proceder a analizar es el de la gente que se graduó en una universidad española durante el curso 2013-2014 (EILU_GRAD_2019.csv). El otro archivo corresponde a la gente que obtuvo un máster en el curso 2013-2014, por lo que no será objeto de nuestro estudio. Habiendo aclarado ya el conjunto de datos a utilizar podemos proceder a importar las librerías que nos permitirán analizarlo, limpiarlo y estudiarlo.
+
+```{r}
+pacman::p_load(readr,dplyr,ggplot2,vcd,patchwork,knitr)
+```
+
+
+# Importación y limpieza de datos 
 
 En este apartado vamos a proceder a importar el archivo de datos con el que vamos a trabajar. Para ello primero debemos de adivinar su codificación mediante el uso de la función __guess_encoding__.
-```{r, echo=FALSE}
-# Importamos las librerías que vamos a utilizar:
-
-pacman::p_load(readr,dplyr,ggplot2,vcd,patchwork)
-
+```{r}
 # Adivinamos la codificación 
 
 guess_encoding("./data/EILU_GRAD_2019.csv")
 ```
 
 Una vez que sabemos que la codificación de nuestros datos es ASCII, podemos proceder a importarlos teniendo en cuenta que estan en formato CSV y que los diferentes valores se encuentran separados por tabulador.
-```{r, echo=FALSE}
-# Importación del archivo en bruto
-
+```{r,message=FALSE,warning=FALSE}
 df_raw <- read_delim("./data/EILU_GRAD_2019.csv", 
     delim = "\t", escape_double = FALSE, 
     trim_ws = TRUE, locale = locale(encoding = "ASCII"))
 ```
-# Tratamiento de los datos
 
-En primer lugar, seleccionaremos las variables de interés:
+El dataframe importado tiene una longitud de ```r ncol(df_raw)``` variables, así que para falicitar nuestro estudio nos quedaremos únicamente con las variables principales que afectan a los estudios, la situación laboral y el sueldo de los diferentes individuos. Para conocer que representa cada una de las distintas variables debemos acudir al codebook de los metadatos, este viene dado por el archivo xlsx denominado __dr_EILU_GRAD_2019.xlsx__. Cabe destacar que en el proyecto de R donde se encuentra este documento pdf también hemos añadido el archivo para que cualquier persona pueda identificar las variables sin necesidad de abrir el archivo original de metadatos.
 ```{r}
-var <- c('IDENT','SEXO','EDAD','RAMA','T_UNIV','EST_B12','EST_B16',
-         'EST_B13_AMB1','EST_B13_AMB2','EST_B13_AMB3','EST_B17_M1','EST_B17_M2',
-         'EST_B17_M3','EST_B21','EST2_SA','IDIOMAS','TRBPRN1','TR_SUELDO',
-         'HATR_E11')
+var <- c('IDENT','SEXO','RAMA','T_UNIV','EST_B17_M1','EST_B17_M2','EST_B17_M3',
+         'EST_B21','EST2_SA','IDIOMAS','TRBPRN1','TR_SUELDO','HATR_E11')
 
 df <- df_raw[var]
 ```
 
-Asignamos a cada variable su tipo, exceptuando a las variables EST_B..., ya qu estas las fusionaremos más adelante como una matriz de tipo factor.
-```{r}
+Una vez que ya tenemos seleccionadas las variables con las que vamos a realizar nuestro estudio debemos pasar cada una de ellas a su respectivo tipo. Dicha tarea se vuelve un poco tediosa debido a que las diferentes variables de tipo factor han sido codificadas mediante índices numéricos, para saber que simboliza cada uno de estos números debemos, otra vez, acudir al codebook de los metadatos. Una vez que podemos comprender que significa cada número debemos convertir las diferentes columnas en factor mediante la función __factor__ introduciendo en el parámetro __levels__ los índices correspondientes a cada nivel del factor y en la parámetro __labels__ el nuevo nombre que queremos asociar a cada nivel del factor, el cual debe ser los suficientemente indicativo para poder interpretarlo más adelante en las distintas gráficas experimentales que se realizaran. Cabe destacar que todo este proceso se encuentra en el documento Rmd asociado, ya que consideramos redundante introducirlo en este informe.
+```{r, echo=FALSE}
 df$SEXO <- factor(df$SEXO, levels = c(1,2), labels = c('Hombre', 'Mujer'))
-df$EDAD <- as.numeric(df$EDAD)
 
 codi_rama <- c(1, 2, 3, 4, 5)
-desc_rama <- c("Artes y humanidades", "Ciencias", "Ciencias sociales y jurídicas", "Ingeniería y arquitectura", "Ciencias de la salud")
+desc_rama <- c("Artes y humanidades", "Ciencias", 
+               "Ciencias sociales y jurídicas", "Ingeniería y arquitectura",
+               "Ciencias de la salud")
 
 df$RAMA <- factor(df$RAMA, levels=codi_rama, labels=desc_rama)
 
@@ -115,13 +114,9 @@ df <- df %>% mutate(HATR_E11 = ifelse(TRBPRN1 == "9",NA, HATR_E11))
 df$HATR_E11 <- factor(df$HATR_E11, levels=codi_tiempo1, labels=desc_tiempo1)
 ```
 
-Observamos la cantidad de respuestas vacías en las columnas sobre el MIR, el ámbito de estudio de la primera carrera y la rama de la carrera.
-```{r}
-sum(is.na(df$RAMA))
-```
-Descartamos la columna del MIR, ya que todo aquel que se encuentre realizándolo o ya lo haya realizado necesariamente debe haver realizado una carrera o máster de la rama de ciencias de la salut. Por tanto, no es redundante conocer esa información para crear la columna con la rama del último estudio realizado.
+Antes de pasar al siguiente apartado, vamos a intentar convertir todas las variables que nos indican la rama de los estudios realizados por cada individuo en una sola. La rama que nos aporta la rama de estudio del primer estudio universitario realizado por el individuo se denomina RAMA. No osbtante, después tenemos más variables que nos indican la rama de los másteres realizados por el individuo o la rama del doctorado más importante. Para reducir todas estas múltiples variables a una sola vamos a crear la variable URAMA, la cual nos va indicar la rama del estudio más elevado realizado por el individuo, es decir, la rama de los últimos estudios realizados. Cabe destacar que vamos a ignorar la columna dedicada a los estudios del del tipo MIR, ya que todo aquel que se encuentre realizándolo o ya lo haya realizado necesariamente debe haber realizado una carrera o máster de la rama de ciencias de la salut. Por tanto, no es redundante conocer esa información para crear la columna con la rama del último estudio realizado.
 
-Seguidamente, nos disponemos a analizar las variables que comienzan por EST, estas poseen información del tipo de estudios que ha realizado y del tipo de cada estudio. Nuestra intención es utilizar dicha información para obtener la cantidad de grados, másteres y carreras que tiene cada entrevistado y además obtener una columna en la que se observe el ámbito del estudio de más nivel que tenga. Para ello vamos a utilizar la librería __dplyr__ en conjunto con las funciones 'mutate' y 'pipe'. Asumimos que los NA significa que no poseen ese estudio. Podríamos ignorar muchas de las columnas porqué hay muy poca gente con 3 grados o 3 máster, peró aún así intentamos mantener los máximos datos posibles
+Para crear la variable URAMA simplemente debemos tener en cuenta que cuando el individuo no ha dado información sobre el estudio o directamente no ha realizado dicho estudio la columna aparecera como NA, así que vamos estudiando que columnas continen datos no faltantes empezando por los doctorados, siguiendo por los másteres y terminando en los grados o diplomaturas.
 ```{r}
 df <- df %>% 
   mutate(URAMA = ifelse(!is.na(EST_B21), EST_B21, 
@@ -131,19 +126,59 @@ df <- df %>%
                  RAMA)))))
 
 codi_urama <- c(1, 2, 3, 4, 5)
-desc_urama <- c("Artes y humanidades", "Ciencias", "Ciencias sociales y jurídicas", "Ingeniería y arquitectura", "Ciencias de la salud")
+desc_urama <- c("Artes y humanidades", "Ciencias", 
+                "Ciencias sociales y jurídicas", "Ingeniería y arquitectura",
+                "Ciencias de la salud")
 
 df$URAMA <- factor(df$URAMA, levels=codi_urama, labels=desc_urama)
 ```
-Podemos comprobar ahora cuantas personas se han cambiado de rama en comparación con la carrera realizada.
+
+Una vez se ha obtenido la columna URAMA podemos eliminar del dataframe las variables con información sobre las ramas de los másteres o la columna que contiene la rama del doctorado más importante.
 ```{r}
-sum(sum(df$URAMA != df$RAMA))
+df <- df %>% select(-c('EST_B17_M1','EST_B17_M2','EST_B17_M3',
+                       'EST_B21','EST2_SA'))
 ```
-Una vez se ha obtenido la columna URAMA podemos eliminar del dataframe todas aquellas columnas que no nos son relevantes para graficar.
-```{r}
-df <- df %>% select(-c('EST_B13_AMB1','EST_B13_AMB2','EST_B13_AMB3','EST_B17_M1',
-                       'EST_B17_M2','EST_B17_M3','EST_B21','EST2_SA'))
+
+# Inspección de datos faltantes
+
+En este apartado, vamos a proceder a estudiar los datos faltantes en cada columna del dataframe con información, es decir, vamos a obviar la columna con el identificador.
+
+```{r tab1, echo=FALSE}
+nasum <- c()
+
+for (i in 1:(length(names(df))-1)){
+  nasum[i] <- sum(is.na(df[i+1]))
+}
+  
+
+dfT1 <- data.frame('Variable' = names(df)[2:length(names(df))],
+                 'Número de datos faltantes' = nasum,check.names = FALSE)
+
+kable(dfT1, format = "latex",booktabs = TRUE,
+  caption = "Cantidad de Na's en función de la variable",
+  align = 'l|c', longtable = TRUE)
 ```
+
+Como podemos observar las únicas columnas con datos faltantes son IDIOMAS, TR_SUELDO y HATR_E11. La variable con más datos faltantes es TR_SUELDO con un ```r sum(is.na(df$TR_SUELDO))/nrow(df)*100``` % de datos con NA. No obstante, no todos ellos son datos que no han sido rellenados, ya que puede darse el caso de que la persona no esté actualmente trabajando y, por tanto, no haya rellenado a drede la casilla de TR_Sueldo. Para observar cuales son en realidad nuestros datos faltantes procedemos a observar el número de NA's de la variable TR_SUELDO una vez hemos eliminado aquellas personas que no se encuentran trabajando.
+```{r tab2, echo=FALSE}
+dfAc <- df %>% filter(TRBPRN1 != 'Trabajando')
+
+NAs <- c(sum(is.na(df$TR_SUELDO)),sum(is.na(dfAc$TR_SUELDO)))
+
+dfT2 <- data.frame('Variable' = c('TR_SUELDO','TR_SUELDO'),
+                  'Cálculo' = c('Con todos los datos',
+                                'Con la gente activa laboralmente'),
+                  'Número de datos faltantes' = NAs,
+                  check.names = FALSE)
+
+kable(dfT2, format = "latex",booktabs = TRUE,
+  caption = "Cantidad de Na's en la variable TR.SUELDO cuando se elimina la cantidad de gente que no está activa laboralmente",
+  align = 'l|c|c', longtable = TRUE)
+```
+
+Como podemos observar hay aproximadamente 1000 valores NA que pertenecen a la población no activa laboralmente, la cual es lógico que no tenga un salario. No obstante, los otros 4000 datos con NA no parecen seguir ninguna lógica. Por ello intentaremos relacionar la variable sueldo con alguna otra variable del conjunto que no contenga datos faltantes para así conseguir imputar dichos datos.
+
+# Gráficas exploratorias
 
 
 Graficamos ahora dos gráficos de barras comparando la columna con la rama de la primera titulación con la rama del último estudio realizado.
@@ -169,8 +204,6 @@ De forma auxiliar generamos un dataframe en el que solo se encuentre la poblaci�
 ```{r}
 df_tra <- df %>% filter(TRBPRN1=='Trabajando')
 ```
-
-# Gráficas
 
 Estadísticas del tipo de universidad.
 
@@ -218,5 +251,9 @@ ggplot(df, aes(x=URAMA)) + geom_bar(aes(fill=SEXO)) + facet_wrap(~TRBPRN1) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 8))
 ```
 
+# Análsis de Chi2 sobre las distintas variables
 
+
+
+# Imputación de datos faltantes
 
