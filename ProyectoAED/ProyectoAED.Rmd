@@ -34,32 +34,30 @@ output:
     extra_dependencies: longtable
 ---
 
-# Aclaración de los datos
-
-En la carpeta de datos original se pueden observar dos archivos completamente diferentes, el archivo que se va a proceder a analizar es el de la gente que se graduó en una universidad española durante el curso 2013-2014 (EILU_GRAD_2019.csv). El otro archivo corresponde a la gente que obtuvo un máster en el curso 2013-2014, por lo que no será objeto de nuestro estudio. Habiendo aclarado ya el conjunto de datos a utilizar podemos proceder a analizarlo, limpiarlo y estudiarlo.
-
 # Importación de los datos
 
-En este apartado vamos a proceder a importar el archivo de datos con el que vamos a trabajar, el cual pertenece al INE (Insituto Nacional de Estadística) y trata sobre la inserción laboral de las personas con estudios universitarios o superiores.
+En la carpeta de datos original, (que se puede obtener en el siguiente enlace \url{https://www.ine.es/ftp/microdatos/eilu/datos_2019.zip}) se pueden observar dos archivos completamente diferentes, el archivo que se va a proceder a analizar es el de la gente que se graduó en una universidad española durante el curso 2013-2014 (EILU_GRAD_2019.csv). El otro archivo corresponde a la gente que obtuvo un máster en el curso 2013-2014, por lo que no será objeto de nuestro estudio. Habiendo aclarado ya el conjunto de datos a utilizar podemos proceder a analizarlo, limpiarlo y estudiarlo.
 
+En este apartado vamos a proceder a importar el archivo de datos con el que vamos a trabajar. Para ello primero debemos de adivinar su codificación mediante el uso de la función __guess_encoding__.
+```{r, echo=FALSE}
+# Importamos las librerías que vamos a utilizar:
 
-Importamos las librerías que vamos a utilizar:
-```{r}
-library(readr)
-library(dplyr)
-library(ggplot2)
-library(vcd)
-library(patchwork)
+pacman::p_load(readr,dplyr,ggplot2,vcd,patchwork)
+
+# Adivinamos la codificación 
+
+guess_encoding("./data/EILU_GRAD_2019.csv")
 ```
 
+Una vez que sabemos que la codificación de nuestros datos es ASCII, podemos proceder a importarlos teniendo en cuenta que estan en formato CSV y que los diferentes valores se encuentran separados por tabulador.
+```{r, echo=FALSE}
+# Importación del archivo en bruto
 
-Importamos los datos:
-```{r}
 df_raw <- read_delim("./data/EILU_GRAD_2019.csv", 
     delim = "\t", escape_double = FALSE, 
-    trim_ws = TRUE)
+    trim_ws = TRUE, locale = locale(encoding = "ASCII"))
 ```
-# Preparación de los datos
+# Tratamiento de los datos
 
 En primer lugar, seleccionaremos las variables de interés:
 ```{r}
