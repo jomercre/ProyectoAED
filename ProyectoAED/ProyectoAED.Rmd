@@ -1,437 +1,452 @@
 ---
-title: Full title of the paper (Capitalized)
+title: Proyecto de AED
 author:
-  - name: Dominik Leutnant
-    affil: 1,2,\ddagger,*
-    orcid: 0000-0003-3293-2315
-  - name: John Doe
-    affil: 2, \dagger, \ddagger
+  - name: Joan Merlos Cremades
+    affil: 1,*
+  - name: Héctor Torres Muñoz
+    affil: 2
 affiliation:
   - num: 1
-    address: |
-      Muenster University of Applied Sciences - 
-      Institute for Infrastructure, Water, Resources, Environment
-      Correnstr. 25, 48149 Muenster, Germany
-    email: leutnant@fh-muenster.de
+    address:
+      Universitat de València
+    email: joanmer@alumni.uv.es
   - num: 2
-    address: |
-      Your department
-      Street, City, Country
-    email: mail@mail.com
-# author citation list in chicago format
-authorcitation: |
-  Leutnant, D.; Doe, J.
-# firstnote to eighthnote
-firstnote: |
-  Current address: Updated affiliation
-secondnote: |
-  These authors contributed equally to this work.
-correspondence: |
-  leutnant@fh-muenster.de; Tel.: +XX-000-00-0000.
+    address:
+      Universitat de València
+    email: hecto2@alumni.uv.es
+correspondence:
+  joanmer@alumni.uv.es
 # document options
 journal: notspecified
 type: article
 status: submit
 # front matter
 simplesummary: |
-  A Simple summary goes here.
+  Proyecto de la asignatura Ánalisis exploratorio de datos del Máster en Ciencia de datos de la Universitat de València.
 abstract: |
-  A single paragraph of about 200 words maximum. For research articles, 
-  abstracts should give a pertinent overview of the work. We strongly encourage
-  authors to use the following style of structured abstracts, but without 
-  headings: 1) Background: Place the question addressed in a broad context and
-  highlight the purpose of the study; 2) Methods: Describe briefly the main
-  methods or treatments applied; 3) Results: Summarize the article's main 
-  findings; and 4) Conclusion: Indicate the main conclusions or interpretations. 
-  The abstract should be an objective representation of the article, it must not 
-  contain results which are not presented and substantiated in the main text and 
-  should not exaggerate the main conclusions.
+  En las siguientes páginas se encuentra ...
 keywords: |
-  keyword 1; keyword 2; keyword 3 (list three to ten pertinent keywords specific 
-  to the article, yet reasonably common within the subject discipline.).
-# back matter
-acknowledgement: |
-  All sources of funding of the study should be disclosed. Please clearly 
-  indicate grants that you have received in support of your research work. 
-  Clearly state if you received funds for covering the costs to publish in open 
-  access.
-authorcontributions: |
-  For research articles with several authors, a short paragraph specifying their 
-  individual contributions must be provided. The following statements should be 
-  used ``X.X. and Y.Y. conceive and designed the experiments; X.X. performed the 
-  experiments; X.X. and Y.Y. analyzed the data; W.W. contributed 
-  reagents/materials/analysis tools; Y.Y. wrote the paper.'' Authorship must be
-  limited to those who have contributed substantially to the work reported.
-funding: |
-  Please add: ``This research received no external funding'' or ``This research 
-  was funded by NAME OF FUNDER grant number XXX.'' and  and ``The APC was funded 
-  by XXX''. Check carefully that the details given are accurate and use the 
-  standard spelling of funding agency names at 
-  \url{https://search.crossref.org/funding}, any errors may affect your future 
-  funding.
-institutionalreview: |
-  In this section, you should add the Institutional Review Board Statement and 
-  approval number, if relevant to your study. You might choose to exclude 
-  this statement if the study did not require ethical approval. Please note 
-  that the Editorial Office might ask you for further information. Please add 
-  “The study was conducted in accordance with the Declaration of Helsinki, 
-  and approved by the Institutional Review Board (or Ethics Committee) of 
-  NAME OF INSTITUTE (protocol code XXX and date of approval).” for studies 
-  involving humans. OR “The animal study protocol was approved by the 
-  Institutional Review Board (or Ethics Committee) of NAME OF INSTITUTE 
-  (protocol code XXX and date of approval).” for studies involving animals. 
-  OR “Ethical review and approval were waived for this study due to REASON 
-  (please provide a detailed justification).” OR “Not applicable” for
-   studies not involving humans or animals.
-informedconsent: |
-  Any research article describing a study involving humans should contain this 
-  statement. Please add ``Informed consent was obtained from all subjects 
-  involved in the study.'' OR ``Patient consent was waived due to REASON 
-  (please provide a detailed justification).'' OR ``Not applicable'' for 
-  studies not involving humans. You might also choose to exclude this statement 
-  if the study did not involve humans.
-  
-  Written informed consent for publication must be obtained from participating 
-  patients who can be identified (including by the patients themselves). Please 
-  state ``Written informed consent has been obtained from the patient(s) to 
-  publish this paper'' if applicable.
-dataavailability: |
-  We encourage all authors of articles published in MDPI journals to share 
-  their research data. In this section, please provide details regarding where 
-  data supporting reported results can be found, including links to publicly 
-  archived datasets analyzed or generated during the study. Where no new data 
-  were created, or where data is unavailable due to privacy or ethical 
-  re-strictions, a statement is still required. Suggested Data Availability 
-  Statements are available in section “MDPI Research Data Policies” at 
-  \url{https://www.mdpi.com/ethics}.
-conflictsofinterest: |
-  Declare conflicts of interest or state 'The authors declare no conflict of 
-  interest.' Authors must identify and declare any personal circumstances or
-  interest that may be perceived as inappropriately influencing the
-  representation or interpretation of reported research results. Any role of the
-  funding sponsors in the design of the study; in the collection, analyses or 
-  interpretation of data in the writing of the manuscript, or in the decision to 
-  publish the results must be declared in this section. If there is no role, 
-  please state 'The founding sponsors had no role in the design of the study; 
-  in the collection, analyses, or interpretation of data; in the writing of the 
-  manuscript, an in the decision to publish the results'.
-supplementary: |
- The following supporting information can be downloaded at:  
- \linksupplementary{s1}, Figure S1: title; Table S1: title; Video S1: title.
-abbreviations:
-  - short: MDPI
-    long: Multidisciplinary Digital Publishing Institute
-  - short: DOAJ
-    long: Directory of open access journals
-  - short: TLA
-    long: Three letter acronym
-  - short: LD 
-    long: linear dichroism
+  Análisis exploratorio de datos, INE, Inserción laboral.
 bibliography: mybibfile.bib
-appendix: appendix.tex
 endnotes: false
 output: 
   rticles::mdpi_article:
     extra_dependencies: longtable
 ---
 
-# Version
+# Aclaración de los datos
 
-This Rmd-skeleton uses the mdpi Latex template published 2024-03-21. 
-However, the official template gets more frequently updated than the **rticles**
-package. Therefore, please make sure prior to paper submission, that you're 
-using the most recent .cls, .tex and .bst files 
-(available [here](http://www.mdpi.com/authors/latex)).
+En la carpeta de datos original se pueden observar dos archivos completamente diferentes, el archivo que se va a proceder a analizar es el de la gente que se graduó en una universidad española durante el curso 2013-2014 (EILU_GRAD_2019.csv). El otro archivo corresponde a la gente que obtuvo un máster en el curso 2013-2014, por lo que no será objeto de nuestro estudio. Habiendo aclarado ya el conjunto de datos a utilizar podemos proceder a analizarlo, limpiarlo y estudiarlo.
 
-# Article Header Information
+# Importación de los datos
 
-The YAML header includes information needed mainly for formatting the front and 
-back matter of the article. Required elements include:
-
-```yaml
-title: Title of the paper
-author:
-  - name: first and last name
-    affil: |
-      One or more comma seperated numbers corresponding to affilitation
-      and one or more  comma seperated symbols corresponding 
-      optional notes.
-    orcid: optional orcid number
-affiliation:  
-  - num: 1,..., n for each affiliation
-    address: required
-    email: required
-authorcitation: |
-  Lastname, F.
-correspondence: |
-  email@email.com; Tel.: +XX-000-00-0000.
-journal: notspecified
-type: article
-status: submit
-```
-
-Journal options are in Table \ref{tab:mdpinames}. The `status` variable should 
-generally not be changed by authors. The `type` variable describes 
-the type of of submission and defaults to `article` but can be replaced with any of the ones in Table \ref{tab:mdpitype}
-
-```{r mdpitype, echo = FALSE}
-type <- c("abstract, addendum, article, book, bookreview, briefreport, 
-casereport, comment, commentary, communication, conferenceproceedings, 
-correction, conferencereport, entry, expressionofconcern, extendedabstract, 
-datadescriptor, editorial, essay, erratum, hypothesis, interestingimage, 
-obituary, opinion, projectreport, reply, retraction, review, perspective, 
-protocol, shortnote, studyprotocol, systematicreview, supfile, 
-technicalnote, viewpoint, guidelines, registeredreport, tutorial")
-knitr::kable(rticles::string_to_table(type, 3), 
-             col.names = NULL, format = "latex", booktab = TRUE, 
-             caption = "MDPI article types.")
-```
-
-## Journal Specific YAML variables
-
-```yaml
-# for journal Diversity,
-# add the Life Science Identifier using:
-lsid: http://zoobank.org/urn:lsid:zoobank.org:act:nnnn
+En este apartado vamos a proceder a importar el archivo de datos con el que vamos a trabajar, el cual pertenece al INE (Insituto Nacional de Estadística) y trata sobre la inserción laboral de las personas con estudios universitarios o superiores.
 
 
-# for journal Applied Sciences
-# add featured application
-featuredapplication: |
-  Authors are encouraged to provide a concise 
-  description of the specific application or 
-  a potential application of the work. This 
-  section is not mandatory.
-
-# for the journal Data
-# add dataset doi and license
-dataset: https://doi.org/10.1000/182
-datasetlicense: CC-BY-4.0
-
-# for the journal Toxins
-# add key contributions
-keycontributions: |
-  The breakthroughs or highlights of the manuscript. 
-  Authors can write one or two sentences to describe 
-  the most important part of the paper.
-
-# for the journal Encyclopedia
-encyclopediadef: |
-  For entry manuscripts only: please provide a brief overview
-  of the entry title instead of an abstract.
-entrylink: The Link to this entry published on the encyclopedia platform.
-
-# for the journal Advances in Respiratory Medicine
-# add highlights
-addhighlights: |
-  This is an obligatory section in “Advances in Respiratory Medicine”, 
-  whose goal is to increase the discoverability and readability of the
-  article via search engines and other scholars. Highlights should not 
-  be a copy of the abstract, but a simple text allowing the reader to 
-  quickly and simplified find out what the article is about and what can 
-  be cited from it. Each of these parts should be devoted up to 2~bullet 
-  points.
-
+Importamos las librerías que vamos a utilizar:
+```{r}
+library(readr)
+library(dplyr)
+library(ggplot2)
+library(vcd)
 ```
 
 
-\startlandscape
-```{r, mdpinames, echo=FALSE, results='asis'}
-mdpi_journals <- "acoustics, actuators, addictions, admsci, adolescents, aerobiology, aerospace, agriculture, agriengineering, agrochemicals, agronomy, ai, air, algorithms, allergies, alloys, analytica, analytics, anatomia, animals, antibiotics, antibodies, antioxidants, applbiosci, appliedchem, appliedmath, applmech, applmicrobiol, applnano, applsci, aquacj, architecture, arm, arthropoda, arts, asc, asi, astronomy, atmosphere, atoms, audiolres, automation, axioms, bacteria, batteries, bdcc, behavsci, beverages, biochem, bioengineering, biologics, biology, biomass, biomechanics, biomed, biomedicines, biomedinformatics, biomimetics, biomolecules, biophysica, biosensors, biotech, birds, bloods, blsf, brainsci, breath, buildings, businesses, cancers, carbon, cardiogenetics, catalysts, cells, ceramics, challenges, chemengineering, chemistry, chemosensors, chemproc, children, chips, cimb, civileng, cleantechnol, climate, clinpract, clockssleep, cmd, coasts, coatings, colloids, colorants, commodities, compounds, computation, computers, condensedmatter, conservation, constrmater, cosmetics, covid, crops, cryptography, crystals, csmf, ctn, curroncol, cyber, dairy, data, ddc, dentistry, dermato, dermatopathology, designs, devices, diabetology, diagnostics, dietetics, digital, disabilities, diseases, diversity, dna, drones, dynamics, earth, ebj, ecologies, econometrics, economies, education, ejihpe, electricity, electrochem, electronicmat, electronics, encyclopedia, endocrines, energies, eng, engproc, entomology, entropy, environments, environsciproc, epidemiologia, epigenomes, est, fermentation, fibers, fintech, fire, fishes, fluids, foods, forecasting, forensicsci, forests, foundations, fractalfract, fuels, future, futureinternet, futurepharmacol, futurephys, futuretransp, galaxies, games, gases, gastroent, gastrointestdisord, gels, genealogy, genes, geographies, geohazards, geomatics, geosciences, geotechnics, geriatrics, grasses, gucdd, hazardousmatters, healthcare, hearts, hemato, hematolrep, heritage, higheredu, highthroughput, histories, horticulturae, hospitals, humanities, humans, hydrobiology, hydrogen, hydrology, hygiene, idr, ijerph, ijfs, ijgi, ijms, ijns, ijpb, ijtm, ijtpp, ime, immuno, informatics, information, infrastructures, inorganics, insects, instruments, inventions, iot, j, jal, jcdd, jcm, jcp, jcs, jcto, jdb, jeta, jfb, jfmk, jimaging, jintelligence, jlpea, jmmp, jmp, jmse, jne, jnt, jof, joitmc, jor, journalmedia, jox, jpm, jrfm, jsan, jtaer, jvd, jzbg, kidneydial, kinasesphosphatases, knowledge, land, languages, laws, life, liquids, literature, livers, logics, logistics, lubricants, lymphatics, machines, macromol, magnetism, magnetochemistry, make, marinedrugs, materials, materproc, mathematics, mca, measurements, medicina, medicines, medsci, membranes, merits, metabolites, metals, meteorology, methane, metrology, micro, microarrays, microbiolres, micromachines, microorganisms, microplastics, minerals, mining, modelling, molbank, molecules, mps, msf, mti, muscles, nanoenergyadv, nanomanufacturing, nanomaterials, ncrna, ndt, network, neuroglia, neurolint, neurosci, nitrogen, notspecified, nri, nursrep, nutraceuticals, nutrients, obesities, oceans, ohbm, onco, oncopathology, optics, oral, organics, organoids, osteology, oxygen, parasites, parasitologia, particles, pathogens, pathophysiology, pediatrrep, pharmaceuticals, pharmaceutics, pharmacoepidemiology, pharmacy, philosophies, photochem, photonics, phycology, physchem, physics, physiologia, plants, plasma, platforms, pollutants, polymers, polysaccharides, poultry, powders, preprints, proceedings, processes, prosthesis, proteomes, psf, psych, psychiatryint, psychoactives, publications, quantumrep, quaternary, qubs, radiation, reactions, receptors, recycling, regeneration, religions, remotesensing, reports, reprodmed, resources, rheumato, risks, robotics, ruminants, safety, sci, scipharm, sclerosis, seeds, sensors, separations, sexes, signals, sinusitis, skins, smartcities, sna, societies, socsci, software, soilsystems, solar, solids, spectroscj, sports, standards, stats, std, stresses, surfaces, surgeries, suschem, sustainability, symmetry, synbio, systems, targets, taxonomy, technologies, telecom, test, textiles, thalassrep, thermo, tomography, tourismhosp, toxics, toxins, transplantology, transportation, traumacare, traumas, tropicalmed, universe, urbansci, uro, vaccines, vehicles, venereology, vetsci, vibration, virtualworlds, viruses, vision, waste, water, wem, wevj, wind, women, world, youth, zoonoticdis"
-
-knitr::kable(rticles::string_to_table(mdpi_journals, 8),
-             col.names = NULL,
-             format = "latex",
-             booktabs = TRUE, 
-             caption = "MDPI journal names.",
-             longtable = TRUE)
-
+Importamos los datos:
+```{r}
+df_raw <- read_delim("./data/EILU_GRAD_2019.csv", 
+    delim = "\t", escape_double = FALSE, 
+    trim_ws = TRUE)
 ```
-\finishlandscape
+# Preparación de los datos
 
+En primer lugar, seleccionaremos las variables de interés:
+```{r}
+var <- c('IDENT','SEXO','EDAD','TITU','RAMA','AMBITO','T_UNIV','EST_B12','EST_B16',
+         'EST_B13_AMB1','EST_B13_AMB2','EST_B13_AMB3','EST_B17_M1','EST_B17_M2',
+         'EST_B17_M3','EST_B21','EST2_SA','IDIOMAS','TRBPRN1','TR_SUELDO',
+         'HATR_E11')
 
-
-
-# Introduction
-
-The introduction should briefly place the study in a broad context and highlight
-why it is important. It should define the purpose of the work and its
-significance. The current state of the research field should be reviewed
-carefully and key publications cited. Please highlight controversial and
-diverging hypotheses when necessary. Finally, briefly mention the main aim of
-the work and highlight the principal conclusions. As far as possible, please
-keep the introduction comprehensible to scientists outside your particular
-field of research. Citing a journal paper [@bertrand-krajewski_distribution_1998;
-@leutnant_stormwater_2016]. And now citing a book reference @gujer_systems_2008.
-Some MDPI journals use Chicago and others use APA, this template should choose
-the correct citation format for you once you specify the journal in the YAML
-header.
-
-To use endnotes, change `endnotes: true` in the YAML header, then use
-`\endnote{This is an endnote.}`.
-
-
-# Materials and Methods
-
-Materials and Methods should be described with sufficient details to allow 
-others to replicate and build on published results. Please note that publication 
-of your manuscript implicates that you must make all materials, data, computer 
-code, and protocols associated with the publication available to readers. Please
-disclose at the submission stage any restrictions on the availability of 
-materials or information. New methods and protocols should be described in 
-detail while well-established methods can be briefly described and appropriately
-cited.
-
-Research manuscripts reporting large datasets that are deposited in a publicly 
-available database should specify where the data have been deposited and provide
-the relevant accession numbers. If the accession numbers have not yet been
-obtained at the time of submission, please state that they will be provided
-during review. They must be provided prior to publication.
-
-Interventionary studies involving animals or humans, and other studies require
-ethical approval must list the authority that provided approval and the
-corresponding ethical approval code.
-
-# Results
-
-This section may be divided by subheadings. It should provide a concise and
-precise description of the experimental results, their interpretation as well
-as the experimental conclusions that can be drawn.
-
-## Subsection Heading Here
-
-Subsection text here.
-
-### Subsubsection Heading Here
-
-Bulleted lists look like this:
-
-* First bullet
-* Second bullet
-* Third bullet
-
-Numbered lists can be added as follows:
-
-1. First item
-2. Second item
-3. Third item
-
-The text continues here.
-
-## Figures, Tables and Schemes
-
-All figures and tables should be cited in the main text as Figure \ref{fig:fig1}, 
-\ref{tab:tab1}, etc. To get cross-reference to figure generated by R chunks 
-include the `\\label{}` tag in the `fig.cap` attribute of the R chunk: 
-`fig.cap = "Fancy Caption\\label{fig:plot}"`.
-
-```{r fig1, echo=FALSE, fig.width=3, fig.cap="A figure added with a code chunk.\\label{fig:fig1}"}
-x = rnorm(10)
-y = rnorm(10)
-plot(x, y)
+df <- df_raw[var]
 ```
 
+Asignamos a cada variable su tipo, exceptuando a las variables EST_B..., ya qu estas las fusionaremos más adelante como una matriz de tipo factor.
+```{r}
+df$SEXO <- factor(df$SEXO, levels = c(1,2), labels = c('Hombre', 'Mujer'))
+df$EDAD <- as.numeric(df$EDAD)
 
-When making tables using `kable`, it is suggested to use
-the `format="latex"` and `tabl.envir="table"` arguments
-to ensure table numbering and compatibility with the mdpi
-document class.
+codi <- c("011101", "011201", "011301", "011401", "011901", "021101", "021201", "021301", "021302", "021401", "021502", "022201", "022202", "022301", "022901", "023101", "023102", "023103", "023104", "023201", "023202", "023901", "031101", "031201", "031202", "031301", "031401", "031402", "031404", "031406", "032101", "032102", "032201", "041201", "041202", "041301", "041302", "041303", "041401", "041402", "041403", "041601", "042101", "051101", "051201", "051202", "051901", "052101", "053101", "053201", "053202", "053203", "053301", "054101", "054201", "061301", "061901", "071101", "071301", "071302", "071401", "071402", "071403", "071404", "071405", "071501", "071502", "071503", "071601", "071603", "071901", "072101", "072102", "072201", "072401", "073101", "073102", "073201", "073202", "081102", "081103", "081201", "082101", "084101", "091101", "091201", "091301", "091401", "091402", "091501", "091502", "091503", "091504", "091505", "091601", "092301", "101401", "101501", "104101", "104103", "109999")
 
-```{r tab1, echo=FALSE}
-knitr::kable(mtcars[1:5, 1:3], format = "latex", 
-             booktabs = TRUE, 
-             caption = "This is a table caption. Tables should be placed in the 
-             main text near to the first time they are~cited.", 
-             align = 'ccc', centering = FALSE,
-             table.envir = "table", position = "H")
+descrip <- c("Pedagogía", "Educación infantil", "Educación primaria", "Otros maestros", "Educación social", "Audiovisual, imagen y multimedia", "Diseño", "Bellas artes", "Historia del arte", "Conservación y restauración", "Música y Artes escénicas", "Arqueología", "Historia", "Filosofía", "Humanidades", "Lengua inglesa", "Lenguas clásicas", "Otras lenguas extranjeras", "Traducción e interpretación", "Lenguas y dialectos españoles", "Literatura", "Lenguas modernas y aplicadas", "Economía", "Política y gestión pública", "Relaciones internacionales", "Psicología", "Antropología social y cultural y Estudios y gestión de la cultura", "Criminología", "Geografía", "Sociología e Igualdad de género", "Comunicación", "Periodismo", "Información y documentación", "Financiera y actuarial", "Finanzas y contabilidad", "Administración y empresa", "Ciencias del trabajo", "Gestión y administración pública", "Marketing", "Protocolo y eventos", "Publicidad y relaciones públicas", "Comercio", "Derecho", "Biología", "Bioquímica", "Biotecnología", "Biomedicina", "Ciencias ambientales", "Química", "Ciencias del mar", "Geografía y ordenación del territorio", "Geología", "Física", "Matemáticas", "Estadística", "Desarrollo de software y de aplicaciones e Ingeniería multimedia", "Informática", "Ingeniería química industrial e Ingeniería medioambiental", "Ingeniería de la energía", "Ingeniería eléctrica", "Ingeniería de computadores", "Ingeniería de sonido e imagen", "Ingeniería de telecomunicación", "Ingeniería electrónica industrial y automática", "Ingeniería en electrónica", "Ingeniería en diseño industrial y desarrollo del producto", "Ingeniería en tecnologías industriales", "Ingeniería mecánica", "Ingeniería aeronáutica", "Ingeniería naval y oceánica", "Ingeniería de organización industrial y Nanotecnología", "Ciencia y tecnología de los alimentos e Ingeniería alimentaria", "Enología", "Ingeniería de materiales e Ingeniería textil", "Ingeniería de minas y energía", "Arquitectura y Urbanismo y paisajismo", "Ingeniería geomática, topografía y cartografía", "Arquitectura técnica", "Ingeniería civil", "Ingeniería agraria y agroalimentaria", "Ingeniería agrícola, agropecuaria y medio rural", "Ingeniería horticultura y jardinería", "Ingeniería forestal y montes", "Veterinaria", "Odontología", "Medicina", "Enfermería", "Ingeniería biomédica y de la salud", "Óptica y optometría", "Fisioterapia", "Logopedia", "Nutrición humana y dietética", "Podología", "Terapia ocupacional", "Farmacia", "Trabajo social", "Actividad física y del deporte", "Turismo", "Náutica y transporte marítimo", "Servicio de transporte terrestre y Servicio de transporte aéreo", "Servicios (otros estudios)")
+
+df$TITU <- factor(df$TITU, levels=codi, labels=descrip)
+
+codi_amb <- c("0112", "0113", "011", "0211", "021", "022", "023", "0311", "0313", "031", "032", "0413", "041", "042", "051", "052", "053", "054", "061", "071", "072", "073", "081", "082", "084", "0912", "0913", "091", "092", "1014", "1015", "109")
+desc_amb <- c("Formación de docentes de enseñanza infantil", "Formación de docentes de enseñanza primaria", "Educación (Otros estudios)", "Técnicas audiovisuales y medios de comunicación", "Artes (Otros estudios)", "Humanidades", "Lenguas", "Economía", "Psicología", "Ciencias sociales y del comportamiento (Otros estudios)", "Periodismo y documentación", "Dirección y administración", "Negocios y administración (Otros estudios)", "Derecho", "Ciencias de la vida", "Medio ambiente", "Ciencias químicas, físicas y geológicas", "Matemáticas y estadística", "Informática", "Ingeniería y profesiones afines", "Industria manufacturera y producción", "Arquitectura y construcción", "Agricultura y ganadería", "Silvicultura", "Veterinaria", "Medicina", "Enfermería", "Salud (Otros estudios)", "Servicios sociales", "Actividades físicas y deportivas", "Viajes, turismo y ocio", "Servicios (Otros estudios)")
+
+# 9999 = NA
+
+df <- df %>% mutate(AMBITO = ifelse(AMBITO == "9999",NA, AMBITO))
+
+df$AMBITO <- factor(df$AMBITO, levels=codi_amb, labels=desc_amb)
+
+codi_rama <- c(1, 2, 3, 4, 5)
+desc_rama <- c("Artes y humanidades", "Ciencias", "Ciencias sociales y jurídicas", "Ingeniería y arquitectura", "Ciencias de la salud")
+
+df$RAMA <- factor(df$RAMA, levels=codi_rama, labels=desc_rama)
+
+codi_tipu <- c(1, 2, 3, 4)
+desc_tipu <- c("Universidad Pública presencial", "Universidad Pública a distancia", "Universidad Privada presencial", "Universidad Privada a distancia")
+
+df$T_UNIV <- factor(df$T_UNIV, levels=codi_tipu, labels=desc_tipu)
+
+# 9 = NA
+
+codi_idi <- c("0", "1", "2", "3", "4", "5")
+desc_idi <- c("0", "1", "2", "3", "4", "5 o más")
+
+df <- df %>% mutate(IDIOMAS = ifelse(IDIOMAS == "9",NA, IDIOMAS))
+
+df$IDIOMAS <- factor(df$IDIOMAS, levels=codi_idi, labels=desc_idi)
+
+codi_empl <- c(1, 2, 3)
+desc_empl <- c("Trabajando", "En desempleo", "Inactivo")
+
+df$TRBPRN1 <- factor(df$TRBPRN1, levels=codi_empl, labels=desc_empl)
+
+codi_sueldo <- c("1", "2", "3", "4", "5", "6", "7")
+desc_sueldo <- c("Menos de 700 euros", "De 700 a 999 euros", "De 1.000 a 1.499 euros", "De 1.500 a 1.999 euros", "De 2.000 a 2.499 euros", "De 2.500 a 2.999 euros", "De 3.000 euros en adelante")
+
+df <- df %>% mutate(TR_SUELDO = ifelse(TRBPRN1 == "9",NA, TR_SUELDO))
+
+df$TR_SUELDO <- factor(df$TR_SUELDO, levels=codi_sueldo, labels=desc_sueldo)
+
+# 9 = NA
+
+codi_tiempo1 <- c("0", "1", "2", "3", "4", "5", "6")
+desc_tiempo1 <- c("Continuó al menos 6 meses más en el trabajo que tenía", "Menos de tres meses", "De 3 a 6 meses", "De 6 meses a 1 año", "De 1 año a año y medio", "De 1 año y medio a 2 años", "2 o más años")
+
+df <- df %>% mutate(HATR_E11 = ifelse(TRBPRN1 == "9",NA, HATR_E11))
+
+df$HATR_E11 <- factor(df$HATR_E11, levels=codi_tiempo1, labels=desc_tiempo1)
+```
+
+Observamos la cantidad de respuestas vacías en las columnas sobre el MIR, el ámbito de estudio de la primera carrera y la rama de la carrera.
+```{r}
+sum(is.na(df$EST_B13_AMB1))
+
+sum(is.na(df$EST2_SA))
+
+sum(is.na(df$RAMA))
+```
+Descartamos la columna del MIR, ya que todo aquel que se encuentre realizándolo o ya lo haya realizado necesariamente debe haver realizado una carrera o máster de la rama de ciencias de la salut. Por tanto, no es redundante conocer esa información para crear la columna con la rama del último estudio realizado.
+
+Seguidamente, nos disponemos a analizar las variables que comienzan por EST, estas poseen información del tipo de estudios que ha realizado y del tipo de cada estudio. Nuestra intención es utilizar dicha información para obtener la cantidad de grados, másteres y carreras que tiene cada entrevistado y además obtener una columna en la que se observe el ámbito del estudio de más nivel que tenga. Para ello vamos a utilizar la librería __dplyr__ en conjunto con las funciones 'mutate' y 'pipe'. Asumimos que los NA significa que no poseen ese estudio. Podríamos ignorar muchas de las columnas porqué hay muy poca gente con 3 grados o 3 máster, peró aún así intentamos mantener los máximos datos posibles
+```{r}
+df <- df %>% 
+  mutate(URAMA = ifelse(!is.na(EST_B21), EST_B21, 
+    ifelse(!is.na(EST_B17_M3), EST_B17_M3,
+        ifelse(!is.na(EST_B17_M2), EST_B17_M2,
+          ifelse(!is.na(EST_B17_M1), EST_B17_M1,
+                 RAMA)))))
+
+codi_urama <- c(1, 2, 3, 4, 5)
+desc_urama <- c("Artes y humanidades", "Ciencias", "Ciencias sociales y jurídicas", "Ingeniería y arquitectura", "Ciencias de la salud")
+
+df$URAMA <- factor(df$URAMA, levels=codi_urama, labels=desc_urama)
+```
+Podemos comprobar ahora cuantas personas se han cambiado de rama en comparación con la carrera realizada.
+```{r}
+sum(sum(df$URAMA != df$RAMA))
+```
+Una vez se ha obtenido la columna URAMA podemos eliminar del dataframe todas aquellas columnas que no nos son relevantes para graficar.
+```{r}
+df <- df %>% select(-c('EST_B13_AMB1','EST_B13_AMB2','EST_B13_AMB3','EST_B17_M1',
+                       'EST_B17_M2','EST_B17_M3','EST_B21','EST2_SA'))
+```
+
+
+Graficamos ahora dos gráficos de barras comparando la columna con la rama de la primera titulación con la rama del último estudio realizado.
+```{r}
+ggplot(data=df, aes(x = RAMA)) + geom_bar(aes(fill=SEXO)) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10)) + 
+  scale_y_continuous(limits = c(0, 16000))
+ggplot(data=df, aes(x = URAMA)) + geom_bar(aes(fill=SEXO)) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10)) +
+  scale_y_continuous(limits = c(0, 16000))
+```
+Ahora lo hacemos con un diagrama de mosaico.
+```{r}
+tc <- table(df$RAMA,df$SEXO)
+mosaicplot(tc,color=c("#F8766D", "#00BFC4"))
+```
+
+Graficamos en un gráfico de barras los estados laborales de las personas analizadas.
+```{r}
+ggplot(data=df, aes(x = TRBPRN1)) + geom_bar(aes(fill=T_UNIV)) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10))
+```
+De forma auxiliar generamos un dataframe en el que solo se encuentre la población de la encuesta que se encuentra trabajando.
+```{r}
+df_tra <- df %>% filter(TRBPRN1=='Trabajando')
+```
+
+Preparación de la variable TR_SUELDO, dado que esta variable presenta una cantidad elevada de datos faltantes además de una codificación que complica trabajar con los datos. 
+
+Antes de imputar es necesario verificar si podemos realizar imputación condicional obervando si hay relación entre las variables TR_SUELDO y RAMA. Para ello realizamos el test Chi-Cuadrado
+
+
+```{r}
+tabla <- table(df$RAMA, df$TR_SUELDO)
+print(tabla)
+
+chi_test <- chisq.test(tabla)
+print("RESULTADO TEST CHI-CUADRADO") 
+print(chi_test)
+```
+
+El resultado del test chi-cuadrado confirma que las variables están estadísticamente relacionadas y por ende pueden usarse para imputación condicional.
+
+El proceso que se seguirá es una imputación de los datos presentes en la variable:
+
+En primer lugar, se verifica que la variable RAMA se encuentre definida como un factor nominal y que T_SUELDO se establezca como un factor ordinal. A continuación, se realiza una exploración inicial para cuantificar el número total de valores faltantes (NA) y determinar su distribución por grupo de rama.
+
+Posteriormente, se procede con la imputación condicional, sustituyendo los valores faltantes de T_SUELDO por la mediana ordinal correspondiente al grupo definido por la variable RAMA, excluyendo los valores ausentes. Una vez completada esta etapa, la variable imputada se reconvierte en un factor con las etiquetas originales.
+
+Finalmente, se genera un gráfico de barras apiladas que representa las proporciones de los distintos rangos salariales por rama de estudio, utilizando los datos tras la imputación.
+
+
+```{r}
+# IMPUTACIÓN DE T_SUELDO SEGÚN RAMA DE ESTUDIO
+
+library(dplyr)
+library(ggplot2)
+
+
+# convertimos las variables a factores (TR_SUELDO y RAMA)
+
+df$RAMA <- factor(df$RAMA,
+                  levels = c("Artes y humanidades",
+                             "Ciencias",
+                             "Ciencias sociales y jurídicas",
+                             "Ingeniería y arquitectura",
+                             "Ciencias de la salud"))
+
+df$TR_SUELDO <- factor(df$TR_SUELDO,
+                      levels = c("Menos de 700 euros",
+                                 "De 700 a 999 euros",
+                                 "De 1.000 a 1.499 euros",
+                                 "De 1.500 a 1.999 euros",
+                                 "De 2.000 a 2.499 euros",
+                                 "De 2.500 a 2.999 euros",
+                                 "De 3.000 euros en adelante",
+                                 "NS/NC"),
+                      ordered = TRUE)
+
+
+#VERIFICAR DATOS FALTANTES
+
+cat("Número de valores faltantes en T_SUELDO:\n")
+sum(is.na(df$TR_SUELDO))
+
+cat("\nDistribución de NAs por rama:\n")
+table(df$RAMA, is.na(df$TR_SUELDO))
+
+moda <- names(which.max(table(df$TR_SUELDO[!is.na(df$TR_SUELDO)])))
+```
+
+```{r}
+
+# Imputacion por rama.
+# Convertimos TR_SUELDO a índice numérico ordenado para calcular la mediana de cada grupo
+df <- df %>%
+  group_by(RAMA) %>%
+  mutate(
+    TR_SUELDO = ifelse(
+      is.na(TR_SUELDO),
+      moda,
+      TR_SUELDO
+    )
+  ) %>%
+  ungroup()
+
+# reconstruimos factor del suelkdo ordenado con etiquetas originales.
+df$TR_SUELDO <- factor(df$TR_SUELDO,
+                      levels = c("Menos de 700 euros",
+                                 "De 700 a 999 euros",
+                                 "De 1.000 a 1.499 euros",
+                                 "De 1.500 a 1.999 euros",
+                                 "De 2.000 a 2.499 euros",
+                                 "De 2.500 a 2.999 euros",
+                                 "De 3.000 euros en adelante",
+                                 "NS/NC"),
+                      )
+
+
+#VERIFICACION
+
+cat("\nValores faltantes después de la imputación:\n")
+sum(is.na(df$TR_SUELDO))
+
+cat("\nFrecuencia de niveles T_SUELDO:\n")
+print(summary(df$TR_SUELDO))
+
+
+# visualizamos las distribucione despues de la imputación.
+
+ggplot(df, aes(x = RAMA, fill = TR_SUELDO)) +
+  geom_bar() +
+  labs(
+    title = "Distribución de niveles salariales imputados por rama de estudio",
+    x = "Rama de estudio",
+    y = "Proporción dentro de cada rama",
+    fill = "Nivel salarial"
+  ) +
+  scale_fill_brewer(palette = "Blues") +
+  theme_minimal(base_size = 12) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+```
+La imputación condinional aplicada ha funcionado correctamente al imputar un total de 4527 datos faltantes usando la mediana.
+La categoría “1.000–1.499 euros” sigue siendo la más frecuente esto suele ser realista y consistente con distribuciones salariales típicas.
+El número de casos imputados (4 527) se ha redistribuido de forma coherente con la estructura de los datos.
+No hay picos o saltos anómalos en ninguna categoría, lo cual indica que la imputación no sesgó visiblemente la distribución.
+
+Obtenemos información sobre la mediana imputada por cada rama de estudio, lo cual corresponde con el nivel salarial típico que ha usado el algoritmo para imputar los datos faltantes.
+
+```{r}
+
+#MEDIANA IMPUTADA POR RAMA
+
+library(dplyr)
+
+medianas_por_rama <- df %>%
+  group_by(RAMA) %>%
+  summarise(
+    Mediana_Sueldo = levels(TR_SUELDO)[median(as.numeric(TR_SUELDO))],
+    n = n()
+  )
+
+print(medianas_por_rama)
+
+```
+
+
+La siguiente tabla muestra todas las ramas con valores salariales distribuidos tras la imputación.
+
+```{r}
+table(df$RAMA, df$TR_SUELDO, useNA = "ifany")
+
+```
+
+
+# Gráficas
+
+Estadísticas del tipo de universidad.
+```{r}
+ggplot(data=df, aes(x = T_UNIV)) + geom_bar(aes(fill=SEXO)) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10))
+```
+Como podemos observar la gran mayoría de la gente ha estudiado de forma presencial en una universidad pública por lo que utilizar el factor de tipo de universidad para estudios siguientes puede no ser estadísticamente correcto, ya que hay oversampling.
+
+Variación del tiempo transcurrido hasta que empezo a trabajar según su universidad.
+```{r}
+df_plot <- df %>% filter(!is.na(HATR_E11))
+
+ggplot(data=df_plot, aes(x = HATR_E11)) + geom_bar(aes(fill=T_UNIV)) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10))
+```
+Variación del tiempo transcurrido hasta que empezo a trabajar según su rama.
+```{r}
+# Quitamos los registros NA y graficamos
+
+df_plot <- df %>% filter(!is.na(HATR_E11))
+
+ggplot(data=df_plot, aes(x = HATR_E11)) + geom_bar(aes(fill=URAMA)) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 5))
+```
+Situación laboral separando por el tipo de rama del estudio más elevado.
+
+```{r}
+# Quitamos los registros NA y graficamos
+
+df_plot <- df %>% filter(!is.na(TRBPRN1))
+
+ggplot(df_plot, aes(x= TRBPRN1)) + geom_bar(aes(fill=URAMA)) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10))
+```
+
+Número de idiomas frente a situación laboral.
+```{r}
+# Quitamos los registros NA y graficamos
+
+df_plot <- df %>% filter(!is.na(TRBPRN1),!is.na(IDIOMAS))
+
+ggplot(df_plot, aes(x=IDIOMAS)) + geom_bar(aes(fill=SEXO)) + facet_wrap(~TRBPRN1) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10))
+```
+
+Rama del estudio más elevado en función de la situación laboral.
+```{r}
+df_plot <- df %>% filter(!is.na(TRBPRN1))
+
+ggplot(df_plot, aes(x=URAMA)) + geom_bar(aes(fill=SEXO)) + facet_wrap(~TRBPRN1) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10))
+```
+
+Gráfica de la variación del sueldo según la rama de de estudio
+
+```{r}
+ggplot(df, aes(x = RAMA, fill = TR_SUELDO)) +
+  geom_bar(position = "fill") +
+  labs(
+    title = "Variación del sueldo según la rama de estudio",
+    x = "Rama de estudio",
+    y = "Proporción de cada nivel salarial",
+    fill = "Nivel salarial"
+  ) +
+  scale_fill_brewer(palette = "Blues") +
+  theme_minimal(base_size = 12) +
+  theme(axis.text.x = element_text(angle = 20, hjust = 1))
+
+```
+
+Gráfica de distribución de hombres y mujeres en cada rama de estudio
+
+```{r}
+ggplot(df, aes(x = RAMA, fill = SEXO)) +
+  geom_bar(position = "fill") +
+  labs(
+    title = "Distribución de mujeres y hombres por rama de estudio",
+    x = "Rama de estudio",
+    y = "Proporción",
+    fill = "Sexo"
+  ) +
+  scale_fill_manual(values = c("#F28E2B", "#4E79A7")) +
+  theme_minimal(base_size = 12) +
+  theme(axis.text.x = element_text(angle = 20, hjust = 1))
+
+```
+Gráfica de comparación salarial según sexo
+
+```{r}
+ggplot(df, aes(x = SEXO, fill = TR_SUELDO)) +
+  geom_bar(position = "fill") 
+  labs(
+    title = "Diferencia salarial según el sexo",
+    x = "Sexo",
+    y = "Proporción de niveles salariales",
+    fill = "Nivel salarial"
+  ) +
+  scale_fill_brewer(palette = "Purples") +
+  theme_minimal()
+
 ```
 
 
 
-For a very wide table, landscape layouts are allowed.
 
 
-\startlandscape
 
-```{r tab2, echo=FALSE}
-df <- data.frame(`Title 1` = c("Entry 1", "Entry 2"),
-                 `Title 2` = c("Data", "Data"),
-                 `Title 3` = c("Data", "Data"),
-                 `Title 4` = c("This cell has some longer content that runs over
-                               two lines",
-                               "Data"))
-knitr::kable(df, format = "latex", 
-             booktabs = TRUE, 
-             caption = "This is a very wide table", 
-             align = 'ccc', centering = FALSE,
-             table.envir = "table", position = "H")
-```
 
-\finishlandscape
 
-## Formatting of Mathematical Components
-
-This is an example of an equation:
-
-$$
-a = 1.
-$$
-
-If you want numbered equations use Latex and wrap in the equation environment:
-
-\begin{equation}
-a = 1,
-\end{equation}
-
-the text following an equation need not be a new paragraph. Please punctuate 
-equations as regular text.
-
-```{comment}
-If the documentclass option "submit" is chosen, please insert a blank line before and after any math environment (equation and eqnarray environments). This ensures correct linenumbering. The blank line should be removed when the documentclass option is changed to "accept" because the text following an equation should not be a new paragraph.
-```
-
-This is the example 2 of equation:
-
-\begin{adjustwidth}{-\extralength}{0cm}
-\begin{equation}
-a = b + c + d + e + f + g + h + i + j + k + l + m + n + o + p + q + r + s + t + 
-u + v + w + x + y + z
-\end{equation}
-\end{adjustwidth}
-
-Theorem-type environments (including propositions, lemmas, corollaries etc.) 
-can be formatted as follows:
-
-Example of a theorem:
-
-::: {.Theorem latex=true}
-Example text of a theorem
-:::
-
-The text continues here. Proofs must be formatted as follows:
-
-Example of a proof:
-
-::: {.proof latex="[Proof of Theorem1]"}
-Text of the proof. Note that the phrase ``of Theorem 1'' is optional if it is 
-clear which theorem is being referred to.
-:::
-
-The text continues here.
-
-# Discussion
-
-Authors should discuss the results and how they can be interpreted in 
-perspective of previous studies and of the working hypotheses. The findings and 
-their implications should be discussed in the broadest context possible. Future 
-research directions may also be highlighted.
-
-# Conclusion
-
-This section is not mandatory, but can be added to the manuscript if the
-discussion is unusually long or complex.
-
-# Patents
-
-This section is not mandatory, but may be added if there are patents resulting
-from the work reported in this manuscript.
