@@ -161,7 +161,7 @@ dfT1 <- data.frame('Variable' = names(df)[2:length(names(df))],
 
 kable(dfT1, format = "latex",booktabs = TRUE,
   caption = "Cantidad de Na's en función de la variable",
-  align = 'l|c', longtable = TRUE)
+  align = 'l|c', longtable = TRUE,linesep = "")
 ```
 
 Como podemos observar las únicas columnas con datos faltantes son IDIOMAS, TR_SUELDO y HATR_E11. La variable con más datos faltantes es TR_SUELDO con un ```r round(sum(is.na(df$TR_SUELDO))/nrow(df)*100,2)``` % de datos con NA. No obstante, no todos ellos son datos que no han sido rellenados, ya que puede darse el caso de que la persona no esté actualmente trabajando y, por tanto, no haya rellenado a drede la casilla de TR_Sueldo. Para observar cuales son en realidad nuestros datos faltantes procedemos a observar el número de NA's de la variable TR_SUELDO una vez hemos eliminado aquellas personas que no se encuentran trabajando.
@@ -178,7 +178,7 @@ dfT2 <- data.frame('Variable' = c('TR_SUELDO','TR_SUELDO'),
 
 kable(dfT2, format = "latex",booktabs = TRUE,
   caption = "Cantidad de Na's en la variable TR.SUELDO cuando se elimina la cantidad de gente que no está activa laboralmente",
-  align = 'l|c|c', longtable = TRUE)
+  align = 'l|c|c', longtable = TRUE,linesep = "")
 ```
 
 Como podemos observar hay aproximadamente 1000 valores NA que pertenecen a la población no activa laboralmente, la cual es lógico que no tenga un salario. No obstante, los otros 3800 datos con NA no parecen seguir ninguna lógica. Por ello intentaremos relacionar la variable sueldo con alguna otra variable del conjunto que no contenga datos faltantes para así conseguir imputar dichos datos.
@@ -210,11 +210,7 @@ ggplot(data=df, aes(x = TRBPRN1)) + geom_bar(aes(fill=T_UNIV)) +
 ```
 En el anterior gráfico se puede apreciar como prácticamente toda la gente que se ha sometido a la encuesta se encuentra trabajando, en concreto tenemos un ```r round(nrow(dfAc)/nrow(df)*100,2)``` % de gente laboralmente activa. Por otro lado, se observa como la mayor parte de la gente a estudiado en una universidad pública presencial seguida de la universidad privada presencial.
 
-
-A partir del gráfico anterior observ
-
- según su rama.
-
+Ahora gráficamos el tiempo transcurrido hasta encontrar trabajo en función del tipo de RAMA del estudio más importante realizado.
 ```{r figT3,echo=FALSE, fig.cap="Gráfico de barras del tiempo transcurrido hasta que empezo a trabajar coloreado con el tipo de RAMA del estudio más importante realizado",fig.align = 'center', out.width = "0.6\\linewidth"}
 ggplot(data=df, aes(x = HATR_E11)) + geom_bar(aes(fill=URAMA)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 8)) +
@@ -241,9 +237,54 @@ ggplot(df, aes(x=IDIOMAS)) + geom_bar(aes(fill=SEXO)) + facet_wrap(~TRBPRN1) +
 
 Observamos como en todos los casos la columna con mayor peso es 1, lo cual nos indica que la gente suele enseñarse un único idioma diferente a los idiomas maternos. Dicha relación tiene sentido, ya que actualmente la gente suele centrarse en estudiar el inglés y dejar el resto de idiomas más de lado. También se puede notar que la segunda columna con más cantidad de datos es la de dos idiomas, dentro de la cual predomina el sexo femenino. Por otro lado, no parece haber una relación directa entre la cantidad de idiomas diferentes del materno que conoce el individuo con la situación laboral que este ostenta.
 
-# Análsis de Chi2 sobre las distintas variables
-
-
-
 # Imputación de datos faltantes
+
+Queremos imputar los valores de la variable con el sueldo para aquellas personas que se encuentran activas, para ello lo que vamos a hacer va a ser primero aplicar el test del $\chi^2$ a la combinación de la variable TR_SUELDO con el resto de variables, evitando las variables IDENT porque no tiene sentido relacionarla con el identificador y la variable TRBPRN1 porque si eliminamos los NA's de la variable TR_SUELDO, aquellas personas que no estan laboralmente activas se eliminan y no tiene sentido realizar la table de contingencia porque dos columnas valen siempre 0.
+```{r, echo=FALSE}
+colNam <- names(df %>% select(-IDENT,-TR_SUELDO, -TRBPRN1, -RAMA))
+dfAUX2 <- df %>% na.omit()
+
+p <- c()
+V <- c()
+
+sueldo <- c()
+
+for (i in 1:length(colNam)){
+  
+  tabla <- table(dfAUX2$TR_SUELDO, dfAUX2[[colNam[i]]])
+  
+  test <- chisq.test(tabla)
+  
+  p[i] <- test$p.value
+  V[i] <- (test$statistic / (sum(tabla) * (min(dim(tabla)) - 1)))**0.5
+  
+  sueldo[i] <- 'TR_SUELDO'
+}
+
+p <- sprintf("%.2e", p)
+V <- sprintf("%.2e", V)
+
+dfT3 <- data.frame('Variable 1' = sueldo,
+                   'Variable 2' = colNam,
+                  'p-valor' = p,
+                  'V de Cramer' = V,
+                  check.names = FALSE)
+
+kable(dfT3, format = "latex",booktabs = TRUE,
+  caption = "p-valor y V de Cramer para el sueldo",
+  align = 'c', longtable = TRUE,linesep = "")
+```
+
+
+Cuando el valor de p obtenido en dicho test es menor que 0.05 podemos concluir que hay una relación entre las dos variables categóricas sobre las que se ha aplicado el test, por tanto podemos decir que todas las variables se encuentran relacionadas en mayor o menor medida. La significancia estadística de dicha relación nos la de el valor del V de Cramer, dicho estadístico consiste en una normalización del parámetro $\chi^2$ de modo que un mayor valor del V de Cramer quiere decir que hay una mayor significancia estadística entre las variables. Ante dicho descubrimiento podríamos pensar que utilizar la variable SEXO es lo mejor. No obstante, esto no tiene ningún sentido, ya que teóricamente ambos sexos tienen las mismas oportunidades y deberían tener las mismas oportunidades de forma laboral. Ante este hecho vamos a proceder a utilizar la variable URAMA para realizar la imputación de los datos. Cabe destacar que el V de Cramer también nos muestra que la variable URAMA es la que tiene mayor significancia estadística después de la variable SEXO. 
+
+
+
+
+
+Poner cosas de imputacion
+
+
+
+
 
