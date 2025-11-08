@@ -451,6 +451,22 @@ ggplot(df, aes(x = SEXO, fill = TR_SUELDO)) +
 
 ```
 
+```{r}
+
+ggplot(df %>% filter(TRBPRN1 == "Trabajando", !is.na(T_UNIV), !is.na(TR_SUELDO)),
+       aes(x = T_UNIV, fill = TR_SUELDO)) +
+  geom_bar(position = "fill") +
+  labs(
+    title = "Distribución salarial por tipo de universidad",
+    x = "Tipo de universidad",
+    y = "Proporción de niveles salariales",
+    fill = "Nivel salarial"
+  ) +
+  scale_fill_brewer(palette = "Reds") +
+  theme_minimal(base_size = 12) +
+  theme(axis.text.x = element_text(angle = 25, hjust = 1))
+
+```
 
 
 
