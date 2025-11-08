@@ -218,13 +218,12 @@ Finalmente, se genera un gráfico de barras apiladas que representa las proporci
 
 ```{r}
 
-# IMPUTACIÓN DE T_SUELDO SEGÚN RAMA DE ESTUDIO
+#aquí imputamos usando dplyr y count porque la moda no la podemos sacar de otra forma
 
 library(dplyr)
 library(ggplot2)
 
-
-# convertimos las variables a factores (TR_SUELDO y RAMA)
+# primero convertimos las variables que vamos a usar a factore
 
 df$RAMA <- factor(df$RAMA,
                   levels = c("Artes y humanidades",
@@ -234,68 +233,82 @@ df$RAMA <- factor(df$RAMA,
                              "Ciencias de la salud"))
 
 df$TR_SUELDO <- factor(df$TR_SUELDO,
-                      levels = c("Menos de 700 euros",
-                                 "De 700 a 999 euros",
-                                 "De 1.000 a 1.499 euros",
-                                 "De 1.500 a 1.999 euros",
-                                 "De 2.000 a 2.499 euros",
-                                 "De 2.500 a 2.999 euros",
-                                 "De 3.000 euros en adelante",
-                                 "NS/NC"),
-                      ordered = TRUE)
+                       levels = c("Menos de 700 euros",
+                                  "De 700 a 999 euros",
+                                  "De 1.000 a 1.499 euros",
+                                  "De 1.500 a 1.999 euros",
+                                  "De 2.000 a 2.499 euros",
+                                  "De 2.500 a 2.999 euros",
+                                  "De 3.000 euros en adelante",
+                                  "NS/NC"),
+                       ordered = TRUE)
 
 
-#VERIFICAR DATOS FALTANTES
+# verificar las variables que faltan los na
 
-cat("Número de valores faltantes en T_SUELDO:\n")
+
+cat("Número de valores faltantes en TR_SUELDO (antes):\n")
 sum(is.na(df$TR_SUELDO))
 
-cat("\nDistribución de NAs por rama:\n")
-table(df$RAMA, is.na(df$TR_SUELDO))
+cat("\nDistribución de NAs por rama (antes):\n")
+print(table(df$RAMA, is.na(df$TR_SUELDO)))
 
 
-# Imputacion por rama.
-# Convertimos TR_SUELDO a índice numérico ordenado para calcular la mediana de cada grupo
-df <- df %>%
+# MODA POR RAMA SOLO PERSONAS TRABAJANDO y quitando los NS/NC
+
+
+moda_por_rama <- df %>%
+  filter(TRBPRN1 == "Trabajando",
+         !is.na(TR_SUELDO),
+         TR_SUELDO != "NS/NC") %>%
   group_by(RAMA) %>%
+  count(RAMA, TR_SUELDO, sort = TRUE) %>%
+  slice_max(n, n = 1, with_ties = FALSE) %>%
+  transmute(RAMA,
+            moda_sueldo = as.character(TR_SUELDO))  # nos quedamos con el texto
+
+
+# imputar condicionalmente pero solo personas que sí trbajan ya que si no trabajan no aportan información valida real
+
+df <- df %>%
+  left_join(moda_por_rama, by = "RAMA") %>%
   mutate(
     TR_SUELDO = ifelse(
-      is.na(TR_SUELDO),
-      as.numeric(stats::median(as.numeric(TR_SUELDO), na.rm = TRUE)),
-      as.numeric(TR_SUELDO)
+      TRBPRN1 == "Trabajando" & is.na(TR_SUELDO),
+      moda_sueldo,                      # usamos la moda de su rama
+      as.character(TR_SUELDO)           # dejamos el valor actual (o NA si no aplica)
     )
   ) %>%
-  ungroup()
+  select(-moda_sueldo)
 
-# reconstruimos factor del suelkdo ordenado con etiquetas originales.
-df$TR_SUELDO <- factor(round(df$TR_SUELDO),
-                      levels = 1:8,
-                      labels = c("Menos de 700 euros",
-                                 "De 700 a 999 euros",
-                                 "De 1.000 a 1.499 euros",
-                                 "De 1.500 a 1.999 euros",
-                                 "De 2.000 a 2.499 euros",
-                                 "De 2.500 a 2.999 euros",
-                                 "De 3.000 euros en adelante",
-                                 "NS/NC"),
-                      ordered = TRUE)
+#  convertir TR_SUELDO a factor ordenado con sus niveles de antes.
+df$TR_SUELDO <- factor(df$TR_SUELDO,
+                       levels = c("Menos de 700 euros",
+                                  "De 700 a 999 euros",
+                                  "De 1.000 a 1.499 euros",
+                                  "De 1.500 a 1.999 euros",
+                                  "De 2.000 a 2.499 euros",
+                                  "De 2.500 a 2.999 euros",
+                                  "De 3.000 euros en adelante",
+                                  "NS/NC"),
+                       ordered = TRUE)
 
 
-#VERIFICACION
+# verificación results
 
-cat("\nValores faltantes después de la imputación:\n")
-sum(is.na(df$TR_SUELDO))
+cat("\nValores faltantes en TR_SUELDO después de la imputación (solo trabajando):\n")
+sum(is.na(df$TR_SUELDO[df$TRBPRN1 == "Trabajando"]))
 
-cat("\nFrecuencia de niveles T_SUELDO:\n")
+cat("\nFrecuencia de niveles TR_SUELDO (en todo el dataset):\n")
 print(summary(df$TR_SUELDO))
 
+# visualizar como ha quedaod
 
-# visualizamos las distribucione despues de la imputación.
-
-ggplot(df, aes(x = RAMA, fill = TR_SUELDO)) +
+ggplot(df %>% filter(TRBPRN1 == "Trabajando"),
+       aes(x = RAMA, fill = TR_SUELDO)) +
   geom_bar(position = "fill") +
   labs(
-    title = "Distribución de niveles salariales imputados por rama de estudio",
+    title = "Distribución de niveles salariales imputados por rama (solo personas que trabajan)",
     x = "Rama de estudio",
     y = "Proporción dentro de cada rama",
     fill = "Nivel salarial"
@@ -303,6 +316,23 @@ ggplot(df, aes(x = RAMA, fill = TR_SUELDO)) +
   scale_fill_brewer(palette = "Blues") +
   theme_minimal(base_size = 12) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+# para documentar como ha ido la imputación podemos generar una tabla.
+imputaciones_por_rama <- df %>%
+  filter(TRBPRN1 == "Trabajando") %>%
+  group_by(RAMA) %>%
+  summarise(
+    Total_Registros = n(),
+    Imputados = sum(is.na(TR_SUELDO)),  # Los que aún son NA (no imputables)
+    Completos = Total_Registros - Imputados
+  ) %>%
+  mutate(
+    Porcentaje_Imputado = round((Total_Registros - Imputados) / Total_Registros * 100, 2)
+  )
+
+#unir tablas (moda y recuento)
+resumen_imputacion <- left_join(moda_por_rama, imputaciones_por_rama, by = "RAMA")
+resumen_imputacion
 
 ```
 La imputación condinional aplicada ha funcionado correctamente al imputar un total de 4527 datos faltantes usando la mediana.
