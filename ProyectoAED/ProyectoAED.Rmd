@@ -34,6 +34,11 @@ output:
     extra_dependencies: longtable
 ---
 
+```{r, echo = FALSE}
+knitr::opts_chunk$set(fig.pos = 'H')
+```
+
+
 # Introducción
 
 En la carpeta de datos original, se pueden observar dos archivos de datos CSV diferentes. El archivo que se va a proceder a analizar es el de la gente que se graduó en una universidad española durante el curso 2013-2014 (EILU_GRAD_2019.csv). El otro archivo corresponde a la gente que obtuvo un máster en el curso 2013-2014, por lo que no será objeto de nuestro estudio. Habiendo aclarado ya el conjunto de datos a utilizar podemos proceder a importar las librerías que nos permitirán analizarlo, limpiarlo y estudiarlo.
@@ -159,7 +164,7 @@ kable(dfT1, format = "latex",booktabs = TRUE,
   align = 'l|c', longtable = TRUE)
 ```
 
-Como podemos observar las únicas columnas con datos faltantes son IDIOMAS, TR_SUELDO y HATR_E11. La variable con más datos faltantes es TR_SUELDO con un ```r sum(is.na(df$TR_SUELDO))/nrow(df)*100``` % de datos con NA. No obstante, no todos ellos son datos que no han sido rellenados, ya que puede darse el caso de que la persona no esté actualmente trabajando y, por tanto, no haya rellenado a drede la casilla de TR_Sueldo. Para observar cuales son en realidad nuestros datos faltantes procedemos a observar el número de NA's de la variable TR_SUELDO una vez hemos eliminado aquellas personas que no se encuentran trabajando.
+Como podemos observar las únicas columnas con datos faltantes son IDIOMAS, TR_SUELDO y HATR_E11. La variable con más datos faltantes es TR_SUELDO con un ```r round(sum(is.na(df$TR_SUELDO))/nrow(df)*100,2)``` % de datos con NA. No obstante, no todos ellos son datos que no han sido rellenados, ya que puede darse el caso de que la persona no esté actualmente trabajando y, por tanto, no haya rellenado a drede la casilla de TR_Sueldo. Para observar cuales son en realidad nuestros datos faltantes procedemos a observar el número de NA's de la variable TR_SUELDO una vez hemos eliminado aquellas personas que no se encuentran trabajando.
 ```{r tab2, echo=FALSE}
 dfAc <- df %>% filter(TRBPRN1 != 'Trabajando')
 
@@ -176,13 +181,14 @@ kable(dfT2, format = "latex",booktabs = TRUE,
   align = 'l|c|c', longtable = TRUE)
 ```
 
-Como podemos observar hay aproximadamente 1000 valores NA que pertenecen a la población no activa laboralmente, la cual es lógico que no tenga un salario. No obstante, los otros 4000 datos con NA no parecen seguir ninguna lógica. Por ello intentaremos relacionar la variable sueldo con alguna otra variable del conjunto que no contenga datos faltantes para así conseguir imputar dichos datos.
+Como podemos observar hay aproximadamente 1000 valores NA que pertenecen a la población no activa laboralmente, la cual es lógico que no tenga un salario. No obstante, los otros 3800 datos con NA no parecen seguir ninguna lógica. Por ello intentaremos relacionar la variable sueldo con alguna otra variable del conjunto que no contenga datos faltantes para así conseguir imputar dichos datos.
 
 # Gráficas exploratorias
 
+En este apartado, vamos a proceder a realizar diferentes gráficas de barras para observar como se separan los datos en función de las variables categóricas que utilicemos. 
 
-Graficamos ahora dos gráficos de barras comparando la columna con la rama de la primera titulación con la rama del último estudio realizado.
-```{r figT1, fig.cap="Gráfico de barras de RAMA/URAMA coloreado con SEXO",fig.align = 'center', out.width = "0.8\\linewidth"}
+Para empezar, vamos a hacer dos gráficos de barras con la variable RAMA y URAMA para observar si hay mucha discrepancia entre ambas variables.
+```{r figT1, echo=FALSE,fig.cap="Gráfico de barras de RAMA/URAMA coloreado con SEXO",fig.align = 'center', out.width = "0.6\\linewidth"}
 p1 <- ggplot(data=df, aes(x = RAMA)) + geom_bar(aes(fill=SEXO)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10)) + 
   scale_y_continuous(limits = c(0, 16000))
@@ -193,63 +199,47 @@ p2 <- ggplot(data=df, aes(x = URAMA)) + geom_bar(aes(fill=SEXO)) +
 
 p1+p2
 ```
+Como podemos observar los dos gráficos son muy similares, lo cual tiene sentido, ya que la gente suele realizar empezar estudios que tengan relación con sus estudios ya completados. A partir de estos gráficos también se observa como hay ramas como ingeniería y arquitectura donde predominan los hombres y otras como Ciencias sociales y jurídicas donde los alumnos son mayoritariamente mujeres.
 
-Graficamos en un gráfico de barras los estados laborales de las personas analizadas.
-```{r figT2, fig.cap="Gráfico de barras de TRBPRN1 coloreado con SEXO",fig.align = 'center', out.width = "0.8\\linewidth"}
+
+Para proseguir graficamos la situación laborales de las personas analizadas en función del tipo de universidad en la que realizaron su primer grado.
+```{r figT2,echo=FALSE, fig.cap="Gráfico de barras de la situación laboral coloreado con el tipo de universidad",fig.align = 'center', out.width = "0.6\\linewidth"}
 ggplot(data=df, aes(x = TRBPRN1)) + geom_bar(aes(fill=T_UNIV)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10)) +
   scale_fill_brewer(palette = "YlOrRd")
 ```
-De forma auxiliar generamos un dataframe en el que solo se encuentre la población de la encuesta que se encuentra trabajando.
-```{r}
-df_tra <- df %>% filter(TRBPRN1=='Trabajando')
-```
+En el anterior gráfico se puede apreciar como prácticamente toda la gente que se ha sometido a la encuesta se encuentra trabajando, en concreto tenemos un ```r round(nrow(dfAc)/nrow(df)*100,2)``` % de gente laboralmente activa. Por otro lado, se observa como la mayor parte de la gente a estudiado en una universidad pública presencial seguida de la universidad privada presencial.
 
-Estadísticas del tipo de universidad.
 
-```{r figT3, fig.cap="Gráfico de barras de TRBPRN1 coloreado con SEXO",fig.align = 'center', out.width = "0.8\\linewidth"}
-ggplot(data=df, aes(x = T_UNIV)) + geom_bar(aes(fill=SEXO)) +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10))
-```
-Como podemos observar la gran mayoría de la gente ha estudiado de forma presencial en una universidad pública por lo que utilizar el factor de tipo de universidad para estudios siguientes puede no ser estadísticamente correcto, ya que hay oversampling.
+A partir del gráfico anterior observ
 
-Variación del tiempo transcurrido hasta que empezo a trabajar según su universidad.
-```{r figT4, fig.cap="Gráfico de barras de TRBPRN1 coloreado con SEXO",fig.align = 'center', out.width = "0.8\\linewidth"}
-ggplot(data=df, aes(x = HATR_E11)) + geom_bar(aes(fill=T_UNIV)) +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10)) +
-  scale_fill_brewer(palette = "YlOrRd")
-```
+ según su rama.
 
-Variación del tiempo transcurrido hasta que empezo a trabajar según su rama.
-
-```{r figT5, fig.cap="Gráfico de barras de TRBPRN1 coloreado con SEXO",fig.align = 'center', out.width = "0.8\\linewidth"}
-ggplot(data=df, aes(x = HATR_E11)) + geom_bar(aes(fill=T_UNIV)) +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10)) +
-  scale_fill_brewer(palette = "YlOrRd")
-```
-```{r figT6, fig.cap="Gráfico de barras de TRBPRN1 coloreado con SEXO",fig.align = 'center', out.width = "0.8\\linewidth"}
+```{r figT3,echo=FALSE, fig.cap="Gráfico de barras del tiempo transcurrido hasta que empezo a trabajar coloreado con el tipo de RAMA del estudio más importante realizado",fig.align = 'center', out.width = "0.6\\linewidth"}
 ggplot(data=df, aes(x = HATR_E11)) + geom_bar(aes(fill=URAMA)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 8)) +
   scale_fill_brewer(palette = "Purples")
 ```
-Situación laboral separando por el tipo de rama del estudio más elevado.
-```{r figT7, fig.cap="Gráfico de barras de TRBPRN1 coloreado con SEXO",fig.align = 'center', out.width = "0.8\\linewidth"}
-ggplot(df, aes(x= TRBPRN1)) + geom_bar(aes(fill=URAMA)) +
+
+La anterior gráfica nos permite apreciar como la mayor parte de la gente tiende a continuar en el mismo trabajo que tenía después de finalizar la universidad. Podemos destacar que la gráfica presenta una tendencia descendiente, de modo que cuanto más tiempo pasa es menos probable que la gente se encuentre sin trabajo. No osbtante, observamos un aumento anómalo en la última columna con datos no vacíos, lo cual podría estar relacionado con la realización de estudios de post-grado como másteres o doctorados donde uno no está trabajando directamente pero ya ha finalizado su grado o licenciatura. Por otro lado, no parece haber una relación entre el tipo de la rama y el tiempo que se tarda en encontrar trabajo, ya que todas las columnas presentan proporciones similares de todos las ramas.
+
+Para proseguir vamos a graficar la rama del estudio más elevado en función de la situación laboral.
+```{r figT4,echo=FALSE, fig.cap="Gráfico de barras normalizado de la rama del estudio más elevado coloreado con la situación laboral",fig.align = 'center', out.width = "0.6\\linewidth"}
+ggplot(df, aes(x= URAMA)) + geom_bar(position = "fill",aes(fill=TRBPRN1)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10)) +
-  scale_fill_brewer(palette = "Purples")
+  scale_fill_brewer(palette = "Greens")
 ```
 
-Número de idiomas frente a situación laboral.
-```{r figT8, fig.cap="Gráfico de barras de TRBPRN1 coloreado con SEXO",fig.align = 'center', out.width = "0.8\\linewidth"}
+Como podemos observar en la anterior gráfica, hay una cantidad mayor de gente que no se encuentra trabajando en las ramas de artes y humidades y ciencias sociales y ciencias jurídicas. No obstante, la diferencia con la cantidad de gente que no trabaja en las otras ramas es muy pequeña.
+
+
+A continuación, vamos a proceder a realizar diferentes gráficos de barras del número de idiomas en función de la situación laboral, los cuales además estarán coloreados por el sexo.
+```{r figT5,echo=FALSE, fig.cap="Gráficos de barras de el número de idiomas en función de la situación laboral y coloreado por el sexo",fig.align = 'center', out.width = "0.6\\linewidth"}
 ggplot(df, aes(x=IDIOMAS)) + geom_bar(aes(fill=SEXO)) + facet_wrap(~TRBPRN1) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10))
 ```
 
-Rama del estudio más elevado en función de la situación laboral.
-```{r figT9, fig.cap="Gráfico de barras de TRBPRN1 coloreado con SEXO",fig.align = 'center', out.width = "0.8\\linewidth"}
-ggplot(df, aes(x=URAMA)) + geom_bar(aes(fill=SEXO)) + facet_wrap(~TRBPRN1) +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 8))
-```
+Observamos como en todos los casos la columna con mayor peso es 1, lo cual nos indica que la gente suele enseñarse un único idioma diferente a los idiomas maternos. Dicha relación tiene sentido, ya que actualmente la gente suele centrarse en estudiar el inglés y dejar el resto de idiomas más de lado. También se puede notar que la segunda columna con más cantidad de datos es la de dos idiomas, dentro de la cual predomina el sexo femenino. Por otro lado, no parece haber una relación directa entre la cantidad de idiomas diferentes del materno que conoce el individuo con la situación laboral que este ostenta.
 
 # Análsis de Chi2 sobre las distintas variables
 
