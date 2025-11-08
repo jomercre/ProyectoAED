@@ -311,7 +311,7 @@ ggplot(df %>% filter(TRBPRN1 == "Trabajando"),
        aes(x = RAMA, fill = TR_SUELDO)) +
   geom_bar(position = "fill") +
   labs(
-    title = "Distribución de niveles salariales imputados por rama (solo personas que trabajan)",
+    title = "Distribución de niveles salariales",
     x = "Rama de estudio",
     y = "Proporción dentro de cada rama",
     fill = "Nivel salarial"
@@ -335,7 +335,7 @@ imputaciones_por_rama <- df %>%
 
 # unir tablas
 resumen_imputacion <- left_join(moda_por_rama, imputaciones_por_rama, by = "RAMA")
-resumen_imputacion
+print(resumen_imputacion)
 
 ```
 
@@ -404,7 +404,7 @@ ggplot(df_plot, aes(x=URAMA)) + geom_bar(aes(fill=SEXO)) + facet_wrap(~TRBPRN1) 
 Gráfica de la variación del sueldo según la rama de de estudio
 
 ```{r}
-ggplot(df, aes(x = RAMA, fill = TR_SUELDO)) +
+ggplot(df %>% filter(TRBPRN1 == "Trabajando"), aes(x = RAMA, fill = TR_SUELDO)) +
   geom_bar(position = "fill") +
   labs(
     title = "Variación del sueldo según la rama de estudio",
@@ -415,6 +415,7 @@ ggplot(df, aes(x = RAMA, fill = TR_SUELDO)) +
   scale_fill_brewer(palette = "Blues") +
   theme_minimal(base_size = 12) +
   theme(axis.text.x = element_text(angle = 20, hjust = 1))
+
 
 ```
 
