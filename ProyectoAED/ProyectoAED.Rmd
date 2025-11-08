@@ -103,7 +103,13 @@ desc_empl <- c("Trabajando", "En desempleo", "Inactivo")
 df$TRBPRN1 <- factor(df$TRBPRN1, levels=codi_empl, labels=desc_empl)
 
 codi_sueldo <- c("1", "2", "3", "4", "5", "6", "7")
-desc_sueldo <- c("< 700 €", "700-999 €", "1.000-1.499 €", "1.500-1.999 €", "2.000-2.499 €", "2.500-2.999 €", "> 3.000 €")
+desc_sueldo <- c("Menos de 700 euros",
+                                  "De 700 a 999 euros",
+                                  "De 1.000 a 1.499 euros",
+                                  "De 1.500 a 1.999 euros",
+                                  "De 2.000 a 2.499 euros",
+                                  "De 2.500 a 2.999 euros",
+                                  "De 3.000 euros en adelante")
 
 df <- df %>% mutate(TR_SUELDO = ifelse(TRBPRN1 == "9",NA, TR_SUELDO))
 
@@ -470,7 +476,7 @@ ggplot(df, aes(x = RAMA, fill = SEXO)) +
     y = "Proporción",
     fill = "Sexo"
   ) +
-  scale_fill_manual(values = c("#F28E2B", "#4E79A7")) +
+  scale_fill_manual(values = c("#4169E1", "#FFC0CB")) +
   theme_minimal(base_size = 12) +
   theme(axis.text.x = element_text(angle = 20, hjust = 1))
 
@@ -478,7 +484,7 @@ ggplot(df, aes(x = RAMA, fill = SEXO)) +
 Gráfica de comparación salarial según sexo
 
 ```{r}
-ggplot(df, aes(x = SEXO, fill = TR_SUELDO)) +
+ggplot(df %>% filter(TRBPRN1 == "Trabajando"), aes(x = SEXO, fill = TR_SUELDO)) +
   geom_bar(position = "fill") +
   labs(
     title = "Diferencia salarial según el sexo",
@@ -490,6 +496,8 @@ ggplot(df, aes(x = SEXO, fill = TR_SUELDO)) +
   theme_minimal()
 
 ```
+
+Gráfica de distribución salarial por tipo de universidad
 
 ```{r}
 
@@ -507,6 +515,50 @@ ggplot(df %>% filter(TRBPRN1 == "Trabajando", !is.na(T_UNIV), !is.na(TR_SUELDO))
   theme(axis.text.x = element_text(angle = 25, hjust = 1))
 
 ```
+Gráfica de relación entre número de estudios y rango salarial
+
+```{r}
+
+df$IDIOMAS <- factor(df$IDIOMAS,
+                     levels = c("1", "2", "3", "4", "5 o más"),
+                     labels = c("Un estudio", "Dos estudios", "Tres", "Cuatro", "Cinco o más"),
+                     ordered = TRUE)
+
+ggplot(df_plot %>% filter(TRBPRN1 == "Trabajando", !is.na(IDIOMAS), !is.na(TR_SUELDO)),
+       aes(x = IDIOMAS, fill = TR_SUELDO)) +
+  geom_bar(position = "fill") +
+  labs(
+    title = "Distribución salarial según Nº idiomas",
+    subtitle = "Solo personas que se encuentran trabajando",
+    x = "Número de idiomas",
+    y = "Proporción dentro de cada categoría",
+    fill = "Nivel salarial"
+  ) +
+  scale_fill_brewer(palette = "Greens") +
+  theme_minimal(base_size = 12) +
+  theme(axis.text.x = element_text(angle = 0, hjust = 0.5),
+        plot.title = element_text(face = "bold"))
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
