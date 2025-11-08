@@ -24,7 +24,7 @@ status: submit
 simplesummary: |
   Proyecto de la asignatura Ánalisis exploratorio de datos del Máster en Ciencia de datos de la Universitat de València.
 abstract: |
-  En las siguientes páginas se encuentra ...
+  En las siguientes páginas, se encuentra un estudio exploratorio de los datos correspondientes a la inserción laboral de los estudiantes universitarios que finalizaron su grado durante el curso 2013-2014, dichos datos fueron recogidos por el Instutito Nacional de Estadística (INE) y se pueden descargar de forma libre accediendo al siguiente enlace \url{https://www.ine.es/ftp/microdatos/eilu/datos_2019.zip}). Dicho análisis exploratorio consistirá en transformar los datos a sus correspondientes tipos, renombrar los factores para que tengan nombres representativos, estudiar las posibles relaciones entre las diferentes variables e imputar datos de interés.
 keywords: |
   Análisis exploratorio de datos, INE, Inserción laboral.
 bibliography: mybibfile.bib
@@ -36,7 +36,7 @@ output:
 
 # Importación de los datos
 
-En la carpeta de datos original, (que se puede obtener en el siguiente enlace \url{https://www.ine.es/ftp/microdatos/eilu/datos_2019.zip}) se pueden observar dos archivos completamente diferentes, el archivo que se va a proceder a analizar es el de la gente que se graduó en una universidad española durante el curso 2013-2014 (EILU_GRAD_2019.csv). El otro archivo corresponde a la gente que obtuvo un máster en el curso 2013-2014, por lo que no será objeto de nuestro estudio. Habiendo aclarado ya el conjunto de datos a utilizar podemos proceder a analizarlo, limpiarlo y estudiarlo.
+En la carpeta de datos original, (que se puede obtener en el siguiente enlace  se pueden observar dos archivos completamente diferentes, el archivo que se va a proceder a analizar es el de la gente que se graduó en una universidad española durante el curso 2013-2014 (EILU_GRAD_2019.csv). El otro archivo corresponde a la gente que obtuvo un máster en el curso 2013-2014, por lo que no será objeto de nuestro estudio. Habiendo aclarado ya el conjunto de datos a utilizar podemos proceder a analizarlo, limpiarlo y estudiarlo.
 
 En este apartado vamos a proceder a importar el archivo de datos con el que vamos a trabajar. Para ello primero debemos de adivinar su codificación mediante el uso de la función __guess_encoding__.
 ```{r, echo=FALSE}
