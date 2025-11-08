@@ -316,7 +316,7 @@ A continuación, se calcula la moda salarial, la cual corresponde con el nivel d
 + El valor de *TR_SUELDO* no es NA.
 + El valor de *TR_SUELDO* no corresponde a la categoría "NS/NC", la cual no es imputable.
 
-El cálculo de la moda se lleva a cabo usando funciones de la librería *dplyr*: group_by(RAMA) agrupa los registros por rama, count() contabiliza la frecuencia de cada nivel salarial dentro del grupo, y slice_max() selecciona el valor más frecuente (la moda) en cada rama. El resultado es una tabla auxiliar que asocia a cada rama su correspondiente “moda salarial”.
+El cálculo de la moda se lleva a cabo usando funciones de la librería *dplyr* group_by agrupa los registros por rama, count() contabiliza la frecuencia de cada nivel salarial dentro del grupo, y slice_max() selecciona el valor más frecuente (la moda) en cada rama. El resultado es una tabla auxiliar que asocia a cada rama su correspondiente “moda salarial”.
 
 Cuando la moda salarial de cada rama está calculada, se puede comenzar la imputación. Empleando la función *left_join()*, se une la tabla de modas al conjunto de datos original a través de la variable *RAMA*. Luego, usando *mutate()* se reemplazan los valores NA con las condiciones *ifelse(TRBPRN1 == "Trabajando" & is.na(TR_SUELDO)*, es decir, que esté trabajando y que el valor sea NA, que es lo que se debe imputar. Tras la imputación, *TR_SUELDO* se reconvierte nuevamente en factor ordenado, asegurando que la variable conserva la estructura ordinal orginial y también las etiquetas.
 
@@ -366,7 +366,7 @@ moda_por_rama <- df %>%
   count(RAMA, TR_SUELDO, sort = TRUE) %>%
   slice_max(n, n = 1, with_ties = FALSE) %>%
   transmute(RAMA,
-            moda_sueldo = as.character(TR_SUELDO))  # nos quedamos con el texto
+            moda_sueldo = as.character(TR_SUELDO))
 
 #imputación en este caso con la moda 
 
@@ -375,8 +375,8 @@ df <- df %>%
   mutate(
     TR_SUELDO = ifelse(
       TRBPRN1 == "Trabajando" & is.na(TR_SUELDO),
-      moda_sueldo,                      # usamos la moda de su rama
-      as.character(TR_SUELDO)           # dejamos el valor actual (o NA si no aplica)
+      moda_sueldo,   # usamos la moda de su rama
+      as.character(TR_SUELDO) 
     )
   ) %>%
   select(-moda_sueldo)
@@ -395,7 +395,8 @@ df$TR_SUELDO <- factor(df$TR_SUELDO,
 
 #verificamos results
 
-print("Valores faltantes en TR_SUELDO después de la imputación (solo trabajando)")
+print("Valores faltantes en TR_SUELDO 
+      después de la imputación (solo trabajando)")
 sum(is.na(df$TR_SUELDO[df$TRBPRN1 == "Trabajando"]))
 
 print("Frecuencia de niveles TR_SUELDO (en todo el dataset)")
@@ -430,7 +431,8 @@ imputaciones_por_rama <- df %>%
   )
 
 # unir tablas
-resumen_imputacion <- left_join(moda_por_rama, imputaciones_por_rama, by = "RAMA")
+resumen_imputacion <- left_join(moda_por_rama,
+                                imputaciones_por_rama, by = "RAMA")
 print(resumen_imputacion)
 
 ```
@@ -450,10 +452,12 @@ table(df$RAMA, df$TR_SUELDO, useNA = "ifany")
 Gráfica de la variación del sueldo según la rama de de estudio
 
 ```{r}
-ggplot(df %>% filter(TRBPRN1 == "Trabajando"), aes(x = RAMA, fill = TR_SUELDO)) +
+ggplot(df %>% filter(TRBPRN1 == "Trabajando"),
+       aes(x = RAMA, fill = TR_SUELDO)) +
   geom_bar(position = "fill") +
   labs(
-    title = "Variación del sueldo según la rama de estudio",
+    title = "Variación del sueldo según
+    la rama de estudio",
     x = "Rama de estudio",
     y = "Proporción de cada nivel salarial",
     fill = "Nivel salarial"
@@ -471,7 +475,8 @@ Gráfica de distribución de hombres y mujeres en cada rama de estudio
 ggplot(df, aes(x = RAMA, fill = SEXO)) +
   geom_bar(position = "fill") +
   labs(
-    title = "Distribución de mujeres y hombres por rama de estudio",
+    title = "Distribución de mujeres y 
+    hombres por rama de estudio",
     x = "Rama de estudio",
     y = "Proporción",
     fill = "Sexo"
@@ -484,7 +489,8 @@ ggplot(df, aes(x = RAMA, fill = SEXO)) +
 Gráfica de comparación salarial según sexo
 
 ```{r}
-ggplot(df %>% filter(TRBPRN1 == "Trabajando"), aes(x = SEXO, fill = TR_SUELDO)) +
+ggplot(df %>% filter(TRBPRN1 == "Trabajando"),
+       aes(x = SEXO, fill = TR_SUELDO)) +
   geom_bar(position = "fill") +
   labs(
     title = "Diferencia salarial según el sexo",
@@ -501,7 +507,8 @@ Gráfica de distribución salarial por tipo de universidad
 
 ```{r}
 
-ggplot(df %>% filter(TRBPRN1 == "Trabajando", !is.na(T_UNIV), !is.na(TR_SUELDO)),
+ggplot(df %>% filter(TRBPRN1 == "Trabajando", !is.na(T_UNIV),
+                     !is.na(TR_SUELDO)),
        aes(x = T_UNIV, fill = TR_SUELDO)) +
   geom_bar(position = "fill") +
   labs(
@@ -521,10 +528,12 @@ Gráfica de relación entre número de estudios y rango salarial
 
 df$IDIOMAS <- factor(df$IDIOMAS,
                      levels = c("1", "2", "3", "4", "5 o más"),
-                     labels = c("Un estudio", "Dos estudios", "Tres", "Cuatro", "Cinco o más"),
+                     labels = c("Un estudio", "Dos estudios", "Tres",
+                                "Cuatro", "Cinco o más"),
                      ordered = TRUE)
 
-ggplot(df_plot %>% filter(TRBPRN1 == "Trabajando", !is.na(IDIOMAS), !is.na(TR_SUELDO)),
+ggplot(df %>% filter(TRBPRN1 == "Trabajando", !is.na(IDIOMAS),
+       !is.na(TR_SUELDO)),
        aes(x = IDIOMAS, fill = TR_SUELDO)) +
   geom_bar(position = "fill") +
   labs(
