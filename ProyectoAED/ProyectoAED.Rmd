@@ -276,11 +276,7 @@ kable(dfT3, format = "latex",booktabs = TRUE,
 ```
 
 
-Cuando el valor de p obtenido en dicho test es menor que 0.05 podemos concluir que hay una relación entre las dos variables categóricas sobre las que se ha aplicado el test, por tanto podemos decir que todas las variables se encuentran relacionadas en mayor o menor medida. La significancia estadística de dicha relación nos la de el valor del V de Cramer, dicho estadístico consiste en una normalización del parámetro $\chi^2$ de modo que un mayor valor del V de Cramer quiere decir que hay una mayor significancia estadística entre las variables. Ante dicho descubrimiento podríamos pensar que utilizar la variable SEXO es lo mejor. No obstante, esto no tiene ningún sentido, ya que teóricamente ambos sexos tienen las mismas oportunidades y deberían tener las mismas oportunidades de forma laboral. Ante este hecho vamos a proceder a utilizar la variable URAMA para realizar la imputación de los datos. Cabe destacar que el V de Cramer también nos muestra que la variable URAMA es la que tiene mayor significancia estadística después de la variable SEXO. 
-
-
-
-
+Cuando el valor de p obtenido en dicho test es menor que 0.05 podemos concluir que hay una relación entre las dos variables categóricas sobre las que se ha aplicado el test, por tanto podemos decir que todas las variables se encuentran relacionadas en mayor o menor medida. La significancia estadística de dicha relación nos la de el valor del V de Cramer, dicho estadístico consiste en una normalización del parámetro $\chi^2$ de modo que un mayor valor del V de Cramer quiere decir que hay una mayor significancia estadística entre las variables. Ante dicho descubrimiento podríamos pensar que utilizar la variable SEXO es lo mejor. No obstante, esto no tiene ningún sentido, ya que teóricamente ambos sexos tienen las mismas oportunidades y deberían tener las mismas oportunidades de forma laboral. Ante este hecho vamos a proceder a utilizar la variable URAMA para realizar la imputación de los datos. Cabe destacar que el V de Cramer también nos muestra que la variable URAMA es la que tiene mayor significancia estadística después de la variable SEXO.
 
 Poner cosas de imputacion
 
