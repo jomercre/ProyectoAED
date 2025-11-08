@@ -431,7 +431,7 @@ Gráfica de comparación salarial según sexo
 
 ```{r}
 ggplot(df, aes(x = SEXO, fill = TR_SUELDO)) +
-  geom_bar(position = "fill") +
+  geom_bar(position = "fill") 
   labs(
     title = "Diferencia salarial según el sexo",
     x = "Sexo",
