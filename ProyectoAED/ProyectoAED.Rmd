@@ -247,10 +247,10 @@ df$TR_SUELDO <- factor(df$TR_SUELDO,
 # verificar las variables que faltan los na
 
 
-cat("Número de valores faltantes en TR_SUELDO (antes):\n")
+print("Número de valores faltantes en TR_SUELDO:")
 sum(is.na(df$TR_SUELDO))
 
-cat("\nDistribución de NAs por rama (antes):\n")
+print("Distribución de NAs por rama:")
 print(table(df$RAMA, is.na(df$TR_SUELDO)))
 
 
@@ -296,10 +296,10 @@ df$TR_SUELDO <- factor(df$TR_SUELDO,
 
 # verificación results
 
-cat("\nValores faltantes en TR_SUELDO después de la imputación (solo trabajando):\n")
+print("Valores faltantes en TR_SUELDO después de la imputación (solo trabajando):")
 sum(is.na(df$TR_SUELDO[df$TRBPRN1 == "Trabajando"]))
 
-cat("\nFrecuencia de niveles TR_SUELDO (en todo el dataset):\n")
+print("Frecuencia de niveles TR_SUELDO (en todo el dataset):")
 print(summary(df$TR_SUELDO))
 
 # visualizar como ha quedaod
@@ -317,13 +317,13 @@ ggplot(df %>% filter(TRBPRN1 == "Trabajando"),
   theme_minimal(base_size = 12) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
-# para documentar como ha ido la imputación podemos generar una tabla.
+# para documentar como ha ido la imputación podemos generar una tabla con los porcentajes de imputación y importante quitar de nuevo los casos na no imputables
 imputaciones_por_rama <- df %>%
   filter(TRBPRN1 == "Trabajando") %>%
   group_by(RAMA) %>%
   summarise(
     Total_Registros = n(),
-    Imputados = sum(is.na(TR_SUELDO)),  # Los que aún son NA (no imputables)
+    Imputados = sum(is.na(TR_SUELDO)),
     Completos = Total_Registros - Imputados
   ) %>%
   mutate(
@@ -341,23 +341,6 @@ El número de casos imputados (4 527) se ha redistribuido de forma coherente con
 No hay picos o saltos anómalos en ninguna categoría, lo cual indica que la imputación no sesgó visiblemente la distribución.
 
 Obtenemos información sobre la mediana imputada por cada rama de estudio, lo cual corresponde con el nivel salarial típico que ha usado el algoritmo para imputar los datos faltantes.
-
-```{r}
-
-#MEDIANA IMPUTADA POR RAMA
-
-library(dplyr)
-
-medianas_por_rama <- df %>%
-  group_by(RAMA) %>%
-  summarise(
-    Mediana_Sueldo = levels(TR_SUELDO)[median(as.numeric(TR_SUELDO))],
-    n = n()
-  )
-
-print(medianas_por_rama)
-
-```
 
 
 La siguiente tabla muestra todas las ramas con valores salariales distribuidos tras la imputación.
