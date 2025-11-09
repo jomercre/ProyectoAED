@@ -66,7 +66,7 @@ df_raw <- read_delim("./data/EILU_GRAD_2019.csv",
 El dataframe importado tiene una longitud de ```r ncol(df_raw)``` variables, así que para falicitar nuestro estudio nos quedaremos únicamente con las variables principales que afectan a los estudios, la situación laboral y el sueldo de los diferentes individuos. Para conocer que representa cada una de las distintas variables debemos acudir al codebook de los metadatos, este viene dado por el archivo xlsx denominado __dr_EILU_GRAD_2019.xlsx__. Cabe destacar que en el proyecto de R donde se encuentra este documento pdf también hemos añadido dicho archivo para que cualquier persona pueda identificar las variables sin necesidad de abrir el archivo original de metadatos.
 ```{r}
 var <- c('IDENT','SEXO','RAMA','EST_B17_M1','EST_B17_M2','EST_B17_M3',
-         'EST_B21','EST2_SA','IDIOMAS','TRBPRN1','TR_SUELDO','HATR_E11')
+         'EST_B21','IDIOMAS','TRBPRN1','TR_SUELDO','HATR_E11')
 
 df <- df_raw[var]
 ```
@@ -137,8 +137,7 @@ df$URAMA <- factor(df$URAMA, levels=codi_urama, labels=desc_urama)
 
 Una vez se ha obtenido la columna *URAMA* podemos eliminar del dataframe las variables con información sobre las ramas de los másteres o la columna que contiene la rama del doctorado más importante.
 ```{r}
-df <- df %>% select(-c('EST_B17_M1','EST_B17_M2','EST_B17_M3',
-                       'EST_B21','EST2_SA'))
+df <- df %>% select(-c('EST_B17_M1','EST_B17_M2','EST_B17_M3','EST_B21'))
 ```
 
 # Inspección de datos faltantes
