@@ -451,13 +451,14 @@ table(df$RAMA, df$TR_SUELDO, useNA = "ifany")
 
 ## Gráfica de la variación del sueldo según la rama de de estudio
 
-```{r}
+```{r figT6,echo=FALSE, fig.cap="Variación del sueldo según rama de estudio",fig.align = 'center', out.width = "0.6\\linewidth"}
+
 ggplot(df %>% filter(TRBPRN1 == "Trabajando"),
        aes(x = RAMA, fill = TR_SUELDO)) +
   geom_bar(position = "fill") +
   labs(
-    title = "Variación del sueldo según
-    la rama de estudio",
+    title = 
+    "Variación del sueldo segúnla rama de estudio",
     x = "Rama de estudio",
     y = "Proporción de cada nivel salarial",
     fill = "Nivel salarial"
@@ -474,7 +475,7 @@ El proposito de esta gráfica es analizar la distribución de los niveles salari
 
 ## Gráfica de distribución de hombres y mujeres en cada rama de estudio
 
-```{r}
+```{r figT7,echo=FALSE, fig.cap="Distribución de hombres y mujeres por rama de estudio",fig.align = 'center', out.width = "0.6\\linewidth"}
 ggplot(df, aes(x = RAMA, fill = SEXO)) +
   geom_bar(position = "fill") +
   labs(
@@ -495,7 +496,7 @@ De manera general, las ramas de Ciencias de la salud, Artes y humanidades y Cien
 
 ## Gráfica de comparación salarial según sexo
 
-```{r}
+```{r figT8,echo=FALSE, fig.cap="Distribución salarial según género",fig.align = 'center', out.width = "0.6\\linewidth"}
 ggplot(df %>% filter(TRBPRN1 == "Trabajando"),
        aes(x = SEXO, fill = TR_SUELDO)) +
   geom_bar(position = "fill") +
@@ -515,7 +516,7 @@ Aunque las proporciones pueden variar según el contexto específico del estudio
 
 ## Gráfica de distribución salarial por tipo de universidad
 
-```{r}
+```{r figT9,echo=FALSE, fig.cap="Distribución salarial por tipo de universidad",fig.align = 'center', out.width = "0.6\\linewidth"}
 
 ggplot(df %>% filter(TRBPRN1 == "Trabajando", !is.na(T_UNIV),
                      !is.na(TR_SUELDO)),
@@ -534,9 +535,9 @@ ggplot(df %>% filter(TRBPRN1 == "Trabajando", !is.na(T_UNIV),
 ```
 El objetivo de esta gráfica es analizar la relación entre el tipo de universidad cursada *T_UNIV* y el nivel salarial actual *TR_SUELDO* de las personas que se encuentran trabajando. El gráfico permite comparar la estructura salarial de los egresados según el tipo de universidad. En general, se observa que las universidades públicas a distancia tienden a concentrar mayores proporciones de individuos en los tramos salariales altos. Por el contrario, las universidades públicas presenciales  suelen mostrar una mayor proporción de sueldos en los tramos bajos o medios. La universidad privada, tanto a distancia como presencial, se encuentran en un perfil intermedio más equilibrado.
 
-## Gráfica de relación entre número de estudios y rango salarial
+## Gráfica de relación entre número de idiomas y rango salarial
 
-```{r}
+```{r figT10,echo=FALSE, fig.cap="Distribución salarial según número de idiomas aprendidos",fig.align = 'center', out.width = "0.6\\linewidth"}
 
 df$IDIOMAS <- factor(df$IDIOMAS,
                      levels = c("1", "2", "3", "4", "5 o más"),
