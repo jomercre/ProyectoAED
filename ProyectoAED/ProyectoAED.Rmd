@@ -367,7 +367,7 @@ ggplot(df, aes(x=IDIOMAS)) + geom_bar(aes(fill=SEXO)) + facet_wrap(~TRBPRN1) +
 
 Observamos como en todos los casos la columna con mayor peso es 1, lo cual nos indica que la gente suele enseñarse un único idioma diferente a los idiomas maternos. Dicha relación tiene sentido, ya que actualmente la gente suele centrarse en estudiar el inglés y dejar el resto de idiomas más de lado. También se puede notar que la segunda columna con más cantidad de datos es la de dos idiomas, dentro de la cual predomina el sexo femenino. Por otro lado, no parece haber una relación directa entre la cantidad de idiomas diferentes del materno que conoce el individuo con la situación laboral que este ostenta.
 
-## Estudio del sueldo obtenido
+## Estudio del salario
 
 En primer lugar vamos a gráficar la variación del sueldo según la rama de de estudio.
 
@@ -429,7 +429,15 @@ El objetivo de esta gráfica es analizar la relación entre el número de idioma
 
 # Conclusión
 
-Añadir conclusiones sacadas de la parte anterior
+A lo largo de este proyecto hemos aprendido diferentes cosas tanto del conjunto de datos con el que estábamos tratando como del análisis exploratorio de datos en general. Nuestros objetivos desde un principio fueron utilizar el conjunto de datos proporcionado por el INE para estudiar la inserción laboral en función de las diferentes ramas del conocimiento y de intentar encontrar alguna relación del sueldo con la rama de estudio asociada.
+
+Lo primero que aprendimos fue como tratar con un conjunto de datos real, ya que tuvimos que reducir las variables de nuestro dataframe y quedarnos solo con aquellas que coincidían con nuestros objetivos. Esto nos permitió pasar de un conjunto de datos con 299 a uno con 12. Cabe destacar que de estas 12 variables iniciales conseguimos combinar a aquellas que se relacionaban con la rama de los diferentes estudios en una sola, lo que nos redujo el conjunto a 8 variables.
+
+Además de aprender a como tratar con las diferentes variables también tuvimos que realizar una reconversión del tipo de nuestros datos, ya que nuestras variables que eran del tipo factor se encontraban codificadas y en formato cadena. Para poder empezar a trabajar con dichas variables tuvimos que utilizar el *codebook* proporcionado por el INE para decodificar las variables y transformarlas en un factor cuyos niveles fueran fácilmente interpretables.
+
+Seguidamente, nos dispusimos a estudiar la presencia de datos faltantes a lo largo de nuestras variables. En dicho proceso observamos que la variable que contenia el sueldo de los individuos poseía una gran cantidad de valores faltantes. A pesar de que gran parte de estos provenían de las personas que no se encontraban activas laboralmente, todavía seguía quedando una pequeña parte que no conseguíamos explicar. Dichos datos fueron tratados como MAR después de comprobar que se esparcían de forma similar entre las diferentes ramas del conocimiento, lo que nos permitió imputarlos utilizando la moda de cada rama del conocimiento. Para realizar dicho proceso antes comprobamos con el test $\chi^2$ y la V de Cramer que las variables *TR_SUELDO* y *URAMA* tenían una relación que era estadísticamente significativa.
+
+Para finalizar con nuestro proyecto realizamos diferentes gráficos exploratorios en los que pudimos comprobar 
 
 
 
