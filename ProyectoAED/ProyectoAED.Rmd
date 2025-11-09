@@ -38,7 +38,6 @@ output:
 knitr::opts_chunk$set(fig.pos = 'H')
 ```
 
-
 # Introducción
 
 En la carpeta de datos original, se pueden observar dos archivos de datos CSV diferentes. El archivo que se va a proceder a analizar es el de la gente que se graduó en una universidad española durante el curso 2013-2014 (EILU_GRAD_2019.csv). El otro archivo corresponde a la gente que obtuvo un máster en el curso 2013-2014, por lo que no será objeto de nuestro estudio. Habiendo aclarado ya el conjunto de datos a utilizar podemos proceder a importar las librerías que nos permitirán analizarlo, limpiarlo y estudiarlo.
@@ -351,6 +350,8 @@ Con el propósito de examinar la distribución de las variables *RAMA* y *TR_SUE
 
 # Gráficas exploratorias
 
+## Estudio de la inserción laboral
+
 En este apartado, vamos a proceder a realizar diferentes gráficas de barras para observar como se separan los datos en función de las variables categóricas que utilicemos. 
 
 Para empezar, vamos a hacer dos gráficos de barras con la variable RAMA y URAMA para observar si hay mucha discrepancia entre ambas variables.
@@ -394,9 +395,9 @@ ggplot(df, aes(x=IDIOMAS)) + geom_bar(aes(fill=SEXO)) + facet_wrap(~TRBPRN1) +
 
 Observamos como en todos los casos la columna con mayor peso es 1, lo cual nos indica que la gente suele enseñarse un único idioma diferente a los idiomas maternos. Dicha relación tiene sentido, ya que actualmente la gente suele centrarse en estudiar el inglés y dejar el resto de idiomas más de lado. También se puede notar que la segunda columna con más cantidad de datos es la de dos idiomas, dentro de la cual predomina el sexo femenino. Por otro lado, no parece haber una relación directa entre la cantidad de idiomas diferentes del materno que conoce el individuo con la situación laboral que este ostenta.
 
-# Gráficas
+## Estudio del sueldo obtenido
 
-## Gráfica de la variación del sueldo según la rama de de estudio
+En primer lugar vamos a gráficar la variación del sueldo según la rama de de estudio.
 
 ```{r figT6,echo=FALSE, fig.cap="Variación del sueldo según rama de estudio",fig.align = 'center', out.width = "0.6\\linewidth"}
 
@@ -419,10 +420,10 @@ ggplot(df %>% filter(TRBPRN1 == "Trabajando"),
 
 El proposito de esta gráfica es analizar la distribución de los niveles salariales, permitiendo identificar diferencias claras en la distribución entre ramas. Las ramas de Ingeniería y arquitectura y Ciencias de la salud presentan una mayor proporción de niveles salariales altos, lo que sugiere una mejor inserción laboral o remuneración media más elevada. En cambio, Artes y humanidades y Ciencias concentran una mayor proporción de sueldos en los tramos bajos o medios, reflejando una estructura salarial menos favorable. La rama de Ciencias sociales y jurídicas se sitúa en una posición intermedia, mostrando una distribución equilibrada entre niveles salariales medios y altos.
 
-## Gráfica de distribución de hombres y mujeres en cada rama de estudio
+Seguidamente, podemos representar la rama del último estudio realizado coloreada con el sexo de los individuos.
 
 ```{r figT7,echo=FALSE, fig.cap="Distribución de hombres y mujeres por rama de estudio",fig.align = 'center', out.width = "0.6\\linewidth"}
-ggplot(df, aes(x = RAMA, fill = SEXO)) +
+ggplot(df, aes(x = URAMA, fill = SEXO)) +
   geom_bar(position = "fill") +
   theme_minimal(base_size = 12) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
@@ -432,9 +433,9 @@ El objetivo de esta gráfica es mostrar la distribución proporcional del alumna
 
 De manera general, las ramas de Ciencias de la salud, Artes y humanidades y Ciencias sociles y jurídicas, muestran una mayor proporción de mujeres, mientras que Ingeniería y arquitectura presenta una clara predominancia masculina. Por otro lado, la rama de Ciencias es la más equilibrada.
 
-## Gráfica de comparación salarial según sexo
+A continuación, podemos hacer una comparación de la distribución salarial según el sexo.
 
-```{r figT8,echo=FALSE, fig.cap="Distribución salarial según género",fig.align = 'center', out.width = "0.6\\linewidth"}
+```{r figT8,echo=FALSE, fig.cap="Distribución salarial según sexo",fig.align = 'center', out.width = "0.6\\linewidth"}
 ggplot(df %>% filter(TRBPRN1 == "Trabajando"),
        aes(x = SEXO, fill = TR_SUELDO)) +
   geom_bar(position = "fill") +
@@ -445,7 +446,7 @@ ggplot(df %>% filter(TRBPRN1 == "Trabajando"),
 El objetivo de esta gráfica es identificar si existen diferencias significativas en la estructura de los ingresos entre hombres y mujeres dentro de la población laboral activa analizada, evidenciando las disparidades de distribución entre hombres y mujeres.
 Aunque las proporciones pueden variar según el contexto específico del estudio, la tendencia reflejada sugiere una mayor concentración de mujeres en los tramos salariales bajos o intermedios, mientras que los hombres presentan una mayor proporción en los rangos salariales altos.
 
-## Gráfica de relación entre número de idiomas y rango salarial
+Finalmente, procedemos a representar la relación entre número de idiomas y rango salarial.
 
 ```{r figT10,echo=FALSE, fig.cap="Distribución salarial según número de idiomas aprendidos",fig.align = 'center', out.width = "0.6\\linewidth"}
 ggplot(df %>% filter(TRBPRN1 == "Trabajando", !is.na(IDIOMAS),
@@ -461,7 +462,10 @@ ggplot(df %>% filter(TRBPRN1 == "Trabajando", !is.na(IDIOMAS),
 El objetivo de esta gráfica es analizar la relación entre el número de idiomas conocidos *IDIOMAS* y el nivel salarial *TR_SUELDO* entre las personas que se encuentran trabajando. A través de esta representación se pretende identificar si existe una tendencia ascendente en la remuneración a medida que aumenta el número de idiomas. De manera general, se observa una tendencia ascendente, no obstante, el gráfico también muestra un retroceso al alcanzar cinco idiomas o más.
 
 
+# Conclusión
 
+
+Añadir conclusiones sacadas de la parte anterior
 
 
 
