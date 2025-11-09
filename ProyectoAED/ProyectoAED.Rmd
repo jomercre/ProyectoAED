@@ -551,7 +551,7 @@ El objetivo de esta gráfica es analizar la relación entre el tipo de universid
 
 df$IDIOMAS <- factor(df$IDIOMAS,
                      levels = c("1", "2", "3", "4", "5 o más"),
-                     labels = c("Un estudio", "Dos estudios", "Tres",
+                     labels = c("Uno", "Dos", "Tres",
                                 "Cuatro", "Cinco o más"),
                      ordered = TRUE)
 
@@ -568,7 +568,7 @@ ggplot(df %>% filter(TRBPRN1 == "Trabajando", !is.na(IDIOMAS),
   ) +
   scale_fill_brewer(palette = "Greens") +
   theme_minimal(base_size = 12) +
-  theme(axis.text.x = element_text(angle = 0, hjust = 0.5),
+  theme(axis.text.x = element_text(angle = 45, hjust = 0.5),
         plot.title = element_text(face = "bold"))
 
 ```
