@@ -510,6 +510,9 @@ ggplot(df %>% filter(TRBPRN1 == "Trabajando"),
 
 ```
 
+El objetivo de esta gráfica es identificar si existen diferencias significativas en la estructura de los ingresos entre hombres y mujeres dentro de la población laboral activa analizada, evidenciando las disparidades de distribución entre hombres y mujeres.
+Aunque las proporciones pueden variar según el contexto específico del estudio, la tendencia reflejada sugiere una mayor concentración de mujeres en los tramos salariales bajos o intermedios, mientras que los hombres presentan una mayor proporción en los rangos salariales altos.
+
 ## Gráfica de distribución salarial por tipo de universidad
 
 ```{r}
@@ -529,7 +532,9 @@ ggplot(df %>% filter(TRBPRN1 == "Trabajando", !is.na(T_UNIV),
   theme(axis.text.x = element_text(angle = 25, hjust = 1))
 
 ```
-Gráfica de relación entre número de estudios y rango salarial
+
+
+## Gráfica de relación entre número de estudios y rango salarial
 
 ```{r}
 
