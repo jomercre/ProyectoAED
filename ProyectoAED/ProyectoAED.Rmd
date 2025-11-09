@@ -532,7 +532,7 @@ ggplot(df %>% filter(TRBPRN1 == "Trabajando", !is.na(T_UNIV),
   theme(axis.text.x = element_text(angle = 25, hjust = 1))
 
 ```
-
+El objetivo de esta gráfica es analizar la relación entre el tipo de universidad cursada *T_UNIV* y el nivel salarial actual *TR_SUELDO* de las personas que se encuentran trabajando. El gráfico permite comparar la estructura salarial de los egresados según el tipo de universidad. En general, se observa que las universidades públicas a distancia tienden a concentrar mayores proporciones de individuos en los tramos salariales altos. Por el contrario, las universidades públicas presenciales  suelen mostrar una mayor proporción de sueldos en los tramos bajos o medios. La universidad privada, tanto a distancia como presencial, se encuentran en un perfil intermedio más equilibrado.
 
 ## Gráfica de relación entre número de estudios y rango salarial
 
