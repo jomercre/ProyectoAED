@@ -293,7 +293,7 @@ Preparación de la variable TR_SUELDO, dado que esta variable presenta una canti
 Antes de imputar es necesario verificar si podemos realizar imputación condicional obervando si hay relación entre las variables TR_SUELDO y RAMA. Para ello realizamos el test Chi-Cuadrado
 
 
-```{r}
+```{r, echo=FALSE}
 tabla <- table(df$RAMA, df$TR_SUELDO)
 print(tabla)
 
@@ -324,7 +324,7 @@ Cuando la moda salarial de cada rama está calculada, se puede comenzar la imput
 
 Por útlimo, es posible verificar los resultados y la efectividad del proceso de imputación. Se oberva una imputación satisfactoria con reducción de 5266 casos de NA en trabajador a 0 NA presentes. No obstante, es necesario destacar todavía la presencia de 4527 valores faltantes, los cuales corresponden con NA de personas que no trabajan. Además, de acuerdo con el resumen de frecuencias, se muestra un distribución coherente con la esperada para variables salariales: rangos más comunes entre 1000 y 1999 euros y no se registran casos en la categoría "NS/NC" confirmando que se excluyó correctamente del proceso.
 
-```{r}
+```{r, echo=FALSE}
 #imputación de tr_sueldo usando la moda y dplyr y count().
 
 library(dplyr)
@@ -404,21 +404,6 @@ sum(is.na(df$TR_SUELDO[df$TRBPRN1 == "Trabajando"]))
 print("Frecuencia de niveles TR_SUELDO (en todo el dataset)")
 print(summary(df$TR_SUELDO))
 
-# visualizar los resultados pero !solo los trbajando 
-
-ggplot(df %>% filter(TRBPRN1 == "Trabajando"),
-       aes(x = RAMA, fill = TR_SUELDO)) +
-  geom_bar(position = "fill") +
-  labs(
-    title = "Distribución de niveles salariales",
-    x = "Rama de estudio",
-    y = "Proporción dentro de cada rama",
-    fill = "Nivel salarial"
-  ) +
-  scale_fill_brewer(palette = "Blues") +
-  theme_minimal(base_size = 12) +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
-
 #calcular cuántos valores se imputaron los na
 imputaciones_por_rama <- df %>%
   filter(TRBPRN1 == "Trabajando") %>%
@@ -438,6 +423,56 @@ resumen_imputacion <- left_join(moda_por_rama,
 print(resumen_imputacion)
 
 ```
+# Resumen general valores faltantes
+
+```{r, echo=FALSE}
+
+faltantes_totales <- sum(is.na(df$TR_SUELDO))
+faltantes_trabajando <- sum(is.na(df$TR_SUELDO[df$TRBPRN1 == "Trabajando"]))
+
+dfT_faltantes <- data.frame(
+  Métrica = c("Valores faltantes totales en TR_SUELDO",
+              "Valores faltantes tras imputación (solo trabajando)"),
+  `Número de casos` = c(faltantes_totales, faltantes_trabajando),
+  check.names = FALSE
+)
+
+kable(dfT_faltantes, format = "latex", booktabs = TRUE,
+      caption = "Resumen de valores faltantes en TR\\_SUELDO",
+      align = 'c', longtable = TRUE, linesep = "")
+
+```
+
+# Distribución valores faltantes por rama
+
+```{r, echo=FALSE}
+tabla_NA_rama <- as.data.frame.matrix(table(df$RAMA, is.na(df$TR_SUELDO)))
+colnames(tabla_NA_rama) <- c("No faltantes", "Faltantes")
+tabla_NA_rama$`Total casos` <- rowSums(tabla_NA_rama)
+tabla_NA_rama$`% Faltantes` <- round(tabla_NA_rama$Faltantes / tabla_NA_rama$`Total casos` * 100, 2)
+
+kable(tabla_NA_rama, format = "latex", booktabs = TRUE,
+      caption = "Distribución de valores faltantes en TR\\_SUELDO por rama de estudio",
+      align = 'c', longtable = TRUE, linesep = "")
+
+
+```
+
+# Frecuencia de valores faltantes en niveles salariales
+
+```{r, echo=FALSE}
+tabla_sueldo <- as.data.frame(summary(df$TR_SUELDO))
+colnames(tabla_sueldo) <- c("Frecuencia")
+tabla_sueldo$`Nivel salarial` <- rownames(tabla_sueldo)
+rownames(tabla_sueldo) <- NULL
+tabla_sueldo <- tabla_sueldo[, c("Nivel salarial", "Frecuencia")]
+
+kable(tabla_sueldo, format = "latex", booktabs = TRUE,
+      caption = "Frecuencia de niveles salariales en el conjunto de datos (variable TR\\_SUELDO)",
+      align = 'c', longtable = TRUE, linesep = "")
+
+```
+
 
 Con el propósito de examinar la distribución de las variables *RAMA* y *TR_SUELDO* tras la imputación, se genera una tabla de contingencia. El resultado respalda la correcta aplicación del método de imputación por moda y evidencia que la variable *TR_SUELDO* quedó adecuadamente estructurada.
 
