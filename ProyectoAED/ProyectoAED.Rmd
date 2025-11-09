@@ -71,7 +71,7 @@ var <- c('IDENT','SEXO','RAMA','EST_B17_M1','EST_B17_M2','EST_B17_M3',
 df <- df_raw[var]
 ```
 
-Una vez que ya tenemos seleccionadas las variables con las que vamos a realizar nuestro estudio debemos pasar cada una de ellas a su respectivo tipo. Dicha tarea se vuelve un poco tediosa debido a que las diferentes variables de tipo factor han sido codificadas mediante índices numéricos, para saber que simboliza cada uno de estos números debemos, otra vez, acudir al codebook de los metadatos. Una vez que podemos comprender que significa cada número debemos convertir las diferentes columnas en tipo factor mediante la función *factor* introduciendo en el parámetro *levels* los valores codificados correspondientes a cada nivel del factor y en la parámetro *labels* el nuevo nombre que queremos asociar a cada nivel del factor, el cual debe ser los suficientemente indicativo para poder interpretarlo más adelante en las distintas gráficas exploratorias que se realizaran. Cabe destacar que todo este proceso se encuentra en el documento Rmd asociado, ya que es algo extenso y consideramos redundante introducirlo en este informe.
+Una vez que ya tenemos seleccionadas las variables con las que vamos a realizar nuestro estudio debemos pasar cada una de ellas a su respectivo tipo. Dicha tarea se vuelve un poco tediosa debido a que las diferentes variables de tipo factor han sido codificadas mediante índices numéricos, para saber que simboliza cada uno de estos números debemos, otra vez, acudir al codebook de los metadatos. Una vez que podemos comprender que significa cada número debemos convertir las diferentes columnas en tipo factor mediante la función *factor* introduciendo en el parámetro *levels* los valores codificados correspondientes a cada nivel del factor y en la parámetro *labels* el nuevo nombre que queremos asociar a cada nivel del factor, el cual debe ser los suficientemente indicativo para poder interpretarlo más adelante en las distintas gráficas exploratorias que se realizaran. Por otro lado, para modelizar los datos faltantes hemos utilizado el tipo NA Cabe destacar que todo este proceso se encuentra en el documento Rmd asociado, ya que es algo extenso y consideramos redundante introducirlo en este informe.
 ```{r, echo=FALSE}
 df$SEXO <- factor(df$SEXO, levels = c(1,2), labels = c('Hombre', 'Mujer'))
 
@@ -116,9 +116,9 @@ df <- df %>% mutate(HATR_E11 = ifelse(TRBPRN1 == "9",NA, HATR_E11)) # 9 = NA
 df$HATR_E11 <- factor(df$HATR_E11, levels=codi_tiempo1, labels=desc_tiempo1)
 ```
 
-Antes de pasar al siguiente apartado, vamos a intentar convertir todas las variables que nos indican la rama de los estudios realizados por cada individuo en una sola. La rama que nos aporta la rama del primer estudio universitario realizado por el individuo se denomina RAMA. No osbtante, después tenemos más variables que nos indican la rama de los másteres realizados por el individuo o la rama del doctorado más importante. Para reducir todas estas múltiples variables a una sola vamos a crear la variable URAMA, la cual nos va indicar la rama del estudio más elevado realizado por el individuo, es decir, los cuales en la mayoría de casos coincidiran con los últimos estudios realizados por el individuo. Cabe destacar que vamos a ignorar la variable dedicada a los estudios del del tipo MIR, ya que todo aquel que se encuentre realizándolo o ya lo haya realizado necesariamente debe haber realizado una carrera o máster de la rama de ciencias de la salud. Por tanto, nos es redundante conocer esa información para crear la columna con la rama del último estudio realizado.
+Antes de pasar al siguiente apartado, vamos a intentar convertir todas las variables que nos indican la rama de los estudios realizados por cada individuo en una sola. La rama que nos aporta la rama del primer estudio universitario realizado por el individuo se denomina *RAMA*. No osbtante, después tenemos más variables que nos indican la rama de los másteres realizados por el individuo o la rama del doctorado más importante. Para reducir todas estas múltiples variables a una sola vamos a crear la variable *URAMA*, la cual nos va indicar la rama del estudio más elevado realizado por el individuo, es decir, los cuales en la mayoría de casos coincidiran con los últimos estudios realizados por el individuo. Cabe destacar que vamos a ignorar la variable dedicada a los estudios del del tipo MIR, ya que todo aquel que se encuentre realizándolo o ya lo haya realizado necesariamente debe haber realizado una carrera o máster de la rama de ciencias de la salud. Por tanto, nos es redundante conocer esa información para crear la columna con la rama del último estudio realizado.
 
-Para crear la variable URAMA simplemente debemos tener en cuenta que cuando el individuo no ha dado información sobre el estudio o directamente no ha realizado dicho estudio la columna aparecera como NA, así que vamos estudiando que columnas continen datos no faltantes empezando por los doctorados, siguiendo por los másteres y terminando en los grados o licenciaturas.
+Para crear la variable *URAMA* simplemente debemos tener en cuenta que cuando el individuo no ha dado información sobre el estudio o directamente no ha realizado dicho estudio la columna aparecera como NA, así que vamos estudiando que columnas continen datos no faltantes empezando por los doctorados, siguiendo por los másteres y terminando en los grados o licenciaturas.
 ```{r}
 df <- df %>% 
   mutate(URAMA = ifelse(!is.na(EST_B21), EST_B21, 
@@ -135,7 +135,7 @@ desc_urama <- c("Artes y humanidades", "Ciencias",
 df$URAMA <- factor(df$URAMA, levels=codi_urama, labels=desc_urama)
 ```
 
-Una vez se ha obtenido la columna URAMA podemos eliminar del dataframe las variables con información sobre las ramas de los másteres o la columna que contiene la rama del doctorado más importante.
+Una vez se ha obtenido la columna *URAMA* podemos eliminar del dataframe las variables con información sobre las ramas de los másteres o la columna que contiene la rama del doctorado más importante.
 ```{r}
 df <- df %>% select(-c('EST_B17_M1','EST_B17_M2','EST_B17_M3',
                        'EST_B21','EST2_SA'))
@@ -157,32 +157,32 @@ dfT1 <- data.frame('Variable' = names(df)[2:length(names(df))],
                  'Número de datos faltantes' = nasum,check.names = FALSE)
 
 kable(dfT1, format = "latex",booktabs = TRUE,
-  caption = "Cantidad de Na's en función de la variable",
+  caption = "Cantidad de NA's en función de la variable",
   align = 'l|c', longtable = TRUE,linesep = "")
 ```
 
-Como podemos observar las únicas columnas con datos faltantes son IDIOMAS, TR_SUELDO y HATR_E11. La variable con más datos faltantes es TR_SUELDO con un ```r round(sum(is.na(df$TR_SUELDO))/nrow(df)*100,2)``` % de datos con NA. No obstante, no todos ellos son datos que no han sido rellenados, ya que puede darse el caso de que la persona no esté actualmente trabajando y, por tanto, no haya rellenado a drede la casilla de TR_Sueldo. Para observar cuales son en realidad nuestros datos faltantes procedemos a observar el número de NA's de la variable TR_SUELDO una vez hemos eliminado aquellas personas que no se encuentran trabajando.
+Como podemos observar las únicas columnas con datos faltantes son *IDIOMAS*, *TR_SUELDO* y *HATR_E11*. La variable con más datos faltantes es TR_SUELDO con un ```r round(sum(is.na(df$TR_SUELDO))/nrow(df)*100,2)``` % de datos con NA. No obstante, no todos ellos son datos faltantes, ya que puede darse el caso de que la persona no esté actualmente trabajando y, por tanto, haya evitado rellenar a drede la casilla de *TR_Sueldo*. Para observar cuales son en realidad nuestros datos faltantes procedemos a observar el número de NA's de la variable *TR_SUELDO* una vez hemos eliminado aquellas personas que no se encuentran trabajando.
 ```{r tab2, echo=FALSE}
-dfAc <- df %>% filter(TRBPRN1 != 'Trabajando')
+dfNAc <- df %>% filter(TRBPRN1 != 'Trabajando')
 
-NAs <- c(sum(is.na(df$TR_SUELDO)),sum(is.na(dfAc$TR_SUELDO)))
+NAs <- c(sum(is.na(df$TR_SUELDO)),sum(is.na(dfNAc$TR_SUELDO)))
 
 dfT2 <- data.frame('Variable' = c('TR_SUELDO','TR_SUELDO'),
                   'Cálculo' = c('Con todos los datos',
-                                'Con la gente activa laboralmente'),
+                                'Con la gente no activa laboralmente'),
                   'Número de datos faltantes' = NAs,
                   check.names = FALSE)
 
 kable(dfT2, format = "latex",booktabs = TRUE,
-  caption = "Cantidad de Na's en la variable TR.SUELDO cuando se elimina la cantidad de gente que no está activa laboralmente",
+  caption = "Cantidad de Na's en la variable TR\\_SUELDO cuando se elimina la cantidad de gente que no está activa laboralmente",
   align = 'l|c|c', longtable = TRUE,linesep = "")
 ```
 
-Como podemos observar hay aproximadamente 1000 valores NA que pertenecen a la población no activa laboralmente, la cual es lógico que no tenga un salario. No obstante, los otros 3800 datos con NA no parecen seguir ninguna lógica. Por ello intentaremos relacionar la variable sueldo con alguna otra variable del conjunto que no contenga datos faltantes para así conseguir imputar dichos datos.
+Como podemos observar hay aproximadamente 4500 valores NA que pertenecen a la población no activa laboralmente, la cual es lógico que no tenga un salario. No obstante, los otros 800 datos con NA no parecen seguir ninguna lógica. Por ello intentaremos relacionar la variable *TR_SUELDO* con alguna otra variable del conjunto que no contenga datos faltantes.
 
 # Imputación de datos faltantes
 
-Queremos imputar los valores de la variable con el sueldo para aquellas personas que se encuentran activas, para ello lo que vamos a hacer va a ser primero aplicar el test del $\chi^2$ a la combinación de la variable TR_SUELDO con el resto de variables, evitando las variables IDENT porque no tiene sentido relacionarla con el identificador y la variable TRBPRN1 porque si eliminamos los NA's de la variable TR_SUELDO, aquellas personas que no estan laboralmente activas se eliminan y no tiene sentido realizar la table de contingencia porque dos columnas valen siempre 0.
+Queremos imputar los valores de la variable con el sueldo para aquellas personas que se encuentran activas, para ello lo que vamos a hacer va a ser primero aplicar el test del $\chi^2$ a la combinación de la variable *TR_SUELDO* con el resto de variables, evitando las variables IDENT porque no tiene sentido relacionarla con el identificador y la variable *TRBPRN1* porque si eliminamos los NA's de la variable *TR_SUELDO*, aquellas personas que no estan laboralmente activas se eliminan y no tiene sentido realizar la table de contingencia porque dos columnas valen siempre 0.
 
 ```{r, echo=FALSE}
 colNam <- names(df %>% select(-IDENT,-TR_SUELDO, -TRBPRN1, -RAMA))
@@ -220,30 +220,42 @@ kable(dfT3, format = "latex",booktabs = TRUE,
 ```
 
 
-Cuando el valor de p obtenido en dicho test es menor que 0.05 podemos concluir que hay una relación entre las dos variables categóricas sobre las que se ha aplicado el test, por tanto podemos decir que todas las variables se encuentran relacionadas en mayor o menor medida. La significancia estadística de dicha relación nos la de el valor del V de Cramer, dicho estadístico consiste en una normalización del parámetro $\chi^2$ de modo que un mayor valor del V de Cramer quiere decir que hay una mayor significancia estadística entre las variables. Ante dicho descubrimiento podríamos pensar que utilizar la variable SEXO es lo mejor. No obstante, esto no tiene ningún sentido, ya que teóricamente ambos sexos tienen las mismas oportunidades y deberían tener las mismas oportunidades de forma laboral. Ante este hecho vamos a proceder a utilizar la variable URAMA para realizar la imputación de los datos. Cabe destacar que el V de Cramer también nos muestra que la variable URAMA es la que tiene mayor significancia estadística después de la variable SEXO.
+Cuando el valor de p obtenido en dicho test es menor que 0.05 podemos concluir que hay una relación entre las dos variables categóricas sobre las que se ha aplicado el test, por tanto podemos decir que todas las variables se encuentran relacionadas en mayor o menor medida. La significancia estadística de dicha relación nos la de el valor de la V de Cramer, dicho estadístico consiste en una normalización del parámetro $\chi^2$ de modo que un mayor valor de la V de Cramer quiere decir que hay una mayor significancia estadística entre las variables. Ante dicho descubrimiento podríamos pensar que utilizar la variable *SEXO* es lo mejor. No obstante, esto no tiene ningún sentido, ya que teóricamente ambos sexos deberían tener las mismas oportunidades de forma laboral. Ante este hecho vamos a proceder a utilizar la variable *URAMA* para realizar la imputación de los datos. Cabe destacar que el V de Cramer también nos muestra que la variable *URAMA* es la que tiene mayor significancia estadística después de la variable *SEXO*.
 
-A continuación se realiza la imputación condicional de la variable *TR_SUELDO* empleando la moda, el objetivo es completar los valores faltantes en la variable, la cual corresponde con el rango salarial de las personas encuestadas. Para garantizar la coherencia estadística se realiza imputación solamente en individuos que constan como "Trabajando", además se emplea la variable *RAMA* de manera condicional, usando como criterio de sustitución la moda salarial de cada rama. 
+A continuación se realiza la imputación condicional de la variable *TR_SUELDO* empleando la moda, el objetivo es completar los valores faltantes en la variable, la cual corresponde con el rango salarial de las personas encuestadas. Para garantizar la coherencia estadística se realiza imputación solamente en individuos que constan como "Trabajando", además se emplea la variable *RAMA* de manera condicional, usando como criterio de sustitución la moda salarial de cada rama.
 
-El proceso se estructura en fases: preparación de las variables, detección de los valores faltantes (NA), cálculo de la moda, imputación y verificación.
+Para poder imputar utilizando la rama deberíamos garantizar que los datos son MAR ('Missing at random'), es decir, que se han perdido de forma completamente aleatoria. Para poder observar si se cumple dicho propósito vamos a realizar una tabla con la frecuencia de datos faltantes en cada tipo del factor *URAMA*.
+```{r, echo=FALSE}
+dfAc <- df %>% filter(TRBPRN1 == 'Trabajando')
 
-En primer lugar convertimos las variables *RAMA* y *TR_SUELDO* en factores ordenados. Esto es obligatorio ya que ambas variables son categóricas y presentan un número finito de niveles. Además, destacar la conversión de *TR_SUELDO* a factor ordinal ya que los rangos salariales deben tener un orden lógico, en este caso de menor a mayor. Esto permitirá ordenar correcatmente las categorías y realizar comparaciones válidas entre niveles.
+tabla_NA_rama <- as.data.frame.matrix(table(dfAc$URAMA, is.na(dfAc$TR_SUELDO)))
+colnames(tabla_NA_rama) <- c("No faltantes", "Faltantes")
+tabla_NA_rama$`Total casos` <- rowSums(tabla_NA_rama)
+tabla_NA_rama$`% Faltantes` <- round(tabla_NA_rama$Faltantes / tabla_NA_rama$`Total casos` * 100, 2)
 
-En segundo lugar, antes de hacer la imputación, se lleva a cabo un cuantificación del número de observaciones faltantes en *TR_SUELDO* y como estan distribuidas en cada rama. El resultado obtenido fue de 5266 NAs en total.
+kable(tabla_NA_rama, format = "latex", booktabs = TRUE,
+      caption = "Distribución de valores faltantes de la gente activa laboralmente en TR\\_SUELDO en función de la rama de estudio",
+      align = 'c', longtable = TRUE, linesep = "")
+```
 
-A continuación, se calcula la moda salarial, la cual corresponde con el nivel de sueldo más frecuente dentro de cada rama de estudio. Para calcularla se han considerado únicamente las siguiente obervaciones:
+Como podemos observar todas las columnas presentan una proporción de aproximadamente un 3 % de datos faltantes, esto nos garantiza que los datos faltantes están esparcidos de forma aleatoria dentro de nuestro conjunto. Por tanto, podemos aplicar una imputación del tipo moda sin preocuparnos por afectar en exceso a la estructura de los datos.
 
-- La persona se encuentra trabajando actualmente.
-- El valor de *TR_SUELDO* no es NA.
-- El valor de *TR_SUELDO* no corresponde a la categoría "NS/NC", la cual no es imputable.
+En primer lugar convertimos las variables *RAMA* y *TR_SUELDO* en factores ordenados. Esto es obligatorio ya que ambas variables son categóricas y presentan un número finito de niveles. Además, destacar la conversión de *TR_SUELDO* a factor ordinal ya que los rangos salariales deben tener un orden lógico, en este caso de menor a mayor. Esto permitirá ordenar correctamente las categorías y realizar comparaciones válidas entre niveles.
 
-El cálculo de la moda se lleva a cabo usando funciones de la librería *dplyr* group_by agrupa los registros por rama, count() contabiliza la frecuencia de cada nivel salarial dentro del grupo, y slice_max() selecciona el valor más frecuente (la moda) en cada rama. El resultado es una tabla auxiliar que asocia a cada rama su correspondiente “moda salarial”.
+A continuación, se calcula la moda salarial, la cual corresponde con el nivel de sueldo más frecuente dentro de cada rama de estudio. Para calcularla se han considerado únicamente observaciones de los individuos que se encuentran trabajando y cuyo valor de *TR_SUELDO* no es NA.
 
-Cuando la moda salarial de cada rama está calculada, se puede comenzar la imputación. Empleando la función *left_join()*, se une la tabla de modas al conjunto de datos original a través de la variable *RAMA*. Luego, usando *mutate()* se reemplazan los valores NA con las condiciones *ifelse(TRBPRN1 == "Trabajando" & is.na(TR_SUELDO)*, es decir, que esté trabajando y que el valor sea NA, que es lo que se debe imputar. Tras la imputación, *TR_SUELDO* se reconvierte nuevamente en factor ordenado, asegurando que la variable conserva la estructura ordinal orginial y también las etiquetas.
+El cálculo de la moda se lleva a cabo usando funciones de la librería *dplyr* *group_by* agrupa los registros por rama, *count* contabiliza la frecuencia de cada nivel salarial dentro del grupo, y *slice_max* selecciona el valor más frecuente (la moda) en cada rama. El resultado es una tabla auxiliar que asocia a cada rama su correspondiente moda salarial.
 
-Por útlimo, es posible verificar los resultados y la efectividad del proceso de imputación. Se oberva una imputación satisfactoria con reducción de 5266 casos de NA en trabajador a 0 NA presentes. No obstante, es necesario destacar todavía la presencia de 4527 valores faltantes, los cuales corresponden con NA de personas que no trabajan. Además, de acuerdo con el resumen de frecuencias, se muestra un distribución coherente con la esperada para variables salariales.
+Cuando la moda salarial de cada rama está calculada, se puede comenzar la imputación. Empleando la función *left_join()*, se une la tabla de modas al conjunto de datos original a través de la variable *URAMA*. Luego, usando *mutate()* se reemplazan los valores NA con las condiciones *ifelse(TRBPRN1 == "Trabajando" & is.na(TR_SUELDO)*, es decir, que esté trabajando y que el valor sea NA, que es lo que se debe imputar. Tras la imputación, *TR_SUELDO* se reconvierte nuevamente en factor ordenado, asegurando que la variable conserva la estructura ordinal original y también las etiquetas.
+
+Por útlimo, es posible verificar los resultados y la efectividad del proceso de imputación.
 
 ```{r, echo=FALSE}
-# Calculamos la moda sin tener en cuenta na y ns/nc
+# Creamos una copia del dataframe sin imputar
+
+dfSI <- df
+
+# Calculamos la moda sin tener en cuenta NA's
 
 moda_por_rama <- df %>%
   filter(TRBPRN1 == "Trabajando",
@@ -291,68 +303,29 @@ resumen_imputacion <- left_join(moda_por_rama, imputaciones_por_rama,
                                 by = "URAMA")
 
 ```
-# Resumen general valores faltantes
 
+Con el propósito de examinar la distribución *TR_SUELDO* antes y después de la imputación para ello recurrimos a la siguiente tabla.
 ```{r, echo=FALSE}
-
-faltantes_totales <- sum(is.na(df$TR_SUELDO))
-faltantes_trabajando <- sum(is.na(df$TR_SUELDO[df$TRBPRN1 == "Trabajando"]))
-
-dfT_faltantes <- data.frame(
-  Métrica = c("Valores faltantes totales en TR_SUELDO",
-              "Valores faltantes tras imputación (solo trabajando)"),
-  `Número de casos` = c(faltantes_totales, faltantes_trabajando),
-  check.names = FALSE
-)
-
-kable(dfT_faltantes, format = "latex", booktabs = TRUE,
-      caption = "Resumen de valores faltantes en TR\\_SUELDO",
-      align = 'c', longtable = TRUE, linesep = "")
-
-```
-
-# Distribución valores faltantes por rama
-
-```{r, echo=FALSE}
-tabla_NA_rama <- as.data.frame.matrix(table(df$URAMA, is.na(df$TR_SUELDO)))
-colnames(tabla_NA_rama) <- c("No faltantes", "Faltantes")
-tabla_NA_rama$`Total casos` <- rowSums(tabla_NA_rama)
-tabla_NA_rama$`% Faltantes` <- round(tabla_NA_rama$Faltantes / tabla_NA_rama$`Total casos` * 100, 2)
-
-kable(tabla_NA_rama, format = "latex", booktabs = TRUE,
-      caption = "Distribución de valores faltantes en TR\\_SUELDO por rama de estudio",
-      align = 'c', longtable = TRUE, linesep = "")
-
-
-```
-
-# Frecuencia de valores faltantes en niveles salariales
-
-```{r, echo=FALSE}
-tabla_sueldo <- as.data.frame(summary(df$TR_SUELDO))
-colnames(tabla_sueldo) <- c("Frecuencia")
-tabla_sueldo$`Nivel salarial` <- rownames(tabla_sueldo)
-rownames(tabla_sueldo) <- NULL
-tabla_sueldo <- tabla_sueldo[, c("Nivel salarial", "Frecuencia")]
+tabla_sueldo <- data.frame('Nivel salarial' = names(summary(df$TR_SUELDO)),
+                  'Datos sin imputación' = 
+                    as.vector(summary(dfSI$TR_SUELDO)),
+                  'Datos con imputación' =
+                    as.vector(summary(df$TR_SUELDO)),
+                  check.names = FALSE)
 
 kable(tabla_sueldo, format = "latex", booktabs = TRUE,
-      caption = "Frecuencia de niveles salariales en el conjunto de datos (variable TR\\_SUELDO)",
+      caption = "Número de datos en los diferentes niveles salariales de la variable TR\\_SUELDO",
       align = 'c', longtable = TRUE, linesep = "")
-
 ```
 
-Con el propósito de examinar la distribución de las variables *RAMA* y *TR_SUELDO* tras la imputación, se genera una tabla de contingencia. El resultado respalda la correcta aplicación del método de imputación por moda y evidencia que la variable *TR_SUELDO* quedó adecuadamente estructurada.
-
-```{r, echo=FALSE}
-#table(df$RAMA, df$TR_SUELDO, useNA = "ifany")
-
-```
+Se oberva una imputación satisfactoria con reducción de aproximadamente 800 casos de NA en trabajador. No obstante, es necesario destacar todavía la presencia de 4527 valores faltantes, los cuales corresponden, como ya se ha comentado anteriormente, con NA de personas que no trabajan. Además, se muestra un distribución coherente con la esperada para variables salariales.
 
 # Gráficas exploratorias
 
-## Estudio de la inserción laboral
+En este apartado, vamos a proceder a realizar diferentes gráficas que por nuestro tipo de datos serán gráficas de barras para observar como se separan los datos en función de las variables categóricas que utilicemos. Cabe destacar que en todos los casos vamos a proceder a utilizar el color para expresar otro variable dentro del mismo gráfico.
 
-En este apartado, vamos a proceder a realizar diferentes gráficas de barras para observar como se separan los datos en función de las variables categóricas que utilicemos. 
+
+## Estudio de la inserción laboral
 
 Para empezar, vamos a hacer dos gráficos de barras con la variable RAMA y URAMA para observar si hay mucha discrepancia entre ambas variables.
 ```{r figT1, echo=FALSE,fig.cap="Gráfico de barras de RAMA/URAMA coloreado con SEXO",fig.align = 'center', out.width = "0.6\\linewidth"}
@@ -404,13 +377,6 @@ En primer lugar vamos a gráficar la variación del sueldo según la rama de de 
 ggplot(df %>% filter(TRBPRN1 == "Trabajando"),
        aes(x = RAMA, fill = TR_SUELDO)) +
   geom_bar(position = "fill") +
-  labs(
-    title = 
-    "Variación del sueldo segúnla rama de estudio",
-    x = "Rama de estudio",
-    y = "Proporción de cada nivel salarial",
-    fill = "Nivel salarial"
-  ) +
   scale_fill_brewer(palette = "Blues") +
   theme_minimal(base_size = 12) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
@@ -444,6 +410,7 @@ ggplot(df %>% filter(TRBPRN1 == "Trabajando"),
 ```
 
 El objetivo de esta gráfica es identificar si existen diferencias significativas en la estructura de los ingresos entre hombres y mujeres dentro de la población laboral activa analizada, evidenciando las disparidades de distribución entre hombres y mujeres.
+
 Aunque las proporciones pueden variar según el contexto específico del estudio, la tendencia reflejada sugiere una mayor concentración de mujeres en los tramos salariales bajos o intermedios, mientras que los hombres presentan una mayor proporción en los rangos salariales altos.
 
 Finalmente, procedemos a representar la relación entre número de idiomas y rango salarial.
@@ -461,9 +428,7 @@ ggplot(df %>% filter(TRBPRN1 == "Trabajando", !is.na(IDIOMAS),
 ```
 El objetivo de esta gráfica es analizar la relación entre el número de idiomas conocidos *IDIOMAS* y el nivel salarial *TR_SUELDO* entre las personas que se encuentran trabajando. A través de esta representación se pretende identificar si existe una tendencia ascendente en la remuneración a medida que aumenta el número de idiomas. De manera general, se observa una tendencia ascendente, no obstante, el gráfico también muestra un retroceso al alcanzar cinco idiomas o más.
 
-
 # Conclusión
-
 
 Añadir conclusiones sacadas de la parte anterior
 
