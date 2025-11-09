@@ -246,6 +246,7 @@ Observamos como en todos los casos la columna con mayor peso es 1, lo cual nos i
 # Imputación de datos faltantes
 
 Queremos imputar los valores de la variable con el sueldo para aquellas personas que se encuentran activas, para ello lo que vamos a hacer va a ser primero aplicar el test del $\chi^2$ a la combinación de la variable TR_SUELDO con el resto de variables, evitando las variables IDENT porque no tiene sentido relacionarla con el identificador y la variable TRBPRN1 porque si eliminamos los NA's de la variable TR_SUELDO, aquellas personas que no estan laboralmente activas se eliminan y no tiene sentido realizar la table de contingencia porque dos columnas valen siempre 0.
+
 ```{r, echo=FALSE}
 colNam <- names(df %>% select(-IDENT,-TR_SUELDO, -TRBPRN1, -RAMA))
 dfAUX2 <- df %>% na.omit()
@@ -312,9 +313,10 @@ En primer lugar convertimos las variables *RAMA* y *TR_SUELDO* en factores orden
 En segundo lugar, antes de hacer la imputación, se lleva a cabo un cuantificación del número de observaciones faltantes en *TR_SUELDO* y como estan distribuidas en cada rama. El resultado obtenido fue de 5266 NAs en total, habiendo una mayor proporción de NA en la rama "Ciencias sociales y jurídicas". 
 
 A continuación, se calcula la moda salarial, la cual corresponde con el nivel de sueldo más frecuente dentro de cada rama de estudio. Para calcularla se han considerado únicamente las siguiente obervaciones:
-+ La persona se encuentra trabajando actualmente.
-+ El valor de *TR_SUELDO* no es NA.
-+ El valor de *TR_SUELDO* no corresponde a la categoría "NS/NC", la cual no es imputable.
+
+- La persona se encuentra trabajando actualmente.
+- El valor de *TR_SUELDO* no es NA.
+- El valor de *TR_SUELDO* no corresponde a la categoría "NS/NC", la cual no es imputable.
 
 El cálculo de la moda se lleva a cabo usando funciones de la librería *dplyr* group_by agrupa los registros por rama, count() contabiliza la frecuencia de cada nivel salarial dentro del grupo, y slice_max() selecciona el valor más frecuente (la moda) en cada rama. El resultado es una tabla auxiliar que asocia a cada rama su correspondiente “moda salarial”.
 
