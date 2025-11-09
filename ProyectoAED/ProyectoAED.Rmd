@@ -561,7 +561,7 @@ ggplot(df %>% filter(TRBPRN1 == "Trabajando", !is.na(IDIOMAS),
         plot.title = element_text(face = "bold"))
 
 ```
-
+El objetivo de esta gráfica es analizar la relación entre el número de idiomas conocidos *IDIOMAS* y el nivel salarial *TR_SUELDO* entre las personas que se encuentran trabajando. A través de esta representación se pretende identificar si existe una tendencia ascendente en la remuneración a medida que aumenta el número de idiomas que una persona domina, lo cual podría reflejar el valor añadido que las competencias lingüísticas aportan en el mercado laboral. De manera general, se observa una tendencia ascendente, no obstante, el gráfico también muestra un retroceso al alcanzar cinco idiomas o más.
 
 
 
