@@ -437,7 +437,11 @@ Además de aprender a como tratar con las diferentes variables también tuvimos 
 
 Seguidamente, nos dispusimos a estudiar la presencia de datos faltantes a lo largo de nuestras variables. En dicho proceso observamos que la variable que contenia el sueldo de los individuos poseía una gran cantidad de valores faltantes. A pesar de que gran parte de estos provenían de las personas que no se encontraban activas laboralmente, todavía seguía quedando una pequeña parte que no conseguíamos explicar. Dichos datos fueron tratados como MAR después de comprobar que se esparcían de forma similar entre las diferentes ramas del conocimiento, lo que nos permitió imputarlos utilizando la moda de cada rama del conocimiento. Para realizar dicho proceso antes comprobamos con el test $\chi^2$ y la V de Cramer que las variables *TR_SUELDO* y *URAMA* tenían una relación que era estadísticamente significativa.
 
-Para finalizar con nuestro proyecto realizamos diferentes gráficos exploratorios en los que pudimos comprobar 
+Para finalizar con nuestro proyecto realizamos diferentes gráficos exploratorios en los que pudimos sacar diferentes conclusiones. 
+
+En lo que atañe al análisis de la inserción laboral, observamos que hay algunas ramas como Artes y humanidades o Ciencias sociales y jurídicas que presentan una proporción ligeramente mayor de desempleo. Por otro lado, no se logró establecer ninguna relación entre el número de idiomas y el estado laboral de los individuos.
+
+En cuento al estudio del sueldo, los resultados confirman que existen diferencias significativas en la empleabilidad y el salario según la rama de estudio, siendo Ingeniería y Arquitectura y Ciencias de la Salud las áreas con mejores indicadores de inserción y con mayor concentración de sueldos elevados. En cambio, las ramas de Artes y Humanidades y Ciencias Sociales y Jurídicas presentan una estructura salarial menos favorable y mayores tasas de precariedad laboral. Asimismo, se observa una brecha salarial por género, donde los hombres se concentran en los tramos de mayor remuneración y las mujeres en niveles medios o bajos, incluso en ramas con predominio femenino. También se constata una cierta influencia del número de idiomas, que se asocia positivamente con salarios más altos, aunque de forma no lineal.
 
 
 
