@@ -1,5 +1,5 @@
 ---
-title: Proyecto de AED: Inserción laboral de titulados universitarios
+title: Proyecto de AED - Inserción laboral de titulados universitarios
 author:
   - name: Joan Merlos Cremades
     affil: 1,*
