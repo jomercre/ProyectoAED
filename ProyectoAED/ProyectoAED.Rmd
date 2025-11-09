@@ -27,7 +27,6 @@ abstract: |
   En las siguientes páginas, se encuentra un estudio exploratorio de los datos correspondientes a la inserción laboral de los estudiantes universitarios que finalizaron su grado durante el curso 2013-2014, dichos datos fueron recogidos por el Instutito Nacional de Estadística (INE) y se pueden descargar de forma libre accediendo al siguiente enlace \url{https://www.ine.es/ftp/microdatos/eilu/datos_2019.zip}. Dicho análisis consistirá en transformar los datos a sus correspondientes tipos, renombrar los factores para que tengan nombres representativos, estudiar las posibles relaciones entre las diferentes variables e imputar variables de interés.
 keywords: |
   Análisis exploratorio de datos, INE, Inserción laboral.
-bibliography: mybibfile.bib
 endnotes: false
 output: 
   rticles::mdpi_article:
@@ -443,24 +442,10 @@ En lo que atañe al análisis de la inserción laboral, observamos que hay algun
 
 En cuento al estudio del sueldo, los resultados confirman que existen diferencias significativas en la empleabilidad y el salario según la rama de estudio, siendo Ingeniería y Arquitectura y Ciencias de la Salud las áreas con mejores indicadores de inserción y con mayor concentración de sueldos elevados. En cambio, las ramas de Artes y Humanidades y Ciencias Sociales y Jurídicas presentan una estructura salarial menos favorable y mayores tasas de precariedad laboral. Asimismo, se observa una brecha salarial por género, donde los hombres se concentran en los tramos de mayor remuneración y las mujeres en niveles medios o bajos, incluso en ramas con predominio femenino. También se constata una cierta influencia del número de idiomas, que se asocia positivamente con salarios más altos, aunque de forma no lineal.
 
+# Bibliografía
 
+\noindent [1] Pérez, C. *Técnicas de análisis multivariante de datos: Aplicaciones con SPSS*; Pearson Educación, 2004.
 
+\vspace{6pt}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+\noindent [2] Provost, F.; Fawcett, T. *Data Science for Business: What you need to know about data mining and data-analytic thinking*; O'Reilly Media, 2013.
