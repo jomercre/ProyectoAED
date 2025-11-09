@@ -24,7 +24,7 @@ status: submit
 simplesummary: |
   Proyecto de la asignatura Ánalisis exploratorio de datos del Máster en Ciencia de datos de la Universitat de València.
 abstract: |
-  En las siguientes páginas, se encuentra un estudio exploratorio de los datos correspondientes a la inserción laboral de los estudiantes universitarios que finalizaron su grado durante el curso 2013-2014, dichos datos fueron recogidos por el Instutito Nacional de Estadística (INE) y se pueden descargar de forma libre accediendo al siguiente enlace \url{https://www.ine.es/ftp/microdatos/eilu/datos_2019.zip}). Dicho análisis exploratorio consistirá en transformar los datos a sus correspondientes tipos, renombrar los factores para que tengan nombres representativos, estudiar las posibles relaciones entre las diferentes variables e imputar datos de interés.
+  En las siguientes páginas, se encuentra un estudio exploratorio de los datos correspondientes a la inserción laboral de los estudiantes universitarios que finalizaron su grado durante el curso 2013-2014, dichos datos fueron recogidos por el Instutito Nacional de Estadística (INE) y se pueden descargar de forma libre accediendo al siguiente enlace \url{https://www.ine.es/ftp/microdatos/eilu/datos_2019.zip}. Dicho análisis consistirá en transformar los datos a sus correspondientes tipos, renombrar los factores para que tengan nombres representativos, estudiar las posibles relaciones entre las diferentes variables e imputar variables de interés.
 keywords: |
   Análisis exploratorio de datos, INE, Inserción laboral.
 bibliography: mybibfile.bib
@@ -40,7 +40,7 @@ knitr::opts_chunk$set(fig.pos = 'H')
 
 # Introducción
 
-En la carpeta de datos original, se pueden observar dos archivos de datos CSV diferentes. El archivo que se va a proceder a analizar es el de la gente que se graduó en una universidad española durante el curso 2013-2014 (EILU_GRAD_2019.csv). El otro archivo corresponde a la gente que obtuvo un máster en el curso 2013-2014, por lo que no será objeto de nuestro estudio. Habiendo aclarado ya el conjunto de datos a utilizar podemos proceder a importar las librerías que nos permitirán analizarlo, limpiarlo y estudiarlo.
+En la carpeta de datos original, se pueden observar dos archivos de datos CSV diferentes. El archivo que se va a proceder a analizar es el de la gente que se graduó en una universidad española durante el curso 2013-2014 ( __EILU_GRAD_2019.csv__ ). El otro archivo corresponde a la gente que obtuvo un máster en el curso 2013-2014, por lo que no será objeto de nuestro estudio. Habiendo aclarado ya el conjunto de datos a utilizar podemos proceder a importar las librerías que nos permitirán analizarlo, limpiarlo y estudiarlo.
 
 ```{r}
 pacman::p_load(readr,dplyr,ggplot2,vcd,patchwork,knitr)
@@ -49,7 +49,7 @@ pacman::p_load(readr,dplyr,ggplot2,vcd,patchwork,knitr)
 
 # Importación y limpieza de datos 
 
-En este apartado vamos a proceder a importar el archivo de datos con el que vamos a trabajar. Para ello primero debemos de adivinar su codificación mediante el uso de la función __guess_encoding__.
+En este apartado vamos a proceder a importar el archivo de datos con el que vamos a trabajar. Para ello primero debemos de adivinar su codificación mediante el uso de la función *guess_encoding*.
 ```{r}
 # Adivinamos la codificación 
 
@@ -63,7 +63,7 @@ df_raw <- read_delim("./data/EILU_GRAD_2019.csv",
     trim_ws = TRUE, locale = locale(encoding = "ASCII"))
 ```
 
-El dataframe importado tiene una longitud de ```r ncol(df_raw)``` variables, así que para falicitar nuestro estudio nos quedaremos únicamente con las variables principales que afectan a los estudios, la situación laboral y el sueldo de los diferentes individuos. Para conocer que representa cada una de las distintas variables debemos acudir al codebook de los metadatos, este viene dado por el archivo xlsx denominado __dr_EILU_GRAD_2019.xlsx__. Cabe destacar que en el proyecto de R donde se encuentra este documento pdf también hemos añadido el archivo para que cualquier persona pueda identificar las variables sin necesidad de abrir el archivo original de metadatos.
+El dataframe importado tiene una longitud de ```r ncol(df_raw)``` variables, así que para falicitar nuestro estudio nos quedaremos únicamente con las variables principales que afectan a los estudios, la situación laboral y el sueldo de los diferentes individuos. Para conocer que representa cada una de las distintas variables debemos acudir al codebook de los metadatos, este viene dado por el archivo xlsx denominado __dr_EILU_GRAD_2019.xlsx__. Cabe destacar que en el proyecto de R donde se encuentra este documento pdf también hemos añadido dicho archivo para que cualquier persona pueda identificar las variables sin necesidad de abrir el archivo original de metadatos.
 ```{r}
 var <- c('IDENT','SEXO','RAMA','EST_B17_M1','EST_B17_M2','EST_B17_M3',
          'EST_B21','EST2_SA','IDIOMAS','TRBPRN1','TR_SUELDO','HATR_E11')
@@ -71,7 +71,7 @@ var <- c('IDENT','SEXO','RAMA','EST_B17_M1','EST_B17_M2','EST_B17_M3',
 df <- df_raw[var]
 ```
 
-Una vez que ya tenemos seleccionadas las variables con las que vamos a realizar nuestro estudio debemos pasar cada una de ellas a su respectivo tipo. Dicha tarea se vuelve un poco tediosa debido a que las diferentes variables de tipo factor han sido codificadas mediante índices numéricos, para saber que simboliza cada uno de estos números debemos, otra vez, acudir al codebook de los metadatos. Una vez que podemos comprender que significa cada número debemos convertir las diferentes columnas en factor mediante la función __factor__ introduciendo en el parámetro __levels__ los índices correspondientes a cada nivel del factor y en la parámetro __labels__ el nuevo nombre que queremos asociar a cada nivel del factor, el cual debe ser los suficientemente indicativo para poder interpretarlo más adelante en las distintas gráficas experimentales que se realizaran. Cabe destacar que todo este proceso se encuentra en el documento Rmd asociado, ya que consideramos redundante introducirlo en este informe.
+Una vez que ya tenemos seleccionadas las variables con las que vamos a realizar nuestro estudio debemos pasar cada una de ellas a su respectivo tipo. Dicha tarea se vuelve un poco tediosa debido a que las diferentes variables de tipo factor han sido codificadas mediante índices numéricos, para saber que simboliza cada uno de estos números debemos, otra vez, acudir al codebook de los metadatos. Una vez que podemos comprender que significa cada número debemos convertir las diferentes columnas en tipo factor mediante la función *factor* introduciendo en el parámetro *levels* los valores codificados correspondientes a cada nivel del factor y en la parámetro *labels* el nuevo nombre que queremos asociar a cada nivel del factor, el cual debe ser los suficientemente indicativo para poder interpretarlo más adelante en las distintas gráficas exploratorias que se realizaran. Cabe destacar que todo este proceso se encuentra en el documento Rmd asociado, ya que es algo extenso y consideramos redundante introducirlo en este informe.
 ```{r, echo=FALSE}
 df$SEXO <- factor(df$SEXO, levels = c(1,2), labels = c('Hombre', 'Mujer'))
 
@@ -116,9 +116,9 @@ df <- df %>% mutate(HATR_E11 = ifelse(TRBPRN1 == "9",NA, HATR_E11)) # 9 = NA
 df$HATR_E11 <- factor(df$HATR_E11, levels=codi_tiempo1, labels=desc_tiempo1)
 ```
 
-Antes de pasar al siguiente apartado, vamos a intentar convertir todas las variables que nos indican la rama de los estudios realizados por cada individuo en una sola. La rama que nos aporta la rama de estudio del primer estudio universitario realizado por el individuo se denomina RAMA. No osbtante, después tenemos más variables que nos indican la rama de los másteres realizados por el individuo o la rama del doctorado más importante. Para reducir todas estas múltiples variables a una sola vamos a crear la variable URAMA, la cual nos va indicar la rama del estudio más elevado realizado por el individuo, es decir, la rama de los últimos estudios realizados. Cabe destacar que vamos a ignorar la columna dedicada a los estudios del del tipo MIR, ya que todo aquel que se encuentre realizándolo o ya lo haya realizado necesariamente debe haber realizado una carrera o máster de la rama de ciencias de la salut. Por tanto, no es redundante conocer esa información para crear la columna con la rama del último estudio realizado.
+Antes de pasar al siguiente apartado, vamos a intentar convertir todas las variables que nos indican la rama de los estudios realizados por cada individuo en una sola. La rama que nos aporta la rama del primer estudio universitario realizado por el individuo se denomina RAMA. No osbtante, después tenemos más variables que nos indican la rama de los másteres realizados por el individuo o la rama del doctorado más importante. Para reducir todas estas múltiples variables a una sola vamos a crear la variable URAMA, la cual nos va indicar la rama del estudio más elevado realizado por el individuo, es decir, los cuales en la mayoría de casos coincidiran con los últimos estudios realizados por el individuo. Cabe destacar que vamos a ignorar la variable dedicada a los estudios del del tipo MIR, ya que todo aquel que se encuentre realizándolo o ya lo haya realizado necesariamente debe haber realizado una carrera o máster de la rama de ciencias de la salud. Por tanto, nos es redundante conocer esa información para crear la columna con la rama del último estudio realizado.
 
-Para crear la variable URAMA simplemente debemos tener en cuenta que cuando el individuo no ha dado información sobre el estudio o directamente no ha realizado dicho estudio la columna aparecera como NA, así que vamos estudiando que columnas continen datos no faltantes empezando por los doctorados, siguiendo por los másteres y terminando en los grados o diplomaturas.
+Para crear la variable URAMA simplemente debemos tener en cuenta que cuando el individuo no ha dado información sobre el estudio o directamente no ha realizado dicho estudio la columna aparecera como NA, así que vamos estudiando que columnas continen datos no faltantes empezando por los doctorados, siguiendo por los másteres y terminando en los grados o licenciaturas.
 ```{r}
 df <- df %>% 
   mutate(URAMA = ifelse(!is.na(EST_B21), EST_B21, 
