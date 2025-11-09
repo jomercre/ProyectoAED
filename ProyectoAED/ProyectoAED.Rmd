@@ -162,13 +162,13 @@ kable(dfT1, format = "latex",booktabs = TRUE,
 
 Como podemos observar las únicas columnas con datos faltantes son *IDIOMAS*, *TR_SUELDO* y *HATR_E11*. La variable con más datos faltantes es TR_SUELDO con un ```r round(sum(is.na(df$TR_SUELDO))/nrow(df)*100,2)``` % de datos con NA. No obstante, no todos ellos son datos faltantes, ya que puede darse el caso de que la persona no esté actualmente trabajando y, por tanto, haya evitado rellenar a drede la casilla de *TR_Sueldo*. Para observar cuales son en realidad nuestros datos faltantes procedemos a observar el número de NA's de la variable *TR_SUELDO* una vez hemos eliminado aquellas personas que no se encuentran trabajando.
 ```{r tab2, echo=FALSE}
-dfNAc <- df %>% filter(TRBPRN1 != 'Trabajando')
+dfNAc <- df %>% filter(TRBPRN1 == 'Trabajando')
 
 NAs <- c(sum(is.na(df$TR_SUELDO)),sum(is.na(dfNAc$TR_SUELDO)))
 
 dfT2 <- data.frame('Variable' = c('TR_SUELDO','TR_SUELDO'),
                   'Cálculo' = c('Con todos los datos',
-                                'Con la gente no activa laboralmente'),
+                                'Con la gente activa laboralmente'),
                   'Número de datos faltantes' = NAs,
                   check.names = FALSE)
 
@@ -177,7 +177,7 @@ kable(dfT2, format = "latex",booktabs = TRUE,
   align = 'l|c|c', longtable = TRUE,linesep = "")
 ```
 
-Como podemos observar hay aproximadamente 4500 valores NA que pertenecen a la población no activa laboralmente, la cual es lógico que no tenga un salario. No obstante, los otros 800 datos con NA no parecen seguir ninguna lógica. Por ello intentaremos relacionar la variable *TR_SUELDO* con alguna otra variable del conjunto que no contenga datos faltantes.
+Como podemos observar hay aproximadamente 4500 valores NA que pertenecen a la población no activa laboralmente, la cual es lógico que no tenga un salario. No obstante, los otros 700 datos con NA no parecen seguir ninguna lógica. Por ello intentaremos relacionar la variable *TR_SUELDO* con alguna otra variable del conjunto que no contenga datos faltantes.
 
 # Imputación de datos faltantes
 
