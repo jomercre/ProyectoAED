@@ -481,7 +481,7 @@ ggplot(df, aes(x = RAMA, fill = SEXO)) +
     y = "Proporción",
     fill = "Sexo"
   ) +
-  scale_fill_manual(values = c("#4169E1", "#FFC0CB")) +
+  scale_fill_manual(values = c("#4169E1", "#E4007C")) +
   theme_minimal(base_size = 12) +
   theme(axis.text.x = element_text(angle = 20, hjust = 1))
 
