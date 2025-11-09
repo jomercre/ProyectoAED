@@ -449,9 +449,7 @@ table(df$RAMA, df$TR_SUELDO, useNA = "ifany")
 
 # Gráficas
 
-
-
-Gráfica de la variación del sueldo según la rama de de estudio
+## Gráfica de la variación del sueldo según la rama de de estudio
 
 ```{r}
 ggplot(df %>% filter(TRBPRN1 == "Trabajando"),
@@ -471,14 +469,17 @@ ggplot(df %>% filter(TRBPRN1 == "Trabajando"),
 
 ```
 
-Gráfica de distribución de hombres y mujeres en cada rama de estudio
+El proposito de esta gráfica es analizar la distribución de los niveles salariales, permitiendo identificar diferencias claras en la distribución entre ramas. Las ramas de Ingeniería y arquitectura y Ciencias de la salud presentan una mayor proporción de niveles salariales altos, lo que sugiere una mejor inserción laboral o remuneración media más elevada. En cambio, Artes y humanidades y Ciencias concentran una mayor proporción de sueldos en los tramos bajos o medios, reflejando una estructura salarial menos favorable. La rama de Ciencias sociales y jurídicas se sitúa en una posición intermedia, mostrando una distribución equilibrada entre niveles salariales medios y altos.
+
+
+## Gráfica de distribución de hombres y mujeres en cada rama de estudio
 
 ```{r}
 ggplot(df, aes(x = RAMA, fill = SEXO)) +
   geom_bar(position = "fill") +
   labs(
-    title = "Distribución de mujeres y 
-    hombres por rama de estudio",
+    title = 
+    "Distribución de mujeres y hombres por rama de estudio",
     x = "Rama de estudio",
     y = "Proporción",
     fill = "Sexo"
@@ -488,7 +489,11 @@ ggplot(df, aes(x = RAMA, fill = SEXO)) +
   theme(axis.text.x = element_text(angle = 20, hjust = 1))
 
 ```
-Gráfica de comparación salarial según sexo
+El objetivo de esta gráfica es mostrar la distribución proporcional del alumnado por sexo dentro de cada rama de estudio. De esta forma, se puede observar la representación relativa de hombres y mujeres en las diferentes áreas académicas y detectar posibles desequilibrios de género en la elección de estudios universitarios.
+
+De manera general, las ramas de Ciencias de la salud, Artes y humanidades y Ciencias sociles y jurídicas, muestran una mayor proporción de mujeres, mientras que Ingeniería y arquitectura presenta una clara predominancia masculina. Por otro lado, la rama de Ciencias es la más equilibrada.
+
+## Gráfica de comparación salarial según sexo
 
 ```{r}
 ggplot(df %>% filter(TRBPRN1 == "Trabajando"),
@@ -505,7 +510,7 @@ ggplot(df %>% filter(TRBPRN1 == "Trabajando"),
 
 ```
 
-Gráfica de distribución salarial por tipo de universidad
+## Gráfica de distribución salarial por tipo de universidad
 
 ```{r}
 
