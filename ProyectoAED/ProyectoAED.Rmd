@@ -207,7 +207,6 @@ p1+p2
 ```
 Como podemos observar los dos gráficos son muy similares, lo cual tiene sentido, ya que la gente suele realizar empezar estudios que tengan relación con sus estudios ya completados. A partir de estos gráficos también se observa como hay ramas como ingeniería y arquitectura donde predominan los hombres y otras como Ciencias sociales y jurídicas donde los alumnos son mayoritariamente mujeres.
 
-
 Para proseguir graficamos la situación laborales de las personas analizadas en función del tipo de universidad en la que realizaron su primer grado.
 ```{r figT2,echo=FALSE, fig.cap="Gráfico de barras de la situación laboral coloreado con el tipo de universidad",fig.align = 'center', out.width = "0.6\\linewidth"}
 ggplot(data=df, aes(x = TRBPRN1)) + geom_bar(aes(fill=T_UNIV)) +
@@ -285,32 +284,13 @@ kable(dfT3, format = "latex",booktabs = TRUE,
 
 Cuando el valor de p obtenido en dicho test es menor que 0.05 podemos concluir que hay una relación entre las dos variables categóricas sobre las que se ha aplicado el test, por tanto podemos decir que todas las variables se encuentran relacionadas en mayor o menor medida. La significancia estadística de dicha relación nos la de el valor del V de Cramer, dicho estadístico consiste en una normalización del parámetro $\chi^2$ de modo que un mayor valor del V de Cramer quiere decir que hay una mayor significancia estadística entre las variables. Ante dicho descubrimiento podríamos pensar que utilizar la variable SEXO es lo mejor. No obstante, esto no tiene ningún sentido, ya que teóricamente ambos sexos tienen las mismas oportunidades y deberían tener las mismas oportunidades de forma laboral. Ante este hecho vamos a proceder a utilizar la variable URAMA para realizar la imputación de los datos. Cabe destacar que el V de Cramer también nos muestra que la variable URAMA es la que tiene mayor significancia estadística después de la variable SEXO.
 
-Poner cosas de imputacion
-
-
-Preparación de la variable TR_SUELDO, dado que esta variable presenta una cantidad elevada de datos faltantes además de una codificación que complica trabajar con los datos. 
-
-Antes de imputar es necesario verificar si podemos realizar imputación condicional obervando si hay relación entre las variables TR_SUELDO y RAMA. Para ello realizamos el test Chi-Cuadrado
-
-
-```{r, echo=FALSE}
-tabla <- table(df$RAMA, df$TR_SUELDO)
-print(tabla)
-
-chi_test <- chisq.test(tabla)
-print("RESULTADO TEST CHI-CUADRADO") 
-print(chi_test)
-```
-
-El resultado del test chi-cuadrado confirma que las variables están estadísticamente relacionadas y por ende pueden usarse para imputación condicional.
-
 A continuación se realiza la imputación condicional de la variable *TR_SUELDO* empleando la moda, el objetivo es completar los valores faltantes en la variable, la cual corresponde con el rango salarial de las personas encuestadas. Para garantizar la coherencia estadística se realiza imputación solamente en individuos que constan como "Trabajando", además se emplea la variable *RAMA* de manera condicional, usando como criterio de sustitución la moda salarial de cada rama. 
 
 El proceso se estructura en fases: preparación de las variables, detección de los valores faltantes (NA), cálculo de la moda, imputación y verificación.
 
 En primer lugar convertimos las variables *RAMA* y *TR_SUELDO* en factores ordenados. Esto es obligatorio ya que ambas variables son categóricas y presentan un número finito de niveles. Además, destacar la conversión de *TR_SUELDO* a factor ordinal ya que los rangos salariales deben tener un orden lógico, en este caso de menor a mayor. Esto permitirá ordenar correcatmente las categorías y realizar comparaciones válidas entre niveles.
 
-En segundo lugar, antes de hacer la imputación, se lleva a cabo un cuantificación del número de observaciones faltantes en *TR_SUELDO* y como estan distribuidas en cada rama. El resultado obtenido fue de 5266 NAs en total, habiendo una mayor proporción de NA en la rama "Ciencias sociales y jurídicas". 
+En segundo lugar, antes de hacer la imputación, se lleva a cabo un cuantificación del número de observaciones faltantes en *TR_SUELDO* y como estan distribuidas en cada rama. El resultado obtenido fue de 5266 NAs en total.
 
 A continuación, se calcula la moda salarial, la cual corresponde con el nivel de sueldo más frecuente dentro de cada rama de estudio. Para calcularla se han considerado únicamente las siguiente obervaciones:
 
@@ -322,7 +302,7 @@ El cálculo de la moda se lleva a cabo usando funciones de la librería *dplyr* 
 
 Cuando la moda salarial de cada rama está calculada, se puede comenzar la imputación. Empleando la función *left_join()*, se une la tabla de modas al conjunto de datos original a través de la variable *RAMA*. Luego, usando *mutate()* se reemplazan los valores NA con las condiciones *ifelse(TRBPRN1 == "Trabajando" & is.na(TR_SUELDO)*, es decir, que esté trabajando y que el valor sea NA, que es lo que se debe imputar. Tras la imputación, *TR_SUELDO* se reconvierte nuevamente en factor ordenado, asegurando que la variable conserva la estructura ordinal orginial y también las etiquetas.
 
-Por útlimo, es posible verificar los resultados y la efectividad del proceso de imputación. Se oberva una imputación satisfactoria con reducción de 5266 casos de NA en trabajador a 0 NA presentes. No obstante, es necesario destacar todavía la presencia de 4527 valores faltantes, los cuales corresponden con NA de personas que no trabajan. Además, de acuerdo con el resumen de frecuencias, se muestra un distribución coherente con la esperada para variables salariales: rangos más comunes entre 1000 y 1999 euros y no se registran casos en la categoría "NS/NC" confirmando que se excluyó correctamente del proceso.
+Por útlimo, es posible verificar los resultados y la efectividad del proceso de imputación. Se oberva una imputación satisfactoria con reducción de 5266 casos de NA en trabajador a 0 NA presentes. No obstante, es necesario destacar todavía la presencia de 4527 valores faltantes, los cuales corresponden con NA de personas que no trabajan. Además, de acuerdo con el resumen de frecuencias, se muestra un distribución coherente con la esperada para variables salariales.
 
 ```{r, echo=FALSE}
 #imputación de tr_sueldo usando la moda y dplyr y count().
@@ -352,11 +332,11 @@ df$TR_SUELDO <- factor(df$TR_SUELDO,
 
 #chequear valores na en el dataset
 
-print("Número de valores faltantes en TR_SUELDO")
-sum(is.na(df$TR_SUELDO))
+#print("Número de valores faltantes en TR_SUELDO")
+#sum(is.na(df$TR_SUELDO))
 
-print("Distribución de NAs por rama")
-print(table(df$RAMA, is.na(df$TR_SUELDO)))
+#print("Distribución de NAs por rama")
+#print(table(df$RAMA, is.na(df$TR_SUELDO)))
 
 #calculamos la moda sin tener en cuenta na y ns/nc
 
@@ -397,12 +377,11 @@ df$TR_SUELDO <- factor(df$TR_SUELDO,
 
 #verificamos results
 
-print("Valores faltantes en TR_SUELDO 
-      después de la imputación (solo trabajando)")
-sum(is.na(df$TR_SUELDO[df$TRBPRN1 == "Trabajando"]))
+#print("Valores faltantes en TR_SUELDO después de la imputación (solo trabajando)")
+#sum(is.na(df$TR_SUELDO[df$TRBPRN1 == "Trabajando"]))
 
-print("Frecuencia de niveles TR_SUELDO (en todo el dataset)")
-print(summary(df$TR_SUELDO))
+#print("Frecuencia de niveles TR_SUELDO (en todo el dataset)")
+#print(summary(df$TR_SUELDO))
 
 #calcular cuántos valores se imputaron los na
 imputaciones_por_rama <- df %>%
@@ -418,9 +397,8 @@ imputaciones_por_rama <- df %>%
   )
 
 # unir tablas
-resumen_imputacion <- left_join(moda_por_rama,
-                                imputaciones_por_rama, by = "RAMA")
-print(resumen_imputacion)
+resumen_imputacion <- left_join(moda_por_rama, imputaciones_por_rama, by = "RAMA")
+#print(resumen_imputacion)
 
 ```
 # Resumen general valores faltantes
@@ -473,14 +451,12 @@ kable(tabla_sueldo, format = "latex", booktabs = TRUE,
 
 ```
 
-
 Con el propósito de examinar la distribución de las variables *RAMA* y *TR_SUELDO* tras la imputación, se genera una tabla de contingencia. El resultado respalda la correcta aplicación del método de imputación por moda y evidencia que la variable *TR_SUELDO* quedó adecuadamente estructurada.
 
-```{r}
-table(df$RAMA, df$TR_SUELDO, useNA = "ifany")
+```{r, echo=FALSE}
+#table(df$RAMA, df$TR_SUELDO, useNA = "ifany")
 
 ```
-
 
 # Gráficas
 
@@ -506,7 +482,6 @@ ggplot(df %>% filter(TRBPRN1 == "Trabajando"),
 ```
 
 El proposito de esta gráfica es analizar la distribución de los niveles salariales, permitiendo identificar diferencias claras en la distribución entre ramas. Las ramas de Ingeniería y arquitectura y Ciencias de la salud presentan una mayor proporción de niveles salariales altos, lo que sugiere una mejor inserción laboral o remuneración media más elevada. En cambio, Artes y humanidades y Ciencias concentran una mayor proporción de sueldos en los tramos bajos o medios, reflejando una estructura salarial menos favorable. La rama de Ciencias sociales y jurídicas se sitúa en una posición intermedia, mostrando una distribución equilibrada entre niveles salariales medios y altos.
-
 
 ## Gráfica de distribución de hombres y mujeres en cada rama de estudio
 
@@ -568,7 +543,7 @@ ggplot(df %>% filter(TRBPRN1 == "Trabajando", !is.na(T_UNIV),
   theme(axis.text.x = element_text(angle = 25, hjust = 1))
 
 ```
-El objetivo de esta gráfica es analizar la relación entre el tipo de universidad cursada *T_UNIV* y el nivel salarial actual *TR_SUELDO* de las personas que se encuentran trabajando. El gráfico permite comparar la estructura salarial de los egresados según el tipo de universidad. En general, se observa que las universidades públicas a distancia tienden a concentrar mayores proporciones de individuos en los tramos salariales altos. Por el contrario, las universidades públicas presenciales  suelen mostrar una mayor proporción de sueldos en los tramos bajos o medios. La universidad privada, tanto a distancia como presencial, se encuentran en un perfil intermedio más equilibrado.
+El objetivo de esta gráfica es analizar la relación entre el tipo de universidad cursada *T_UNIV* y el nivel salarial actual *TR_SUELDO* de las personas. En general, se observa que las universidades públicas a distancia tienden a concentrar mayores proporciones de individuos en los tramos salariales altos. Por el contrario, las universidades públicas presenciales  suelen mostrar una mayor proporción de sueldos en los tramos bajos o medios. La universidad privada, tanto a distancia como presencial, se encuentran en un perfil intermedio más equilibrado.
 
 ## Gráfica de relación entre número de idiomas y rango salarial
 
@@ -597,7 +572,7 @@ ggplot(df %>% filter(TRBPRN1 == "Trabajando", !is.na(IDIOMAS),
         plot.title = element_text(face = "bold"))
 
 ```
-El objetivo de esta gráfica es analizar la relación entre el número de idiomas conocidos *IDIOMAS* y el nivel salarial *TR_SUELDO* entre las personas que se encuentran trabajando. A través de esta representación se pretende identificar si existe una tendencia ascendente en la remuneración a medida que aumenta el número de idiomas que una persona domina, lo cual podría reflejar el valor añadido que las competencias lingüísticas aportan en el mercado laboral. De manera general, se observa una tendencia ascendente, no obstante, el gráfico también muestra un retroceso al alcanzar cinco idiomas o más.
+El objetivo de esta gráfica es analizar la relación entre el número de idiomas conocidos *IDIOMAS* y el nivel salarial *TR_SUELDO* entre las personas que se encuentran trabajando. A través de esta representación se pretende identificar si existe una tendencia ascendente en la remuneración a medida que aumenta el número de idiomas. De manera general, se observa una tendencia ascendente, no obstante, el gráfico también muestra un retroceso al alcanzar cinco idiomas o más.
 
 
 
