@@ -66,7 +66,7 @@ df_raw <- read_delim("./data/EILU_GRAD_2019.csv",
 
 El dataframe importado tiene una longitud de ```r ncol(df_raw)``` variables, así que para falicitar nuestro estudio nos quedaremos únicamente con las variables principales que afectan a los estudios, la situación laboral y el sueldo de los diferentes individuos. Para conocer que representa cada una de las distintas variables debemos acudir al codebook de los metadatos, este viene dado por el archivo xlsx denominado __dr_EILU_GRAD_2019.xlsx__. Cabe destacar que en el proyecto de R donde se encuentra este documento pdf también hemos añadido el archivo para que cualquier persona pueda identificar las variables sin necesidad de abrir el archivo original de metadatos.
 ```{r}
-var <- c('IDENT','SEXO','RAMA','T_UNIV','EST_B17_M1','EST_B17_M2','EST_B17_M3',
+var <- c('IDENT','SEXO','RAMA','EST_B17_M1','EST_B17_M2','EST_B17_M3',
          'EST_B21','EST2_SA','IDIOMAS','TRBPRN1','TR_SUELDO','HATR_E11')
 
 df <- df_raw[var]
@@ -83,17 +83,10 @@ desc_rama <- c("Artes y humanidades", "Ciencias",
 
 df$RAMA <- factor(df$RAMA, levels=codi_rama, labels=desc_rama)
 
-codi_tipu <- c(1, 2, 3, 4)
-desc_tipu <- c("Universidad Pública presencial", "Universidad Pública a distancia", "Universidad Privada presencial", "Universidad Privada a distancia")
-
-df$T_UNIV <- factor(df$T_UNIV, levels=codi_tipu, labels=desc_tipu)
-
-# 9 = NA
-
 codi_idi <- c("0", "1", "2", "3", "4", "5")
 desc_idi <- c("0", "1", "2", "3", "4", "5 o más")
 
-df <- df %>% mutate(IDIOMAS = ifelse(IDIOMAS == "9",NA, IDIOMAS))
+df <- df %>% mutate(IDIOMAS = ifelse(IDIOMAS == "9",NA, IDIOMAS)) # 9 = NA
 
 df$IDIOMAS <- factor(df$IDIOMAS, levels=codi_idi, labels=desc_idi)
 
@@ -104,23 +97,22 @@ df$TRBPRN1 <- factor(df$TRBPRN1, levels=codi_empl, labels=desc_empl)
 
 codi_sueldo <- c("1", "2", "3", "4", "5", "6", "7")
 desc_sueldo <- c("Menos de 700 euros",
-                                  "De 700 a 999 euros",
-                                  "De 1.000 a 1.499 euros",
-                                  "De 1.500 a 1.999 euros",
-                                  "De 2.000 a 2.499 euros",
-                                  "De 2.500 a 2.999 euros",
-                                  "De 3.000 euros en adelante")
+                 "De 700 a 999 euros",
+                 "De 1.000 a 1.499 euros",
+                 "De 1.500 a 1.999 euros",
+                 "De 2.000 a 2.499 euros",
+                 "De 2.500 a 2.999 euros",
+                 "De 3.000 euros en adelante")
 
-df <- df %>% mutate(TR_SUELDO = ifelse(TRBPRN1 == "9",NA, TR_SUELDO))
+df <- df %>% mutate(TR_SUELDO = ifelse(TRBPRN1 == "9",NA, TR_SUELDO)) # 9 = NA
 
-df$TR_SUELDO <- factor(df$TR_SUELDO, levels=codi_sueldo, labels=desc_sueldo)
-
-# 9 = NA
+df$TR_SUELDO <- factor(df$TR_SUELDO, levels=codi_sueldo, 
+                       labels=desc_sueldo,ordered=T)
 
 codi_tiempo1 <- c("0", "1", "2", "3", "4", "5", "6")
 desc_tiempo1 <- c("Continuó (+ 6 meses)", "< 3 meses", "3-6 meses", "6 meses-1 año", "1-1.5 años", "1.5-2 años", ">= 2 años")
 
-df <- df %>% mutate(HATR_E11 = ifelse(TRBPRN1 == "9",NA, HATR_E11))
+df <- df %>% mutate(HATR_E11 = ifelse(TRBPRN1 == "9",NA, HATR_E11)) # 9 = NA
 
 df$HATR_E11 <- factor(df$HATR_E11, levels=codi_tiempo1, labels=desc_tiempo1)
 ```
@@ -189,59 +181,6 @@ kable(dfT2, format = "latex",booktabs = TRUE,
 
 Como podemos observar hay aproximadamente 1000 valores NA que pertenecen a la población no activa laboralmente, la cual es lógico que no tenga un salario. No obstante, los otros 3800 datos con NA no parecen seguir ninguna lógica. Por ello intentaremos relacionar la variable sueldo con alguna otra variable del conjunto que no contenga datos faltantes para así conseguir imputar dichos datos.
 
-# Gráficas exploratorias
-
-En este apartado, vamos a proceder a realizar diferentes gráficas de barras para observar como se separan los datos en función de las variables categóricas que utilicemos. 
-
-Para empezar, vamos a hacer dos gráficos de barras con la variable RAMA y URAMA para observar si hay mucha discrepancia entre ambas variables.
-```{r figT1, echo=FALSE,fig.cap="Gráfico de barras de RAMA/URAMA coloreado con SEXO",fig.align = 'center', out.width = "0.6\\linewidth"}
-p1 <- ggplot(data=df, aes(x = RAMA)) + geom_bar(aes(fill=SEXO)) +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10)) + 
-  scale_y_continuous(limits = c(0, 16000))
-
-p2 <- ggplot(data=df, aes(x = URAMA)) + geom_bar(aes(fill=SEXO)) +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10)) +
-  scale_y_continuous(limits = c(0, 16000))
-
-p1+p2
-```
-Como podemos observar los dos gráficos son muy similares, lo cual tiene sentido, ya que la gente suele realizar empezar estudios que tengan relación con sus estudios ya completados. A partir de estos gráficos también se observa como hay ramas como ingeniería y arquitectura donde predominan los hombres y otras como Ciencias sociales y jurídicas donde los alumnos son mayoritariamente mujeres.
-
-Para proseguir graficamos la situación laborales de las personas analizadas en función del tipo de universidad en la que realizaron su primer grado.
-```{r figT2,echo=FALSE, fig.cap="Gráfico de barras de la situación laboral coloreado con el tipo de universidad",fig.align = 'center', out.width = "0.6\\linewidth"}
-ggplot(data=df, aes(x = TRBPRN1)) + geom_bar(aes(fill=T_UNIV)) +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10)) +
-  scale_fill_brewer(palette = "YlOrRd")
-```
-En el anterior gráfico se puede apreciar como prácticamente toda la gente que se ha sometido a la encuesta se encuentra trabajando, en concreto tenemos un ```r round(nrow(dfAc)/nrow(df)*100,2)``` % de gente laboralmente activa. Por otro lado, se observa como la mayor parte de la gente a estudiado en una universidad pública presencial seguida de la universidad privada presencial.
-
-Ahora gráficamos el tiempo transcurrido hasta encontrar trabajo en función del tipo de RAMA del estudio más importante realizado.
-```{r figT3,echo=FALSE, fig.cap="Gráfico de barras del tiempo transcurrido hasta que empezo a trabajar coloreado con el tipo de RAMA del estudio más importante realizado",fig.align = 'center', out.width = "0.6\\linewidth"}
-ggplot(data=df, aes(x = HATR_E11)) + geom_bar(aes(fill=URAMA)) +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 8)) +
-  scale_fill_brewer(palette = "Purples")
-```
-
-La anterior gráfica nos permite apreciar como la mayor parte de la gente tiende a continuar en el mismo trabajo que tenía después de finalizar la universidad. Podemos destacar que la gráfica presenta una tendencia descendiente, de modo que cuanto más tiempo pasa es menos probable que la gente se encuentre sin trabajo. No osbtante, observamos un aumento anómalo en la última columna con datos no vacíos, lo cual podría estar relacionado con la realización de estudios de post-grado como másteres o doctorados donde uno no está trabajando directamente pero ya ha finalizado su grado o licenciatura. Por otro lado, no parece haber una relación entre el tipo de la rama y el tiempo que se tarda en encontrar trabajo, ya que todas las columnas presentan proporciones similares de todos las ramas.
-
-Para proseguir vamos a graficar la rama del estudio más elevado en función de la situación laboral.
-```{r figT4,echo=FALSE, fig.cap="Gráfico de barras normalizado de la rama del estudio más elevado coloreado con la situación laboral",fig.align = 'center', out.width = "0.6\\linewidth"}
-ggplot(df, aes(x= URAMA)) + geom_bar(position = "fill",aes(fill=TRBPRN1)) +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10)) +
-  scale_fill_brewer(palette = "Greens")
-```
-
-Como podemos observar en la anterior gráfica, hay una cantidad mayor de gente que no se encuentra trabajando en las ramas de artes y humidades y ciencias sociales y ciencias jurídicas. No obstante, la diferencia con la cantidad de gente que no trabaja en las otras ramas es muy pequeña.
-
-
-A continuación, vamos a proceder a realizar diferentes gráficos de barras del número de idiomas en función de la situación laboral, los cuales además estarán coloreados por el sexo.
-```{r figT5,echo=FALSE, fig.cap="Gráficos de barras de el número de idiomas en función de la situación laboral y coloreado por el sexo",fig.align = 'center', out.width = "0.6\\linewidth"}
-ggplot(df, aes(x=IDIOMAS)) + geom_bar(aes(fill=SEXO)) + facet_wrap(~TRBPRN1) +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10))
-```
-
-Observamos como en todos los casos la columna con mayor peso es 1, lo cual nos indica que la gente suele enseñarse un único idioma diferente a los idiomas maternos. Dicha relación tiene sentido, ya que actualmente la gente suele centrarse en estudiar el inglés y dejar el resto de idiomas más de lado. También se puede notar que la segunda columna con más cantidad de datos es la de dos idiomas, dentro de la cual predomina el sexo femenino. Por otro lado, no parece haber una relación directa entre la cantidad de idiomas diferentes del materno que conoce el individuo con la situación laboral que este ostenta.
-
 # Imputación de datos faltantes
 
 Queremos imputar los valores de la variable con el sueldo para aquellas personas que se encuentran activas, para ello lo que vamos a hacer va a ser primero aplicar el test del $\chi^2$ a la combinación de la variable TR_SUELDO con el resto de variables, evitando las variables IDENT porque no tiene sentido relacionarla con el identificador y la variable TRBPRN1 porque si eliminamos los NA's de la variable TR_SUELDO, aquellas personas que no estan laboralmente activas se eliminan y no tiene sentido realizar la table de contingencia porque dos columnas valen siempre 0.
@@ -305,55 +244,21 @@ Cuando la moda salarial de cada rama está calculada, se puede comenzar la imput
 Por útlimo, es posible verificar los resultados y la efectividad del proceso de imputación. Se oberva una imputación satisfactoria con reducción de 5266 casos de NA en trabajador a 0 NA presentes. No obstante, es necesario destacar todavía la presencia de 4527 valores faltantes, los cuales corresponden con NA de personas que no trabajan. Además, de acuerdo con el resumen de frecuencias, se muestra un distribución coherente con la esperada para variables salariales.
 
 ```{r, echo=FALSE}
-#imputación de tr_sueldo usando la moda y dplyr y count().
-
-library(dplyr)
-library(ggplot2)
-
-#convertimos variabls a factores para trabajar bien con ello
-
-df$RAMA <- factor(df$RAMA,
-                  levels = c("Artes y humanidades",
-                             "Ciencias",
-                             "Ciencias sociales y jurídicas",
-                             "Ingeniería y arquitectura",
-                             "Ciencias de la salud"))
-
-df$TR_SUELDO <- factor(df$TR_SUELDO,
-                       levels = c("Menos de 700 euros",
-                                  "De 700 a 999 euros",
-                                  "De 1.000 a 1.499 euros",
-                                  "De 1.500 a 1.999 euros",
-                                  "De 2.000 a 2.499 euros",
-                                  "De 2.500 a 2.999 euros",
-                                  "De 3.000 euros en adelante",
-                                  "NS/NC"),
-                       ordered = TRUE)
-
-#chequear valores na en el dataset
-
-#print("Número de valores faltantes en TR_SUELDO")
-#sum(is.na(df$TR_SUELDO))
-
-#print("Distribución de NAs por rama")
-#print(table(df$RAMA, is.na(df$TR_SUELDO)))
-
-#calculamos la moda sin tener en cuenta na y ns/nc
+# Calculamos la moda sin tener en cuenta na y ns/nc
 
 moda_por_rama <- df %>%
   filter(TRBPRN1 == "Trabajando",
-         !is.na(TR_SUELDO),
-         TR_SUELDO != "NS/NC") %>%
-  group_by(RAMA) %>% 
-  count(RAMA, TR_SUELDO, sort = TRUE) %>%
+         !is.na(TR_SUELDO)) %>%
+  group_by(URAMA) %>% 
+  count(URAMA, TR_SUELDO, sort = TRUE) %>%
   slice_max(n, n = 1, with_ties = FALSE) %>%
-  transmute(RAMA,
+  transmute(URAMA,
             moda_sueldo = as.character(TR_SUELDO))
 
-#imputación en este caso con la moda 
+# Imputación con la moda 
 
 df <- df %>%
-  left_join(moda_por_rama, by = "RAMA") %>%
+  left_join(moda_por_rama, by = "URAMA") %>%
   mutate(
     TR_SUELDO = ifelse(
       TRBPRN1 == "Trabajando" & is.na(TR_SUELDO),
@@ -363,30 +268,16 @@ df <- df %>%
   ) %>%
   select(-moda_sueldo)
 
-#convertimos tr_sueldo a factor ordenado otra vez
+# Convertimos tr_sueldo a factor ordenado otra vez
 df$TR_SUELDO <- factor(df$TR_SUELDO,
-                       levels = c("Menos de 700 euros",
-                                  "De 700 a 999 euros",
-                                  "De 1.000 a 1.499 euros",
-                                  "De 1.500 a 1.999 euros",
-                                  "De 2.000 a 2.499 euros",
-                                  "De 2.500 a 2.999 euros",
-                                  "De 3.000 euros en adelante",
-                                  "NS/NC"),
+                       levels = desc_sueldo,
                        ordered = TRUE)
 
-#verificamos results
+# Calculamos cuántos valores se imputaron los na
 
-#print("Valores faltantes en TR_SUELDO después de la imputación (solo trabajando)")
-#sum(is.na(df$TR_SUELDO[df$TRBPRN1 == "Trabajando"]))
-
-#print("Frecuencia de niveles TR_SUELDO (en todo el dataset)")
-#print(summary(df$TR_SUELDO))
-
-#calcular cuántos valores se imputaron los na
 imputaciones_por_rama <- df %>%
   filter(TRBPRN1 == "Trabajando") %>%
-  group_by(RAMA) %>%
+  group_by(URAMA) %>%
   summarise(
     Total_Registros = n(),
     Faltantes = sum(is.na(TR_SUELDO)),
@@ -396,9 +287,9 @@ imputaciones_por_rama <- df %>%
     Porcentaje_Completos = round((Completos / Total_Registros) * 100, 2)
   )
 
-# unir tablas
-resumen_imputacion <- left_join(moda_por_rama, imputaciones_por_rama, by = "RAMA")
-#print(resumen_imputacion)
+# Unimos las tablas
+resumen_imputacion <- left_join(moda_por_rama, imputaciones_por_rama,
+                                by = "URAMA")
 
 ```
 # Resumen general valores faltantes
@@ -424,7 +315,7 @@ kable(dfT_faltantes, format = "latex", booktabs = TRUE,
 # Distribución valores faltantes por rama
 
 ```{r, echo=FALSE}
-tabla_NA_rama <- as.data.frame.matrix(table(df$RAMA, is.na(df$TR_SUELDO)))
+tabla_NA_rama <- as.data.frame.matrix(table(df$URAMA, is.na(df$TR_SUELDO)))
 colnames(tabla_NA_rama) <- c("No faltantes", "Faltantes")
 tabla_NA_rama$`Total casos` <- rowSums(tabla_NA_rama)
 tabla_NA_rama$`% Faltantes` <- round(tabla_NA_rama$Faltantes / tabla_NA_rama$`Total casos` * 100, 2)
@@ -458,6 +349,51 @@ Con el propósito de examinar la distribución de las variables *RAMA* y *TR_SUE
 
 ```
 
+# Gráficas exploratorias
+
+En este apartado, vamos a proceder a realizar diferentes gráficas de barras para observar como se separan los datos en función de las variables categóricas que utilicemos. 
+
+Para empezar, vamos a hacer dos gráficos de barras con la variable RAMA y URAMA para observar si hay mucha discrepancia entre ambas variables.
+```{r figT1, echo=FALSE,fig.cap="Gráfico de barras de RAMA/URAMA coloreado con SEXO",fig.align = 'center', out.width = "0.6\\linewidth"}
+p1 <- ggplot(data=df, aes(x = RAMA)) + geom_bar(aes(fill=SEXO)) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10)) + 
+  scale_y_continuous(limits = c(0, 16000))
+
+p2 <- ggplot(data=df, aes(x = URAMA)) + geom_bar(aes(fill=SEXO)) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10)) +
+  scale_y_continuous(limits = c(0, 16000))
+
+p1+p2
+```
+Como podemos observar los dos gráficos son muy similares, lo cual tiene sentido, ya que la gente suele realizar empezar estudios que tengan relación con sus estudios ya completados. A partir de estos gráficos también se observa como hay ramas como ingeniería y arquitectura donde predominan los hombres y otras como Ciencias sociales y jurídicas donde los alumnos son mayoritariamente mujeres.
+
+Ahora gráficamos el tiempo transcurrido hasta encontrar trabajo en función del tipo de RAMA del estudio más importante realizado.
+```{r figT3,echo=FALSE, fig.cap="Gráfico de barras del tiempo transcurrido hasta que empezo a trabajar coloreado con el tipo de RAMA del estudio más importante realizado",fig.align = 'center', out.width = "0.6\\linewidth"}
+ggplot(data=df, aes(x = HATR_E11)) + geom_bar(aes(fill=URAMA)) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 8)) +
+  scale_fill_brewer(palette = "Purples")
+```
+
+La anterior gráfica nos permite apreciar como la mayor parte de la gente tiende a continuar en el mismo trabajo que tenía después de finalizar la universidad. Podemos destacar que la gráfica presenta una tendencia descendiente, de modo que cuanto más tiempo pasa es menos probable que la gente se encuentre sin trabajo. No osbtante, observamos un aumento anómalo en la última columna con datos no vacíos, lo cual podría estar relacionado con la realización de estudios de post-grado como másteres o doctorados donde uno no está trabajando directamente pero ya ha finalizado su grado o licenciatura. Por otro lado, no parece haber una relación entre el tipo de la rama y el tiempo que se tarda en encontrar trabajo, ya que todas las columnas presentan proporciones similares de todos las ramas.
+
+Para proseguir vamos a graficar la rama del estudio más elevado en función de la situación laboral.
+```{r figT4,echo=FALSE, fig.cap="Gráfico de barras normalizado de la rama del estudio más elevado coloreado con la situación laboral",fig.align = 'center', out.width = "0.6\\linewidth"}
+ggplot(df, aes(x= URAMA)) + geom_bar(position = "fill",aes(fill=TRBPRN1)) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10)) +
+  scale_fill_brewer(palette = "Greens")
+```
+
+Como podemos observar en la anterior gráfica, hay una cantidad mayor de gente que no se encuentra trabajando en las ramas de artes y humidades y ciencias sociales y ciencias jurídicas. No obstante, la diferencia con la cantidad de gente que no trabaja en las otras ramas es muy pequeña.
+
+
+A continuación, vamos a proceder a realizar diferentes gráficos de barras del número de idiomas en función de la situación laboral, los cuales además estarán coloreados por el sexo.
+```{r figT5,echo=FALSE, fig.cap="Gráficos de barras de el número de idiomas en función de la situación laboral y coloreado por el sexo",fig.align = 'center', out.width = "0.6\\linewidth"}
+ggplot(df, aes(x=IDIOMAS)) + geom_bar(aes(fill=SEXO)) + facet_wrap(~TRBPRN1) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10))
+```
+
+Observamos como en todos los casos la columna con mayor peso es 1, lo cual nos indica que la gente suele enseñarse un único idioma diferente a los idiomas maternos. Dicha relación tiene sentido, ya que actualmente la gente suele centrarse en estudiar el inglés y dejar el resto de idiomas más de lado. También se puede notar que la segunda columna con más cantidad de datos es la de dos idiomas, dentro de la cual predomina el sexo femenino. Por otro lado, no parece haber una relación directa entre la cantidad de idiomas diferentes del materno que conoce el individuo con la situación laboral que este ostenta.
+
 # Gráficas
 
 ## Gráfica de la variación del sueldo según la rama de de estudio
@@ -476,7 +412,7 @@ ggplot(df %>% filter(TRBPRN1 == "Trabajando"),
   ) +
   scale_fill_brewer(palette = "Blues") +
   theme_minimal(base_size = 12) +
-  theme(axis.text.x = element_text(angle = 20, hjust = 1))
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 
 ```
@@ -488,16 +424,8 @@ El proposito de esta gráfica es analizar la distribución de los niveles salari
 ```{r figT7,echo=FALSE, fig.cap="Distribución de hombres y mujeres por rama de estudio",fig.align = 'center', out.width = "0.6\\linewidth"}
 ggplot(df, aes(x = RAMA, fill = SEXO)) +
   geom_bar(position = "fill") +
-  labs(
-    title = 
-    "Distribución de mujeres y hombres por rama de estudio",
-    x = "Rama de estudio",
-    y = "Proporción",
-    fill = "Sexo"
-  ) +
-  scale_fill_manual(values = c("#4169E1", "#E4007C")) +
   theme_minimal(base_size = 12) +
-  theme(axis.text.x = element_text(angle = 20, hjust = 1))
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 ```
 El objetivo de esta gráfica es mostrar la distribución proporcional del alumnado por sexo dentro de cada rama de estudio. De esta forma, se puede observar la representación relativa de hombres y mujeres en las diferentes áreas académicas y detectar posibles desequilibrios de género en la elección de estudios universitarios.
@@ -510,63 +438,21 @@ De manera general, las ramas de Ciencias de la salud, Artes y humanidades y Cien
 ggplot(df %>% filter(TRBPRN1 == "Trabajando"),
        aes(x = SEXO, fill = TR_SUELDO)) +
   geom_bar(position = "fill") +
-  labs(
-    title = "Diferencia salarial según el sexo",
-    x = "Sexo",
-    y = "Proporción de niveles salariales",
-    fill = "Nivel salarial"
-  ) +
-  scale_fill_brewer(palette = "Purples") +
+  scale_fill_brewer(palette = "Blues") +
   theme_minimal()
-
 ```
 
 El objetivo de esta gráfica es identificar si existen diferencias significativas en la estructura de los ingresos entre hombres y mujeres dentro de la población laboral activa analizada, evidenciando las disparidades de distribución entre hombres y mujeres.
 Aunque las proporciones pueden variar según el contexto específico del estudio, la tendencia reflejada sugiere una mayor concentración de mujeres en los tramos salariales bajos o intermedios, mientras que los hombres presentan una mayor proporción en los rangos salariales altos.
 
-## Gráfica de distribución salarial por tipo de universidad
-
-```{r figT9,echo=FALSE, fig.cap="Distribución salarial por tipo de universidad",fig.align = 'center', out.width = "0.6\\linewidth"}
-
-ggplot(df %>% filter(TRBPRN1 == "Trabajando", !is.na(T_UNIV),
-                     !is.na(TR_SUELDO)),
-       aes(x = T_UNIV, fill = TR_SUELDO)) +
-  geom_bar(position = "fill") +
-  labs(
-    title = "Distribución salarial por tipo de universidad",
-    x = "Tipo de universidad",
-    y = "Proporción de niveles salariales",
-    fill = "Nivel salarial"
-  ) +
-  scale_fill_brewer(palette = "Reds") +
-  theme_minimal(base_size = 12) +
-  theme(axis.text.x = element_text(angle = 25, hjust = 1))
-
-```
-El objetivo de esta gráfica es analizar la relación entre el tipo de universidad cursada *T_UNIV* y el nivel salarial actual *TR_SUELDO* de las personas. En general, se observa que las universidades públicas a distancia tienden a concentrar mayores proporciones de individuos en los tramos salariales altos. Por el contrario, las universidades públicas presenciales  suelen mostrar una mayor proporción de sueldos en los tramos bajos o medios. La universidad privada, tanto a distancia como presencial, se encuentran en un perfil intermedio más equilibrado.
-
 ## Gráfica de relación entre número de idiomas y rango salarial
 
 ```{r figT10,echo=FALSE, fig.cap="Distribución salarial según número de idiomas aprendidos",fig.align = 'center', out.width = "0.6\\linewidth"}
-
-df$IDIOMAS <- factor(df$IDIOMAS,
-                     levels = c("1", "2", "3", "4", "5 o más"),
-                     labels = c("Uno", "Dos", "Tres",
-                                "Cuatro", "Cinco o más"),
-                     ordered = TRUE)
-
 ggplot(df %>% filter(TRBPRN1 == "Trabajando", !is.na(IDIOMAS),
        !is.na(TR_SUELDO)),
        aes(x = IDIOMAS, fill = TR_SUELDO)) +
   geom_bar(position = "fill") +
-  labs(
-    title = "Distribución salarial según Nº idiomas",
-    subtitle = "Solo personas que se encuentran trabajando",
-    x = "Número de idiomas",
-    y = "Proporción dentro de cada categoría",
-    fill = "Nivel salarial"
-  ) +
-  scale_fill_brewer(palette = "Greens") +
+  scale_fill_brewer(palette = "Blues") +
   theme_minimal(base_size = 12) +
   theme(axis.text.x = element_text(angle = 45, hjust = 0.5),
         plot.title = element_text(face = "bold"))
